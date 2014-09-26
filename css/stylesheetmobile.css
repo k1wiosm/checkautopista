@@ -1,0 +1,166 @@
+* {
+	/*border:1px black solid;*/
+}
+
+#ad {
+	display:none;
+}
+
+html { 
+    height:100%;
+    width:100%;
+    position:inline;
+    margin:0;
+}
+
+body { 
+    height:100%;
+    width:100%;
+    position:inline;
+    margin:0;
+}
+
+#header {
+	padding:5px;
+	width:calc(100% - 15px);
+	height:100px;
+	padding-bottom:0;
+}
+
+img#emblema {
+	margin-right:5px;
+	float:left;
+}
+
+#headerright {
+	float:left;
+	width:calc(100% - 80px);
+	height:auto;
+	margin:0px;
+}
+
+#logo {
+	display:inline;
+}
+
+#txtlogo1 {
+	font-size:25px;
+	font-family:Lobster;
+}
+
+#txtlogo2 {
+	color:blue;
+	font-size:30px
+}
+
+#lema {
+	font-family:Arial;
+}
+
+#byk1wi {
+	display: relative;
+	font-family:Arial;
+	font-size: 10px;
+	color:grey;
+	margin-top:-5px;
+}
+
+#byk1wi a {
+	color:grey;
+}
+
+#map { 
+	margin:10px;
+	clear:all;
+	height: 80% ;
+}
+
+.maxspeed {
+	display:inline;
+	margin: 0;
+	padding: 2px;
+	border: 3px red solid;
+	border-radius: 100%;
+	font-weight: bold;
+}
+
+#selector {
+	clear:all;
+	padding:0px 8px 0px 8px;
+	width:calc(100% - 22px);
+	font-size:12px;
+	font-family:Arial;
+}
+
+ul {
+	list-style-type:none;
+	margin:0;
+	padding:0;
+}
+
+li {
+	display:inline-block;
+}
+
+form {
+	display:inline;
+}
+
+.boton {
+	border:2px solid;
+	border-radius: 100%;
+	padding: 2px;
+	width:4px;
+	height:4px;
+	background-color: #000000;
+	display:inline-block;
+
+}
+.leyenda_text {
+	display:inline;
+	margin-left:2px;
+	margin-right:3px;
+}
+#peaje {
+	border-color:#0000ff;
+}
+#sal_ref_exit_to {
+	border-color:#00ff00;
+}
+#sal_ref_name {
+	border-color:#00ffff;
+}
+#sal_ref {
+	border-color:#ff8800;
+}
+#sal_no_ref {
+	border-color:#ff0000;
+}
+
+.linea {
+	border:2px solid;
+	margin-bottom: 2px;
+	padding: 0px 2px 0px 2px;
+	width:4px;
+	height:0px;
+	background-color: #000000;
+	display:inline-block;
+	border-color:#00ffff;
+}
+#via_todo {
+	border-color:#0000ff;
+}
+#via_falta_algo {
+	border-color:#ffff00;
+}
+#via_no_name {
+	border-color:#ff0000;
+}
+#via_construccion {
+	border-color:#000000;
+}
+
+.code {
+	font-family:Courier, monospace;
+
+}
