@@ -159,6 +159,9 @@ form {
 #via_construccion {
 	border-color:#000000;
 }
+#via_proyecto {
+	border-color:#82858a;
+}
 
 .code {
 	font-family:Courier, monospace;

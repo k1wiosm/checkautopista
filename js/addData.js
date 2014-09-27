@@ -16,6 +16,8 @@ function addData() {
             if (feature.geometry.type=='LineString') {                          // Vías  
                 if (feature.properties.tags.highway=='construction'){
                     return {"color": "#000000"};
+                } else if (feature.properties.tags.highway=='proposed'){
+                    return {"color": "#82858a"};
                 } else if (feature.properties.tags.name==undefined) {
                     return {"color": "#ff0000"};
                 } else if (feature.properties.tags.maxspeed==undefined || feature.properties.tags.lanes==undefined) {
@@ -58,6 +60,10 @@ function addData() {
             }
             if (feature.properties.tags.highway=='construction') {
                 layer.bindPopup("<b>En construcción: " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
+                    feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + feature.properties.tags.lanes);
+            }
+            if (feature.properties.tags.highway=='proposed') {
+                layer.bindPopup("<b>En proyecto: " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + feature.properties.tags.lanes);
             }
             if (feature.properties.tags.barrier=='toll_booth') {
