@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'> <!-- Google Fonts -->
-        <link rel="stylesheet" type="text/css" href="css/stylesheetmobile.css" media="screen  and (max-width: 40.5em),handheld" /> <!-- CSS para mobile -->
-        <link rel="stylesheet" type="text/css" href="css/stylesheet.css" media="screen  and (min-width: 40.5em)" /> <!-- CSS para desktop -->
         <title>CheckAutopista</title>
-        <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi, user-scalable=0" /> <!-- iPhone -->
-        <meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8" /> <!-- iPhone -->
-        <meta name="HandheldFriendly" content="true" /> <!-- iPhone -->
-        <meta name="apple-mobile-web-app-capable" content="yes" /> <!-- iPhone -->
 
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> <!-- Leaflet-js -->
-        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-        <script src='js/osmtogeojson.js'></script>
-
-        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/src/L.Control.Locate.css" />
-        <script src="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/src/L.Control.Locate.js" ></script>
-
+        <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>                               <!-- Google Fonts -->
+        <link rel="stylesheet" type="text/css" href="css/stylesheetmobile.css" media="screen  and (max-width: 40.5em),handheld" />  <!-- CSS para mobile -->
+        <link rel="stylesheet" type="text/css" href="css/stylesheet.css" media="screen  and (min-width: 40.5em)" />                 <!-- CSS para desktop -->
+        <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi, user-scalable=0" />                          <!-- iPhone -->
+        <meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8" />                                   <!-- iPhone -->
+        <meta name="HandheldFriendly" content="true" />                                                                             <!-- iPhone -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />                                                                  <!-- iPhone -->
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />                                         <!-- Leaflet-js -->
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>                                                   <!-- Leaflet-js -->
+        <script src='js/osmtogeojson.js'></script>                                                                                  <!-- osmtogeojsom -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">                        <!-- LocateControl -->
+        <link rel="stylesheet" href="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/src/L.Control.Locate.css" />           <!-- LocateControl -->
+        <script src="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/src/L.Control.Locate.js" ></script>                    <!-- LocateControl -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>                                    <!-- jQuery -->
+        <script src="js/purl.js"></script>                                                                                          <!-- allmarkedup/purl -->
+        
     </head>
     <body>
         <div id="header">
@@ -42,8 +43,7 @@
                                     echo ('<option value="'.$autopista[$i].'" selected>'.$autopista[$i].'</option>');
                                 } else {
                                     echo ('<option value="'.$autopista[$i].'">'.$autopista[$i].'</option>');
-                                }
-                                
+                                }    
                             ?>
                         </select>
                         <input name="submit" type="submit" value="Ver" />
@@ -65,35 +65,9 @@
                 <li><b>Atención:</b> CheckAutopista no tiene en cuenta las salidas marcadas con <span class="code">destination</span>.</li>          
         </div>
         <div id="map">
-            <?php
-                if (!empty($a)){
-                    $consulta = '[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' . $a . '"](area.area);way(r);node(w););out;';
-                    $nodo_xml = file_get_contents("http://overpass-api.de/api/interpreter?data=" .
-                        urlencode($consulta));
-                    echo ("<script> osm_data = " . $nodo_xml . ";</script>");
-                }
-            ?>
-
-            <script>
-                data = osmtogeojson(
-                    osm_data, uninterestingTags = {
-                        "source": true,
-                        "source_ref": true,
-                        "source:ref": true,
-                        "history": true,
-                        "attribution": true,
-                        "created_by": true,
-                        "converted_by": false,
-                        "tiger:county": true,
-                        "tiger:tlid": true,
-                        "tiger:upload_uuid": true
-                    }
-                );
-
-                console.log(data);
-            </script>
-
-            <script src="js/mapa.js"></script>
+            <script src="js/prepareMap.js"></script>
+            <script src="js/addData.js"></script>
+            <script src="js/getData.js"></script>
         </div>
         <div id="ad">
     </body>
