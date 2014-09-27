@@ -1,5 +1,6 @@
 var a = $.url().param("a");
 var osm_data;
+var data;
 
 $.getJSON('http://overpass-api.de/api/interpreter?data=[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="'+a+'"](area.area);way(r);node(w););out;',
     function (response) {
