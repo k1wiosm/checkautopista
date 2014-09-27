@@ -66,10 +66,12 @@
         </div>
         <div id="map">
             <?php
-                $consulta = '[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' . $a . '"](area.area);way(r);node(w););out;';
-                $nodo_xml = file_get_contents("http://overpass-api.de/api/interpreter?data=" .
-                    urlencode($consulta));
-                echo ("<script> osm_data = " . $nodo_xml . ";</script>");
+                if (!empty($a)){
+                    $consulta = '[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' . $a . '"](area.area);way(r);node(w););out;';
+                    $nodo_xml = file_get_contents("http://overpass-api.de/api/interpreter?data=" .
+                        urlencode($consulta));
+                    echo ("<script> osm_data = " . $nodo_xml . ";</script>");
+                }
             ?>
 
             <script>
