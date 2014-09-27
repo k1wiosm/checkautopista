@@ -162,5 +162,9 @@ form {
 
 .code {
 	font-family:Courier, monospace;
+}
 
+#feedback {
+	color:grey;
+	margin-bottom: 10px;
 }

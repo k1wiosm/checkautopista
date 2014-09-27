@@ -35,9 +35,10 @@
                 <li>
                     <form>
                         <select name="a"></select>
-                        <input name="submit" type="submit" value="Ver" />
+                        <input name="submit" type="button" value="Ver" />
                     </form>
                 </li>
+                <li><div id="feedback"><div>
                 <br/>
                 <li><b>Leyenda</b></li>
                 <li><div class="boton" id="peaje"></div><div class="leyenda_text">Peaje</div></li>
@@ -66,7 +67,12 @@
                     } else {
                         $("select[name=a]").append('<option value="' + autopista[i] + '">' + autopista[i] + '</option>');
                     }
-                }
+                };
+                $("input[name=submit]").click(function(){
+                    a=$("select[name=a]").val();
+                    $("div#feedback").html("Cargando datos...");
+                    getData();
+                });
             });
             </script>
         </div>
