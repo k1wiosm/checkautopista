@@ -1,12 +1,12 @@
 var a = $.url().param("a");
-var osm_data;
-var data;
+var dataOSM;
+var dataGeoJSON;
 
 function getData() {
-    $.getJSON('http://overpass-api.de/api/interpreter?data=[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="'+a+'"](area.area);way(r);node(w););out;',
+    $.getJSON('http://overpass-api.de/api/interpreter?data=[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + '"](area.area);way(r);node(w););out;',
         function (response) {
-            osm_data=response;
-            data = osmtogeojson(osm_data, uninterestingTags = {
+            dataOSM = response;
+            dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
                 "source": true,
                 "source_ref": true,
                 "source:ref": true,

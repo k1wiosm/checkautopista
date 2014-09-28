@@ -1,5 +1,5 @@
 var geojsonMarkerOptions;
-var exits;
+var capaDatos;
 
 function addData() {
     geojsonMarkerOptions = {
@@ -11,7 +11,7 @@ function addData() {
         fillOpacity: 0.8
     };
 
-    exits = new L.geoJson(data, {
+    capaDatos = new L.geoJson(dataGeoJSON, {
         style: function(feature) {
             if (feature.geometry.type=='LineString') {                          // Vías  
                 if (feature.properties.tags.highway=='construction'){
