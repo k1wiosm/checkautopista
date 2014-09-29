@@ -107,19 +107,19 @@ ul {
 	display:inline;
 	margin-left:2px;
 }
-#peaje {
+#Peaje {
 	border-color:#0000ff;
 }
-#sal_ref_exit_to {
+#SalRefExitTo {
 	border-color:#00ff00;
 }
-#sal_ref_name {
+#SalRefName {
 	border-color:#00ffff;
 }
-#sal_ref {
+#SalRef {
 	border-color:#ff8800;
 }
-#sal_no_ref {
+#SalNoRef {
 	border-color:#ff0000;
 }
 
@@ -155,5 +155,11 @@ ul {
 
 #feedback {
 	color:grey;
-	margin-bottom: 10px;
+	margin-bottom:10px;
+}
+
+.botondesactivado {
+	background-color:#b7c3c2;
+	border-width:0;
+	margin:2px;
 }
