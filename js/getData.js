@@ -2,12 +2,14 @@ var a = $.url().param("a");
 var dataOSM;
 var dataGeoJSON;
 var capaDatos;
+var i;
 
 var grupoVias = [];
 var grupoSalRefExitTo = [];
 var grupoSalRefName = [];
 var grupoSalRef = [];
 var grupoSalNoRef = [];
+var grupoSalDestination = [];
 var grupoPeaje = [];
 var grupoOtros = [];
 
@@ -16,6 +18,7 @@ var visibSalRefExitTo = true;
 var visibSalRefName = true;
 var visibSalRef = true;
 var visibSalNoRef = true;
+var visibSalDestination = true;
 var visibPeaje = true;
 var visibOtros = true;
 
@@ -158,7 +161,68 @@ function addData() {
 
 }
 
-function getData() {
+function addData2() {
+    geojsonMarkerOptions = {        // Estilo por defecto de los nodos
+        radius: 5,
+        fillColor: "#000000",
+        color: "#000000",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    capaDatos = new L.geoJson(dataGeoJSON, {
+        style: function(feature) {
+            return {"color":"#4DA038"}    //Color para salidas con destination
+
+        },
+        onEachFeature: function (feature, layer) {                              //Configuro los popup
+            layer.bindPopup("<b> Salida " + feature.properties.tags.ref + 
+                "<br><a target='_blank' href='http://level0.osmz.ru/?url=%2F%2Foverpass-api.de%2Fapi%2Finterpreter%3Fdata%3D%" + 
+                "253Cosm-script%2520output%253D%2522xml%2522%2520timeout%253D%252225%2522%253E%250A%2520%2520%253Cunion%253E%250" + 
+                "A%2520%2520%2520%2520%253Cquery%2520type%253D%2522node%2522%253E%250A%2520%2520%2520%2520%2520%2520%253Cid-query%" + 
+                "2520type%253D%2522node%2522%2520ref%253D%2522" + feature.properties.id + 
+                "%2522%252F%253E%250A%2520%2520%2520%2520%253C%252Fquery%253E%250A%2520%2520%253C%252Funion%253E%250A%2520%2520%253C" + 
+                "print%2520mode%253D%2522meta%2522%252F%253E%250A%2520%2520%253Crecurse%2520type%253D%2522down%2522%252F%253E%250A%252" + 
+                "0%2520%253Cprint%2520mode%253D%2522meta%2522%2520order%253D%2522quadtile%2522%252F%253E%250A%253C%252" + 
+                "Fosm-script%253E'>Editar en level0</a>");
+        },
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);        // Convierto los nodos en circleMarker
+        }
+
+    })
+    .addTo(map);
+
+    // Organizo los nodos y vías en grupos
+    layers = capaDatos.getLayers()
+    for (var i = 0; i < layers.length; i++) {                           
+        grupoSalDestination.push(layers[i]);
+    };
+
+    //Borro nodos repetidos
+    var copiagrupoSalRef = grupoSalRef;
+    var k;
+    for (var i = 0; i < grupoSalDestination.length; i++) {
+        for (var j = 0; j < copiagrupoSalRef.length; j++) {
+            if (copiagrupoSalRef[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
+                k = grupoSalRef.indexOf(copiagrupoSalRef[j]);
+                map.removeLayer(copiagrupoSalRef[j]);
+                grupoSalRef.splice(k,1);
+            }
+        };
+    };
+
+    //Para ocultar datos
+    if (!visibSalDestination) {
+        for (var i = 0; i < grupoSalDestination.length; i++) {
+            map.removeLayer(grupoSalDestination[i]);
+        };
+    }
+
+}
+
+function getData () {
     consulta = '[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + '"](area.area);way(r);node(w););out;';
     $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
@@ -176,6 +240,36 @@ function getData() {
                 "tiger:upload_uuid": true
             });
             addData();
-            $("div#feedback").html("Datos cargados.");
-    });
+            $("div#feedback").html("Datos cargados (1/2) .");
+        }
+    );
+}
+
+function getData2 () {
+
+    consulta = '[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + 
+        '"](area.area);way(r);node(w););node(around:1)["highway"="motorway_junction"];way(around:1)["hig' + 
+        'hway"="motorway_link"]["destination"~"."];node(around:1)["highway"="motorway_junction"];(._;>;);out body;';
+
+    
+    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+            dataOSM = response;
+            dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
+                "source": true,
+                "source_ref": true,
+                "source:ref": true,
+                "history": true,
+                "attribution": true,
+                "created_by": true,
+                "converted_by": false,
+                "tiger:county": true,
+                "tiger:tlid": true,
+                "tiger:upload_uuid": true
+            });
+            addData2();
+            $("div#feedback").html("Datos cargados (2/2) .");
+        }
+    );
+
 }

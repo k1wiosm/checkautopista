@@ -18,6 +18,8 @@
         <script src="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/src/L.Control.Locate.js" ></script>                    <!-- LocateControl -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>                                    <!-- jQuery -->
         <script src="js/purl.js"></script>                                                                                          <!-- allmarkedup/purl -->
+        <link rel="stylesheet" href="css/Leaflet.EditInOSM.css" />                                                                    <!-- EditInOSM -->
+        <script src="js/Leaflet.EditInOSM.js"></script>                                                                              <!-- EditInOSM -->
 
         <script src="js/form.js"></script>
         
@@ -44,6 +46,7 @@
                 <br/>
                 <li><b>Leyenda</b></li>
                 <li><div class="boton" id="Peaje"></div><div class="leyenda_text">Peaje</div></li>
+                <li><div class="boton" id="SalDestination"></div><div class="leyenda_text">Salida con <span class="code">destination</span></div></li>
                 <li><div class="boton" id="SalRefExitTo"></div><div class="leyenda_text">Salida con <span class="code">ref</span> y <span class="code">exit_to</span></div></li>
                 <li><div class="boton" id="SalRefName"></div><div class="leyenda_text">Salida con <span class="code">ref</span> y <span class="code">name</span></div></li>
                 <li><div class="boton" id="SalRef"></div><div class="leyenda_text">Salida sólo con <span class="code">ref</span></div></li>
@@ -55,7 +58,8 @@
                 <li><div class="linea" id="via_construccion"></div><div class="leyenda_text">En construcción</div></li>   
                 <li><div class="linea" id="via_proyecto"></div><div class="leyenda_text">En proyecto</div></li> 
                 <br/>
-                <li><b>Atención:</b> CheckAutopista no tiene en cuenta las salidas marcadas con <span class="code">destination</span>.</li>          
+                <li><b style="color:red">Nuevo:</b> CheckAutopista SÍ tiene en cuenta las salidas marcadas con <span class="code">destination</span>.</li>
+                <li><b style="color:red">Nuevo:</b> Además, ahora puedes activar o desactivar categorías de nodos pulsando en los circulos en la leyenda.</li>            
         </div>
         <div id="map">
             <script src="js/prepareMap.js"></script>

@@ -17,6 +17,7 @@ $(document).ready( function() {
         a=$("select[name=a]").val();
         $("div#feedback").html("Cargando datos...");
         getData();
+        getData2();
     });
 
     //Para ocultar datos
@@ -30,6 +31,19 @@ $(document).ready( function() {
         } else {
             for (var i = 0; i < grupoSalRefExitTo.length; i++) {
                 map.addLayer(grupoSalRefExitTo[i]);
+            };
+        }
+    })
+    $("#SalDestination").click(function () {
+        $(this).toggleClass("botondesactivado");
+        visibSalDestination=!visibSalDestination;
+        if (!visibSalDestination) {
+            for (var i = 0; i < grupoSalDestination.length; i++) {
+                map.removeLayer(grupoSalDestination[i]);
+            };
+        } else {
+            for (var i = 0; i < grupoSalDestination.length; i++) {
+                map.addLayer(grupoSalDestination[i]);
             };
         }
     })

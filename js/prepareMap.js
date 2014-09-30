@@ -1,4 +1,4 @@
-var map = L.map('map').setView([40.179, -4.482], 6);
+var map = L.map('map', {editInOSMControlOptions: {widget:"attributionBox", editors:["josm"]}}).setView([40.179, -4.482], 6);
 
 L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

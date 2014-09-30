@@ -20,7 +20,10 @@ Se permite elegir una autopista y se comprueba la siguiente información:
 En las salidas se comprueba:
 
 * ref
+* destination
 * exit_to
 * name
 
-Las salidas que usan destination aparecen como incorrectas.
+También aparecen marcados los peajes.
+
+
