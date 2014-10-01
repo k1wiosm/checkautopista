@@ -5,6 +5,11 @@ $(document).ready( function() {
     "A-32", "A-33", "A-35", "AP-36", "A-38", "A-40", "A-41", "AP-41", "A-42", "A-43", "A-44", "A-45", "A-46", "A-48", "A-49", "A-50", "AP-51", 
     "A-52", "AP-53", "A-54", "A-55", "A-58", "A-60", "AP-61", "A-62", "A-63", "A-64", "A-65", "A-66", "AP-66", "A-67", "A-68", "AP-68", "A-70", 
     "AP-71", "A-73", "A-75", "A-91", "A-92", "A-92M", "A-231"];
+
+    if ($.url().param("a") !== undefined){
+        $("select[name=a]").append('<option value="' + a + '" selected>' + a + '</option>');
+    }
+
     for (var i = 0; i<74; i++) {
         if (autopista[i] == a) {
             $("select[name=a]").append('<option value="' + autopista[i] + '" selected>' + autopista[i] + '</option>');
@@ -12,6 +17,8 @@ $(document).ready( function() {
             $("select[name=a]").append('<option value="' + autopista[i] + '">' + autopista[i] + '</option>');
         }
     };
+
+
 
     $("input[name=submit]").click(function () {
         a=$("select[name=a]").val();
