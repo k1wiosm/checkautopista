@@ -21,8 +21,20 @@
         <link rel="stylesheet" href="css/Leaflet.EditInOSM.css" />                                                                    <!-- EditInOSM -->
         <script src="js/Leaflet.EditInOSM.js"></script>                                                                              <!-- EditInOSM -->
 
+
+
         <script src="js/form.js"></script>
-        
+
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-55352416-1', 'auto');
+          ga('send', 'pageview');
+
+        </script>
     </head>
     <body>
         <div id="header">
@@ -52,11 +64,13 @@
                 <li><div class="boton" id="SalRef"></div><div class="leyenda_text">Salida sólo con <span class="code">ref</span></div></li>
                 <li><div class="boton" id="SalNoRef"></div><div class="leyenda_text">Salida sin <span class="code">ref</span></div></li>
                 <br/>
-                <li><div class="linea" id="via_todo"></div><div class="leyenda_text">Vía completa</div></li>
-                <li><div class="linea" id="via_falta_algo"></div><div class="leyenda_text">Vía sin <span class="code">maxspeed</span> o <span class="code">lanes</span></div></li>
-                <li><div class="linea" id="via_no_name"></div><div class="leyenda_text">Vía sin <span class="code">name</span></div></li>    
-                <li><div class="linea" id="via_construccion"></div><div class="leyenda_text">En construcción</div></li>   
-                <li><div class="linea" id="via_proyecto"></div><div class="leyenda_text">En proyecto</div></li> 
+                <li><div class="linea" id="ViaTodo"></div><div class="leyenda_text">Vía completa</div></li>
+                <li><div class="linea" id="ViaNoMaxspeed"></div><div class="leyenda_text">Vía sin <span class="code">maxspeed</span></div></li>
+                <li><div class="linea" id="ViaNoLanes"></div><div class="leyenda_text">Vía sin <span class="code">lanes</span></div></li>
+                <li><div class="linea" id="ViaNoMaxspeedNoLanes"></div><div class="leyenda_text">Vía sin <span class="code">maxspeed</span> y sin <span class="code">lanes</span></div></li>
+                <li><div class="linea" id="ViaNoName"></div><div class="leyenda_text">Vía sin <span class="code">name</span></div></li>    
+                <li><div class="linea" id="ViaConstruccion"></div><div class="leyenda_text">En construcción</div></li>   
+                <li><div class="linea" id="ViaProyecto"></div><div class="leyenda_text">En proyecto</div></li> 
                 <br/>
                 <li><b style="color:red">Nuevo:</b> CheckAutopista SÍ tiene en cuenta las salidas marcadas con <span class="code">destination</span>.</li>
                 <li><b style="color:red">Nuevo:</b> Además, ahora puedes activar o desactivar categorías de nodos pulsando en los circulos en la leyenda.</li>            

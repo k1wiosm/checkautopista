@@ -146,19 +146,25 @@ form {
 	display:inline-block;
 	border-color:#00ffff;
 }
-#via_todo {
+#ViaTodo {
 	border-color:#0000ff;
 }
-#via_falta_algo {
+#ViaNoMaxspeed {
 	border-color:#ffff00;
 }
-#via_no_name {
+#ViaNoLanes {
+	border-color:#ff8d00;
+}
+#ViaNoMaxspeedNoLanes {
+	border-color:#D430AB;
+}
+#ViaNoName {
 	border-color:#ff0000;
 }
-#via_construccion {
+#ViaConstruccion {
 	border-color:#000000;
 }
-#via_proyecto {
+#ViaProyecto {
 	border-color:#82858a;
 }
 

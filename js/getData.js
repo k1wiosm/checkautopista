@@ -42,10 +42,16 @@ function addData() {
                     return {"color": "#82858a"};
                 } else if (feature.properties.tags.name==undefined) {
                     return {"color": "#ff0000"};
-                } else if (feature.properties.tags.maxspeed==undefined || feature.properties.tags.lanes==undefined) {
-                    return {"color": "#ffff00"};
+                } else if (feature.properties.tags.maxspeed==undefined){
+                    if (feature.properties.tags.lanes==undefined){
+                        return {"color": "#D430AB"};
+                    } else {
+                        return {"color": "#ffff00"};
+                    }
+                } else if (feature.properties.tags.lanes==undefined){
+                        return {"color": "#ff8d00"};
                 } else {
-                    return {"color": "#0000ff"};
+                        return {"color": "#0000ff"};
                 }
 
             } else {                                                            // Estilo de los nodos
@@ -64,7 +70,7 @@ function addData() {
                 } else if (feature.properties.tags.barrier=="toll_booth") {
                     return {"color": "#0000ff"};
                 } else {
-                    return {"radius": 0, "opacity": 0, "fillOpacity": 0};
+                    
                 }
             }
 
@@ -130,6 +136,11 @@ function addData() {
         } else {
             grupoOtros.push(layers[i]);;
         }
+    };
+
+    //Borro los nodos inutiles
+    for (var i = 0; i < grupoOtros.length; i++) {
+        map.removeLayer(grupoOtros[i]);
     };
 
     //Para ocultar datos
