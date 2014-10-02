@@ -23,7 +23,7 @@ body {
 	padding-bottom:0;
 }
 
-img#emblema {
+img {
 	margin-right:10px;
 	float:left;
 }
@@ -124,6 +124,10 @@ ul {
 }
 #SalNoRef {
 	border-color:#ff0000;
+}
+
+#Areas {
+	border-color:#f043b4;
 }
 
 .linea {

@@ -25,6 +25,7 @@ $(document).ready( function() {
         $("div#feedback").html("Cargando datos...");
         getData();
         getData2();
+        getData3();
     });
 
     //Para ocultar datos
@@ -103,6 +104,19 @@ $(document).ready( function() {
         } else {
             for (var i = 0; i < grupoPeaje.length; i++) {
                 map.addLayer(grupoPeaje[i]);
+            };
+        }
+    })
+    $("#Areas").click(function () {
+        $(this).toggleClass("botondesactivado");
+        visibAreas=!visibAreas;
+        if (!visibAreas) {
+            for (var i = 0; i < grupoAreas.length; i++) {
+                map.removeLayer(grupoAreas[i]);
+            };
+        } else {
+            for (var i = 0; i < grupoAreas.length; i++) {
+                map.addLayer(grupoAreas[i]);
             };
         }
     })

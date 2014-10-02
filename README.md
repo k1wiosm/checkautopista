@@ -26,6 +26,6 @@ En las salidas se comprueba:
 * exit_to
 * name
 
-También aparecen marcados los peajes.
+También aparecen marcados los peajes y las áreas de servicio y de descanso.
 
 

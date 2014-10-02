@@ -12,6 +12,7 @@ var grupoSalNoRef = [];
 var grupoSalDestination = [];
 var grupoPeaje = [];
 var grupoOtros = [];
+var grupoAreas = [];
 
 var visibVias = true;
 var visibSalRefExitTo = true;
@@ -21,9 +22,14 @@ var visibSalNoRef = true;
 var visibSalDestination = true;
 var visibPeaje = true;
 var visibOtros = true;
+var visibAreas = true;
 
+// addData
+// Añado:       Vías y salidas
+// Compruebo:   maxspeed, lanes, name, ref, construction y proposed en vías
+//              exit_to, name, ref en salidas
 
-function addData() {
+function addData() { 
     geojsonMarkerOptions = {        // Estilo por defecto de los nodos
         radius: 5,
         fillColor: "#000000",
@@ -84,14 +90,7 @@ function addData() {
             if (feature.properties.tags.highway=='motorway_junction') {
                 layer.bindPopup("<b> Salida " + feature.properties.tags.ref + "</b><br/> name: " + feature.properties.tags.name + 
                     "<br/>exit_to: " + feature.properties.tags.exit_to + 
-                    "<br><a target='_blank' href='http://level0.osmz.ru/?url=%2F%2Foverpass-api.de%2Fapi%2Finterpreter%3Fdata%3D%" + 
-                    "253Cosm-script%2520output%253D%2522xml%2522%2520timeout%253D%252225%2522%253E%250A%2520%2520%253Cunion%253E%250" + 
-                    "A%2520%2520%2520%2520%253Cquery%2520type%253D%2522node%2522%253E%250A%2520%2520%2520%2520%2520%2520%253Cid-query%" + 
-                    "2520type%253D%2522node%2522%2520ref%253D%2522" + feature.properties.id + 
-                    "%2522%252F%253E%250A%2520%2520%2520%2520%253C%252Fquery%253E%250A%2520%2520%253C%252Funion%253E%250A%2520%2520%253C" + 
-                    "print%2520mode%253D%2522meta%2522%252F%253E%250A%2520%2520%253Crecurse%2520type%253D%2522down%2522%252F%253E%250A%252" + 
-                    "0%2520%253Cprint%2520mode%253D%2522meta%2522%2520order%253D%2522quadtile%2522%252F%253E%250A%253C%252" + 
-                    "Fosm-script%253E'>Editar en level0</a>");
+                    "<br>" + linkEditID("node", feature.properties.id) );
             }
             if (feature.properties.tags.highway=='construction') {
                 layer.bindPopup("<b>En construcción: " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
@@ -104,7 +103,8 @@ function addData() {
                     feature.properties.tags.lanes);
             }
             if (feature.properties.tags.barrier=='toll_booth') {
-                layer.bindPopup("<b>Peaje: " + feature.properties.tags.name + "</b>");
+                layer.bindPopup("<b>Peaje: " + feature.properties.tags.name + "</b>" +
+                    "<br>" + linkEditID("node", feature.properties.id) );
             }
         },
         pointToLayer: function (feature, latlng) {
@@ -169,8 +169,11 @@ function addData() {
             map.removeLayer(grupoPeaje[i]);
         };
     }
-
 }
+
+// addData2
+// Añado:       Salidas que tienen destination cerca
+// Compruebo:   destination en salidas
 
 function addData2() {
     geojsonMarkerOptions = {        // Estilo por defecto de los nodos
@@ -189,14 +192,7 @@ function addData2() {
         },
         onEachFeature: function (feature, layer) {                              //Configuro los popup
             layer.bindPopup("<b> Salida " + feature.properties.tags.ref + 
-                "<br><a target='_blank' href='http://level0.osmz.ru/?url=%2F%2Foverpass-api.de%2Fapi%2Finterpreter%3Fdata%3D%" + 
-                "253Cosm-script%2520output%253D%2522xml%2522%2520timeout%253D%252225%2522%253E%250A%2520%2520%253Cunion%253E%250" + 
-                "A%2520%2520%2520%2520%253Cquery%2520type%253D%2522node%2522%253E%250A%2520%2520%2520%2520%2520%2520%253Cid-query%" + 
-                "2520type%253D%2522node%2522%2520ref%253D%2522" + feature.properties.id + 
-                "%2522%252F%253E%250A%2520%2520%2520%2520%253C%252Fquery%253E%250A%2520%2520%253C%252Funion%253E%250A%2520%2520%253C" + 
-                "print%2520mode%253D%2522meta%2522%252F%253E%250A%2520%2520%253Crecurse%2520type%253D%2522down%2522%252F%253E%250A%252" + 
-                "0%2520%253Cprint%2520mode%253D%2522meta%2522%2520order%253D%2522quadtile%2522%252F%253E%250A%253C%252" + 
-                "Fosm-script%253E'>Editar en level0</a>");
+                "<br>" + linkEditID("node", feature.properties.id) );
         },
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, geojsonMarkerOptions);        // Convierto los nodos en circleMarker
@@ -223,6 +219,17 @@ function addData2() {
             }
         };
     };
+    var copiagrupoSalNoRef = grupoSalNoRef;
+    var k;
+    for (var i = 0; i < grupoSalDestination.length; i++) {
+        for (var j = 0; j < copiagrupoSalNoRef.length; j++) {
+            if (copiagrupoSalNoRef[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
+                k = grupoSalNoRef.indexOf(copiagrupoSalNoRef[j]);
+                map.removeLayer(copiagrupoSalNoRef[j]);
+                grupoSalNoRef.splice(k,1);
+            }
+        };
+    };
 
     //Para ocultar datos
     if (!visibSalDestination) {
@@ -230,11 +237,83 @@ function addData2() {
             map.removeLayer(grupoSalDestination[i]);
         };
     }
+}
 
+// addData3
+// Añado:       Áreas de servicio y Áreas de descanso
+// Compruebo:   nombre
+
+function addData3() {
+    geojsonMarkerOptions = {        // Estilo por defecto de los nodos
+        radius: 5,
+        fillColor: "#000000",
+        color: "#f043b4",       //Color areas de servicio
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    capaDatos = new L.geoJson(dataGeoJSON, {
+        style: function(feature) {  
+            return {color: "#f043b4"}
+        },
+        onEachFeature: function (feature, layer) {                              //Configuro los popup
+            var tipo;
+            if (feature.properties.tags.highway=="services") {
+                tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>Área de servicio";
+            } else if (feature.properties.tags.highway=="rest_area") {
+                tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>Área de descanso";
+            }
+            if(feature.geometry.type=="Point"){
+                layer.bindPopup("<b> " + tipo + ": " + feature.properties.tags.name + 
+                    "<br>" + linkEditID("node", feature.properties.id) );
+            } else {
+                layer.bindPopup("<b> " + tipo + ": " + feature.properties.tags.name + 
+                    "<br>" + linkEditID("way", feature.properties.id) );
+            }
+        },
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);        // Convierto los nodos en circleMarker
+        }
+
+    })
+    .addTo(map);
+
+    // Organizo los nodos y vías en grupos
+    layers = capaDatos.getLayers()
+    for (var i = 0; i < layers.length; i++) {                           
+        grupoAreas.push(layers[i]);
+    };
+
+    // Convierto las áreas a circulos
+    for (var i = 0; i < grupoAreas.length; i++) {
+        if(grupoAreas[i].feature!==undefined){
+            if(grupoAreas[i].feature.geometry.type=="Polygon"){
+                var tipo;
+                if (grupoAreas[i].feature.properties.tags.highway=="services") {
+                    tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>Área de servicio";
+                } else if (grupoAreas[i].feature.properties.tags.highway=="rest_area") {
+                    tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>Área de descanso";
+                }
+                circulo = L.circleMarker(grupoAreas[i].getBounds().getCenter(), geojsonMarkerOptions);
+                circulo.bindPopup("<b> " + tipo + ": " + grupoAreas[i].feature.properties.tags.name + 
+                    "<br>" + linkEditID("way", grupoAreas[i].feature.properties.id) );
+                circulo.addTo(map);
+                grupoAreas.push(circulo);
+            }
+        }
+    };
+
+    //Para ocultar datos
+    if (!visibAreas) {
+        for (var i = 0; i < grupoAreas.length; i++) {
+            map.removeLayer(grupoAreas[i]);
+        };
+    }    
 }
 
 function getData () {
-    consulta = '[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + '"](area.area);way(r);node(w););out;';
+    consulta = '[out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + '"](area.area);way(r);node(w););out;';
     $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
             dataOSM = response;
@@ -251,14 +330,14 @@ function getData () {
                 "tiger:upload_uuid": true
             });
             addData();
-            $("div#feedback").html("Datos cargados (1/2) .");
+            $("div#feedback").html("Datos cargados (1/3) .");
         }
     );
 }
 
 function getData2 () {
 
-    consulta = '[maxsize:1073741824][out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + 
+    consulta = '[out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + 
         '"](area.area);way(r);node(w););node(around:1)["highway"="motorway_junction"];way(around:1)["hig' + 
         'hway"="motorway_link"]["destination"~"."];node(around:1)["highway"="motorway_junction"];(._;>;);out body;';
 
@@ -279,8 +358,47 @@ function getData2 () {
                 "tiger:upload_uuid": true
             });
             addData2();
-            $("div#feedback").html("Datos cargados (2/2) .");
+            $("div#feedback").html("Datos cargados (2/3) .");
         }
     );
+}
 
+function getData3 () {
+
+    consulta = '[out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + 
+        '"](area.area);way(r);node(w););(way(around:100)["highway"="services"]->.a;node' + 
+        '(around:100)["highway"="services"]->.a;way(around:100)["highway"="rest_area"]->.a;nod' + 
+        'e(around:100)["highway"="rest_area"]->.a;);(._;>;);out body;';
+
+    
+    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+            dataOSM = response;
+            dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
+                "source": true,
+                "source_ref": true,
+                "source:ref": true,
+                "history": true,
+                "attribution": true,
+                "created_by": true,
+                "converted_by": false,
+                "tiger:county": true,
+                "tiger:tlid": true,
+                "tiger:upload_uuid": true
+            });
+            addData3();
+            $("div#feedback").html("Datos cargados (3/3) .");
+        }
+    );
+}
+
+function linkEditID (type, id) {
+    return "<a target='_blank' href='http://level0.osmz.ru/?url=%2F%2Foverpass-api.de%2Fapi%2Finterpreter%3Fdata%3D%" + 
+        "253Cosm-script%2520output%253D%2522xml%2522%2520timeout%253D%252225%2522%253E%250A%2520%2520%253Cunion%253E%250" + 
+        "A%2520%2520%2520%2520%253Cquery%2520type%253D%2522" + type + "%2522%253E%250A%2520%2520%2520%2520%2520%2520%253Cid-query%" + 
+        "2520type%253D%2522" + type + "%2522%2520ref%253D%2522" + id + 
+        "%2522%252F%253E%250A%2520%2520%2520%2520%253C%252Fquery%253E%250A%2520%2520%253C%252Funion%253E%250A%2520%2520%253C" + 
+        "print%2520mode%253D%2522meta%2522%252F%253E%250A%2520%2520%253Crecurse%2520type%253D%2522down%2522%252F%253E%250A%252" + 
+        "0%2520%253Cprint%2520mode%253D%2522meta%2522%2520order%253D%2522quadtile%2522%252F%253E%250A%253C%252" + 
+        "Fosm-script%253E'>Editar en level0</a>";
 }
