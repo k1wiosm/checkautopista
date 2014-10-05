@@ -94,40 +94,19 @@ ul {
 }
 
 .boton {
-	border:2px solid;
+	border:3px solid;
 	border-radius: 100%;
 	padding: 2px;
 	width:4px;
 	height:4px;
-	background-color: #000000;
+	border-color:#ffffff;
+	background-color:#ffffff;
 	display:inline-block;
 
 }
 .leyenda_text {
 	display:inline;
 	margin-left:2px;
-}
-#Peaje {
-	border-color:#0000ff;
-}
-#SalDestination {
-	border-color:#4DA038;
-}
-#SalRefExitTo {
-	border-color:#00ff00;
-}
-#SalRefName {
-	border-color:#00ffff;
-}
-#SalRef {
-	border-color:#ff8800;
-}
-#SalNoRef {
-	border-color:#ff0000;
-}
-
-#Areas {
-	border-color:#f043b4;
 }
 
 .linea {
@@ -174,5 +153,5 @@ ul {
 .botondesactivado {
 	background-color:#b7c3c2;
 	border-width:0;
-	margin:2px;
+	margin:3px;
 }

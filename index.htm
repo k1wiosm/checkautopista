@@ -2,7 +2,6 @@
 <html>
     <head>
         <title>CheckAutopista</title>
-
         <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>                               <!-- Google Fonts -->
         <link rel="stylesheet" type="text/css" href="css/stylesheetmobile.css" media="screen  and (max-width: 40.5em),handheld" />  <!-- CSS para mobile -->
         <link rel="stylesheet" type="text/css" href="css/stylesheet.css" media="screen  and (min-width: 40.5em)" />                 <!-- CSS para desktop -->
@@ -60,10 +59,12 @@
                 <li><div class="boton" id="Peaje"></div><div class="leyenda_text">Peaje</div></li>
                 <br/>
                 <li><div class="boton" id="SalDestination"></div><div class="leyenda_text">Salida con <span class="code">destination</span></div></li>
-                <li><div class="boton" id="SalRefExitTo"></div><div class="leyenda_text">Salida con <span class="code">ref</span> y <span class="code">exit_to</span></div></li>
-                <li><div class="boton" id="SalRefName"></div><div class="leyenda_text">Salida con <span class="code">ref</span> y <span class="code">name</span></div></li>
-                <li><div class="boton" id="SalRef"></div><div class="leyenda_text">Salida sólo con <span class="code">ref</span></div></li>
+                <li><div class="boton" id="SalExitTo"></div><div class="leyenda_text">Salida con <span class="code">exit_to</span></div></li>
+                <li><div class="boton" id="SalName"></div><div class="leyenda_text">Salida con <span class="code">name</span></div></li>
+                <li><div class="boton" id="SalNada"></div><div class="leyenda_text">Salida sin <span class="code">destination</span> ni <span class="code">exit_to</span> ni <span class="code">name</span></div></li>
+                <li><div class="boton" id="SalRef"></div><div class="leyenda_text">Salida con <span class="code">ref</span></div></li>
                 <li><div class="boton" id="SalNoRef"></div><div class="leyenda_text">Salida sin <span class="code">ref</span></div></li>
+                <li><div class="boton" id="SalSinSal"></div><div class="leyenda_text">Salida sin marcar</div></li>
                 <br/>
                 <li><div class="boton" id="Areas"></div><div class="leyenda_text">Áreas de servicio y de descanso</div></li>
                 <br/>
@@ -75,7 +76,6 @@
                 <li><div class="linea" id="ViaConstruccion"></div><div class="leyenda_text">En construcción</div></li>   
                 <li><div class="linea" id="ViaProyecto"></div><div class="leyenda_text">En proyecto</div></li> 
                 <br/>
-                <li><b style="color:red">Nuevo:</b> CheckAutopista SÍ tiene en cuenta las salidas marcadas con <span class="code">destination</span>.</li>
                 <li><b style="color:red">Nuevo:</b> Además, ahora puedes activar o desactivar categorías de nodos pulsando en los circulos en la leyenda.</li>            
         </div>
         <div id="map">

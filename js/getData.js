@@ -2,27 +2,47 @@ var a = $.url().param("a");
 var dataOSM;
 var dataGeoJSON;
 var capaDatos;
-var i;
+var cargado;
 
 var grupoVias = [];
-var grupoSalRefExitTo = [];
-var grupoSalRefName = [];
+var grupoSalExitTo = [];
+var grupoSalName = [];
+var grupoSalNada = [];
 var grupoSalRef = [];
 var grupoSalNoRef = [];
 var grupoSalDestination = [];
+var grupoSalSinSal = [];
 var grupoPeaje = [];
 var grupoOtros = [];
 var grupoAreas = [];
 
 var visibVias = true;
-var visibSalRefExitTo = true;
-var visibSalRefName = true;
+var visibSalExitTo = true;
+var visibSalName = true;
+var visibSalNada = true;
 var visibSalRef = true;
 var visibSalNoRef = true;
 var visibSalDestination = true;
+var visibSalSinSal = true;
 var visibPeaje = true;
 var visibOtros = true;
 var visibAreas = true;
+
+//Colores
+var colorPeaje = "#0000ff";
+var colorPeajeFondo = "#55a0bd";
+var colorSalDestination = "#1e452b";
+var colorSalExitTo = "#00b140";
+var colorSalName = "#00ffff";
+var colorSalNada = "#ff0000";
+var colorSalRef = "#00ff00";
+var colorSalNoRef = "#eca411";
+var colorSalSinSal = "#ae0000";
+var colorSalSinSalFondo = "#985652";
+var colorAreas = "#f043b4";
+var colorAreasFondo = "#d48fd1";
+
+
 
 // addData
 // Añado:       Vías y salidas
@@ -30,13 +50,13 @@ var visibAreas = true;
 //              exit_to, name, ref en salidas
 
 function addData() { 
-    geojsonMarkerOptions = {        // Estilo por defecto de los nodos
-        radius: 5,
+    MarkerStyleDefault = {        // Estilo por defecto de los nodos
+        radius: 6,
         fillColor: "#000000",
         color: "#000000",
-        weight: 2,
+        weight: 3,
         opacity: 1,
-        fillOpacity: 0.8
+        fillOpacity: 1
     };
 
     capaDatos = new L.geoJson(dataGeoJSON, {
@@ -62,19 +82,26 @@ function addData() {
 
             } else {                                                            // Estilo de los nodos
                 if (feature.properties.tags.highway=="motorway_junction") {
-                    if (feature.properties.tags.ref!==undefined){
+                    if (feature.properties.tags.ref==undefined) {
                         if (feature.properties.tags.exit_to!==undefined){
-                            return {"color": "#00ff00"};
+                            return {fillColor: colorSalNoRef, color: colorSalExitTo};
                         } else if (feature.properties.tags.name!==undefined){
-                            return {"color": "#00ffff"};
+                            return {fillColor: colorSalNoRef, color: colorSalName};
                         } else {
-                            return {"color": "#ff8800"};
+                            return {fillColor: colorSalNoRef, color: colorSalNada};
                         }
                     } else {
-                        return {"color": "#ff0000"};
+
+                        if (feature.properties.tags.exit_to!==undefined){
+                            return {fillColor: colorSalRef, color: colorSalExitTo};
+                        } else if (feature.properties.tags.name!==undefined){
+                            return {fillColor: colorSalRef, color: colorSalName};
+                        } else {
+                            return {fillColor: colorSalRef, color: colorSalNada};
+                        }
                     }
                 } else if (feature.properties.tags.barrier=="toll_booth") {
-                    return {"color": "#0000ff"};
+                    return {color: colorPeaje, fillColor:colorPeajeFondo};
                 } else {
                     
                 }
@@ -108,7 +135,7 @@ function addData() {
             }
         },
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, geojsonMarkerOptions);        // Convierto los nodos en circleMarker
+            return L.circleMarker(latlng, MarkerStyleDefault);        // Convierto los nodos en circleMarker
         }
 
     })
@@ -117,24 +144,25 @@ function addData() {
     // Organizo los nodos y vías en grupos
     layers = capaDatos.getLayers()
     for (var i = 0; i < layers.length; i++) {                           
-        if (layers[i].feature.geometry.type=='LineString') {
+        if (layers[i].feature.geometry.type=='LineString') { // Organizo las vias
             grupoVias.push(layers[i]);
-        } else if (layers[i].feature.properties.tags.highway=="motorway_junction") {
-            if (layers[i].feature.properties.tags.ref!==undefined){
-                if (layers[i].feature.properties.tags.exit_to!==undefined){
-                    grupoSalRefExitTo.push(layers[i]);
-                } else if (layers[i].feature.properties.tags.name!==undefined){
-                    grupoSalRefName.push(layers[i]);
-                } else {
-                    grupoSalRef.push(layers[i]);
-                }
+        } else if (layers[i].feature.properties.tags.highway=="motorway_junction") {    // Organizo las salidas
+            if (layers[i].feature.properties.tags.ref!==undefined){ // Organizo según ref si o no
+                grupoSalRef.push(layers[i]);
             } else {
                 grupoSalNoRef.push(layers[i]);
             }
-        } else if (layers[i].feature.properties.tags.barrier=="toll_booth") {
+            if (layers[i].feature.properties.tags.exit_to!==undefined){ // Organizo segun exit_to, name o nada
+                grupoSalExitTo.push(layers[i]);
+            } else if (layers[i].feature.properties.tags.name!==undefined){
+                grupoSalName.push(layers[i]);
+            } else {
+                grupoSalNada.push(layers[i]);
+            }
+        } else if (layers[i].feature.properties.tags.barrier=="toll_booth") {   // Organizo los peajes
             grupoPeaje.push(layers[i]);
         } else {
-            grupoOtros.push(layers[i]);;
+            grupoOtros.push(layers[i]);;    // Resto
         }
     };
 
@@ -144,14 +172,19 @@ function addData() {
     };
 
     //Para ocultar datos
-    if (!visibSalRefExitTo) {
-        for (var i = 0; i < grupoSalRefExitTo.length; i++) {
-            map.removeLayer(grupoSalRefExitTo[i]);
+    if (!visibPeaje) {
+        for (var i = 0; i < grupoPeaje.length; i++) {
+            map.removeLayer(grupoPeaje[i]);
         };
     }
-    if (!visibSalRefName) {
-        for (var i = 0; i < grupoSalRefName.length; i++) {
-            map.removeLayer(grupoSalRefName[i]);
+    if (!visibSalExitTo) {
+        for (var i = 0; i < grupoSalExitTo.length; i++) {
+            map.removeLayer(grupoSalExitTo[i]);
+        };
+    }
+    if (!visibSalName) {
+        for (var i = 0; i < grupoSalName.length; i++) {
+            map.removeLayer(grupoSalName[i]);
         };
     }
     if (!visibSalRef) {
@@ -164,79 +197,6 @@ function addData() {
             map.removeLayer(grupoSalNoRef[i]);
         };
     }
-    if (!visibPeaje) {
-        for (var i = 0; i < grupoPeaje.length; i++) {
-            map.removeLayer(grupoPeaje[i]);
-        };
-    }
-}
-
-// addData2
-// Añado:       Salidas que tienen destination cerca
-// Compruebo:   destination en salidas
-
-function addData2() {
-    geojsonMarkerOptions = {        // Estilo por defecto de los nodos
-        radius: 5,
-        fillColor: "#000000",
-        color: "#000000",
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.8
-    };
-
-    capaDatos = new L.geoJson(dataGeoJSON, {
-        style: function(feature) {
-            return {"color":"#4DA038"}    //Color para salidas con destination
-
-        },
-        onEachFeature: function (feature, layer) {                              //Configuro los popup
-            layer.bindPopup("<b> Salida " + feature.properties.tags.ref + 
-                "<br>" + linkEditID("node", feature.properties.id) );
-        },
-        pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, geojsonMarkerOptions);        // Convierto los nodos en circleMarker
-        }
-
-    })
-    .addTo(map);
-
-    // Organizo los nodos y vías en grupos
-    layers = capaDatos.getLayers()
-    for (var i = 0; i < layers.length; i++) {                           
-        grupoSalDestination.push(layers[i]);
-    };
-
-    //Borro nodos repetidos
-    var copiagrupoSalRef = grupoSalRef;
-    var k;
-    for (var i = 0; i < grupoSalDestination.length; i++) {
-        for (var j = 0; j < copiagrupoSalRef.length; j++) {
-            if (copiagrupoSalRef[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
-                k = grupoSalRef.indexOf(copiagrupoSalRef[j]);
-                map.removeLayer(copiagrupoSalRef[j]);
-                grupoSalRef.splice(k,1);
-            }
-        };
-    };
-    var copiagrupoSalNoRef = grupoSalNoRef;
-    var k;
-    for (var i = 0; i < grupoSalDestination.length; i++) {
-        for (var j = 0; j < copiagrupoSalNoRef.length; j++) {
-            if (copiagrupoSalNoRef[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
-                k = grupoSalNoRef.indexOf(copiagrupoSalNoRef[j]);
-                map.removeLayer(copiagrupoSalNoRef[j]);
-                grupoSalNoRef.splice(k,1);
-            }
-        };
-    };
-
-    //Para ocultar datos
-    if (!visibSalDestination) {
-        for (var i = 0; i < grupoSalDestination.length; i++) {
-            map.removeLayer(grupoSalDestination[i]);
-        };
-    }
 }
 
 // addData3
@@ -244,13 +204,13 @@ function addData2() {
 // Compruebo:   nombre
 
 function addData3() {
-    geojsonMarkerOptions = {        // Estilo por defecto de los nodos
-        radius: 5,
-        fillColor: "#000000",
-        color: "#f043b4",       //Color areas de servicio
-        weight: 2,
+    MarkerStyleAreas = {        // Estilo por defecto de los nodos
+        radius: 6,
+        fillColor: colorAreasFondo,
+        color: colorAreas,       //Color areas de servicio
+        weight: 3,
         opacity: 1,
-        fillOpacity: 0.8
+        fillOpacity: 1
     };
 
     capaDatos = new L.geoJson(dataGeoJSON, {
@@ -273,7 +233,7 @@ function addData3() {
             }
         },
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, geojsonMarkerOptions);        // Convierto los nodos en circleMarker
+            return L.circleMarker(latlng, MarkerStyleAreas);        // Convierto los nodos en circleMarker
         }
 
     })
@@ -295,7 +255,7 @@ function addData3() {
                 } else if (grupoAreas[i].feature.properties.tags.highway=="rest_area") {
                     tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>Área de descanso";
                 }
-                circulo = L.circleMarker(grupoAreas[i].getBounds().getCenter(), geojsonMarkerOptions);
+                circulo = L.circleMarker(grupoAreas[i].getBounds().getCenter(), MarkerStyleAreas);
                 circulo.bindPopup("<b> " + tipo + ": " + grupoAreas[i].feature.properties.tags.name + 
                     "<br>" + linkEditID("way", grupoAreas[i].feature.properties.id) );
                 circulo.addTo(map);
@@ -330,45 +290,19 @@ function getData () {
                 "tiger:upload_uuid": true
             });
             addData();
-            $("div#feedback").html("Datos cargados (1/3) .");
+            cargado++;
+            $("div#feedback").html("Datos cargados (" + cargado + "/3) .");
         }
-    );
-}
-
-function getData2 () {
-
-    consulta = '[out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + 
-        '"](area.area);way(r);node(w););node(around:1)["highway"="motorway_junction"];way(around:1)["hig' + 
-        'hway"="motorway_link"]["destination"~"."];node(around:1)["highway"="motorway_junction"];(._;>;);out body;';
-
-    
-    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
-        function (response) {
-            dataOSM = response;
-            dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
-                "source": true,
-                "source_ref": true,
-                "source:ref": true,
-                "history": true,
-                "attribution": true,
-                "created_by": true,
-                "converted_by": false,
-                "tiger:county": true,
-                "tiger:tlid": true,
-                "tiger:upload_uuid": true
-            });
-            addData2();
-            $("div#feedback").html("Datos cargados (2/3) .");
-        }
-    );
+    )
+    .fail(function() { $("div#feedback").append("Error al cargar."); });
 }
 
 function getData3 () {
 
-    consulta = '[out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + 
-        '"](area.area);way(r);node(w););(way(around:100)["highway"="services"]->.a;node' + 
-        '(around:100)["highway"="services"]->.a;way(around:100)["highway"="rest_area"]->.a;nod' + 
-        'e(around:100)["highway"="rest_area"]->.a;);(._;>;);out body;';
+    consulta = '[out:json][timeout:50];area(3601311341)->.area;(relation["ref"="' + a + 
+        '"](area.area);way(r);node(w););(way(around:200)["highway"="services"]->.a;node' + 
+        '(around:200)["highway"="services"]->.a;way(around:200)["highway"="rest_area"]->.a;nod' + 
+        'e(around:200)["highway"="rest_area"]->.a;);(._;>;);out body;';
 
     
     $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
@@ -387,12 +321,160 @@ function getData3 () {
                 "tiger:upload_uuid": true
             });
             addData3();
-            $("div#feedback").html("Datos cargados (3/3) .");
+            cargado++;
+            $("div#feedback").html("Datos cargados (" + cargado + "/3) .");
         }
-    );
+    )
+    .fail(function() { $("div#feedback").append("Error al cargar."); });
 }
 
-function linkEditID (type, id) {
+
+// getData41 y getData51
+// Obtengo las salidas que no tienen ni siquiera marcado highway=motorway_junction
+
+function getData41 () {
+
+    consulta = '[out:json][timeout:25];area(3601311341)->.area;relation["ref"="'+ a +  //Obtengo los nodos de la autopista
+        '"](area.area);way(r);node(w);out body;';
+
+    
+    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {getData51(response);}
+    )
+    .fail(function() { $("div#feedback").append("Error al cargar."); });
+}
+
+function getData51 (response) {
+
+    var nodosAutopista = response;
+    var nodosalida = 0;
+
+    consulta = '[out:json][timeout:50];area(3601311341)->.area;relation["ref"="' + a +  //Obtengo vias de salidas
+    '"](area.area);way(r);node(w);way(bn);(way._["highway"="motorway_link"]->.A;way._["highway"="service"];);(._;>;);out body;'; 
+
+    
+    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+            MarkerStyleSalSinSal = {        // Estilo por defecto de los nodos
+                radius: 6,
+                fillColor: colorSalSinSalFondo,
+                color: colorSalSinSal,       //Color salidas sin marcar
+                weight: 3,
+                opacity: 1,
+                fillOpacity: 1
+            };
+            MarkerStyleSalDestination = {        // Estilo por defecto de los nodos
+                radius: 6,
+                fillColor: "#000000",
+                color: colorSalDestination,       //Color salidas con destination
+                weight: 3,
+                opacity: 1,
+                fillOpacity: 1
+            };
+            var viasSalidas = response;
+
+            for (var i = 0; i < viasSalidas.elements.length; i++) {
+                if (viasSalidas.elements[i].type == "way") {            // Solo trabajo con las vias de salida
+                    if (viasSalidas.elements[i].tags.oneway == "-1") {  // Obtengo el ID del nodo de unión con la autopista
+                        nodosalida = viasSalidas.elements[i].nodes.length;
+                    } else {
+                        nodosalida = 0;
+                    }
+                    if (viasSalidas.elements[i].tags.access !== "no") { // Si realmente es una salida
+                        for (var j = 0; j < nodosAutopista.elements.length; j++) {  // Para cada nodo de la autopista
+                            if (nodosAutopista.elements[j].id == viasSalidas.elements[i].nodes[nodosalida]) { //Busco el nodo de unión con la salida
+                                lat=nodosAutopista.elements[j].lat;
+                                lon=nodosAutopista.elements[j].lon;
+                                if (nodosAutopista.elements[j].tags == undefined) {  // Si no tiene tags lo marco como salida sin marcar
+                                    circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);
+                                    circulo.bindPopup("<b>Salida sin marcar</b>");
+                                    circulo.addTo(map);
+                                    grupoSalSinSal.push(circulo);
+                                } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // Si no tiene motorway_junction  
+                                    circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // lo marco como salida sin marcar
+                                    circulo.bindPopup("<b>Salida sin marcar</b>");
+                                    circulo.addTo(map);
+                                    grupoSalSinSal.push(circulo);
+                                } else if (nodosAutopista.elements[j].tags.name == undefined && nodosAutopista.elements[j].tags.exit_to == undefined) {
+                                    if (viasSalidas.elements[i].tags.destination !== undefined){                    // Si tiene destination
+                                        circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalDestination);    // lo marco como salida con destination
+                                        circulo.bindPopup("<b> Salida " + nodosAutopista.elements[j].tags.ref + "</b>" + 
+                                            "<br> destination: " + viasSalidas.elements[i].tags.destination + "<br/>" + 
+                                            linkEditID("node", nodosAutopista.elements[j].id) );
+                                        if (nodosAutopista.elements[j].tags.ref == undefined) {
+                                            circulo.setStyle({fillColor:colorSalNoRef});
+                                        } else {
+                                            circulo.setStyle({fillColor:colorSalRef});
+                                        }
+                                        circulo.addTo(map);
+                                        circulo.feature = {properties: nodosAutopista.elements[j]};
+                                        grupoSalDestination.push(circulo);
+                                    }
+                                }
+                            };
+                        };
+                    }
+                };
+            };
+
+            var copiagrupoSalRef = grupoSalRef;
+            var k;
+            for (var i = 0; i < grupoSalDestination.length; i++) {
+                for (var j = 0; j < copiagrupoSalRef.length; j++) {
+                    if (copiagrupoSalRef[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
+                        k = grupoSalRef.indexOf(copiagrupoSalRef[j]);
+                        map.removeLayer(copiagrupoSalRef[j]);
+                        grupoSalRef.splice(k,1);
+                        
+                    }
+                };
+            };
+            var copiagrupoSalNoRef = grupoSalNoRef;
+            var k;
+            for (var i = 0; i < grupoSalDestination.length; i++) {
+                for (var j = 0; j < copiagrupoSalNoRef.length; j++) {
+                    if (copiagrupoSalNoRef[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
+                        k = grupoSalNoRef.indexOf(copiagrupoSalNoRef[j]);
+                        map.removeLayer(copiagrupoSalNoRef[j]);
+                        grupoSalNoRef.splice(k,1);
+
+                    }
+                };
+            };
+
+            for (var i = 0; i < grupoSalDestination.length; i++) {
+                if (grupoSalDestination[i].feature.properties.tags.ref !==undefined){
+                    grupoSalRef.push(grupoSalDestination[i]);
+                } else {
+                    grupoSalNoRef.push(grupoSalDestination[i]);
+                }
+            };
+
+            for (var i = 0; i < grupoSalDestination.length; i++) {
+                map.addLayer(grupoSalDestination[i]);
+            };
+
+            //Para ocultar datos
+            if (!visibSalSinSal) {
+                for (var i = 0; i < grupoSalSinSal.length; i++) {
+                    map.removeLayer(grupoSalSinSal[i]);
+                };
+            }  
+            if (!visibSalDestination) {
+                for (var i = 0; i < grupoSalDestination.length; i++) {
+                    map.removeLayer(grupoSalDestination[i]);
+                };
+            }
+
+            cargado++;
+            $("div#feedback").html("Datos cargados (" + cargado + "/3) .");
+
+        }
+    )
+    .fail(function() { $("div#feedback").append("Error al cargar."); });
+}
+
+function linkEditID (type, id) {    // Para obtener el link de edición en el editor ID dados el tipo de via y el ID del objeto
     return "<a target='_blank' href='http://level0.osmz.ru/?url=%2F%2Foverpass-api.de%2Fapi%2Finterpreter%3Fdata%3D%" + 
         "253Cosm-script%2520output%253D%2522xml%2522%2520timeout%253D%252225%2522%253E%250A%2520%2520%253Cunion%253E%250" + 
         "A%2520%2520%2520%2520%253Cquery%2520type%253D%2522" + type + "%2522%253E%250A%2520%2520%2520%2520%2520%2520%253Cid-query%" + 

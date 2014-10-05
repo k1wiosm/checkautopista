@@ -117,28 +117,6 @@ form {
 	margin-left:2px;
 	margin-right:3px;
 }
-#Peaje {
-	border-color:#0000ff;
-}
-#SalDestination {
-	border-color:#4DA038;
-}
-#SalRefExitTo {
-	border-color:#00ff00;
-}
-#SalRefName {
-	border-color:#00ffff;
-}
-#SalRef {
-	border-color:#ff8800;
-}
-#SalNoRef {
-	border-color:#ff0000;
-}
-
-#Areas {
-	border-color:#f043b4;
-}
 
 .linea {
 	border:2px solid;
@@ -183,5 +161,5 @@ form {
 .botondesactivado {
 	background-color:#b7c3c2;
 	border-width:0;
-	margin:2px;
+	margin:3px;
 }

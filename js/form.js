@@ -18,27 +18,43 @@ $(document).ready( function() {
         }
     };
 
-
+    $("#Peaje").css("border-color", colorPeaje);
+    $("#Peaje").css("background-color", colorPeajeFondo);
+    $("#SalDestination").css("border-color", colorSalDestination);
+    $("#SalExitTo").css("border-color", colorSalExitTo);
+    $("#SalName").css("border-color", colorSalName);
+    $("#SalNada").css("border-color", colorSalNada);   
+    $("#SalRef").css("border-color", "#ffffff");
+    $("#SalRef").css("background-color", colorSalRef);
+    $("#SalNoRef").css("border-color", "#ffffff");
+    $("#SalNoRef").css("background-color", colorSalNoRef);
+    $("#SalSinSal").css("border-color", colorSalSinSal);
+    $("#SalSinSal").css("background-color", colorSalSinSalFondo);
+    $("#Areas").css("border-color", colorAreas);
+    $("#Areas").css("background-color", colorAreasFondo);
 
     $("input[name=submit]").click(function () {
         a=$("select[name=a]").val();
         $("div#feedback").html("Cargando datos...");
+        cargado=0;
         getData();
-        getData2();
         getData3();
+        getData41();
     });
 
     //Para ocultar datos
-    $("#SalRefExitTo").click(function () {
+    $("#Peaje").click(function () {
         $(this).toggleClass("botondesactivado");
-        visibSalRefExitTo=!visibSalRefExitTo;
-        if (!visibSalRefExitTo) {
-            for (var i = 0; i < grupoSalRefExitTo.length; i++) {
-                map.removeLayer(grupoSalRefExitTo[i]);
+        visibPeaje=!visibPeaje;
+        if (!visibPeaje) {
+            $(this).css("background-color", "#b7c3c2");
+            for (var i = 0; i < grupoPeaje.length; i++) {
+                map.removeLayer(grupoPeaje[i]);
             };
         } else {
-            for (var i = 0; i < grupoSalRefExitTo.length; i++) {
-                map.addLayer(grupoSalRefExitTo[i]);
+            $(this).css("background-color", colorPeajeFondo);
+            for (var i = 0; i < grupoPeaje.length; i++) {
+                map.addLayer(grupoPeaje[i]);
             };
         }
     })
@@ -55,16 +71,42 @@ $(document).ready( function() {
             };
         }
     })
-    $("#SalRefName").click(function () {
+    $("#SalExitTo").click(function () {
         $(this).toggleClass("botondesactivado");
-        visibSalRefName=!visibSalRefName;
-        if (!visibSalRefName) {
-            for (var i = 0; i < grupoSalRefName.length; i++) {
-                map.removeLayer(grupoSalRefName[i]);
+        visibSalExitTo=!visibSalExitTo;
+        if (!visibSalExitTo) {
+            for (var i = 0; i < grupoSalExitTo.length; i++) {
+                map.removeLayer(grupoSalExitTo[i]);
             };
         } else {
-            for (var i = 0; i < grupoSalRefName.length; i++) {
-                map.addLayer(grupoSalRefName[i]);
+            for (var i = 0; i < grupoSalExitTo.length; i++) {
+                map.addLayer(grupoSalExitTo[i]);
+            };
+        }
+    })
+    $("#SalName").click(function () {
+        $(this).toggleClass("botondesactivado");
+        visibSalName=!visibSalName;
+        if (!visibSalName) {
+            for (var i = 0; i < grupoSalName.length; i++) {
+                map.removeLayer(grupoSalName[i]);
+            };
+        } else {
+            for (var i = 0; i < grupoSalName.length; i++) {
+                map.addLayer(grupoSalName[i]);
+            };
+        }
+    })
+    $("#SalNada").click(function () {
+        $(this).toggleClass("botondesactivado");
+        visibSalNada=!visibSalNada;
+        if (!visibSalNada) {
+            for (var i = 0; i < grupoSalNada.length; i++) {
+                map.removeLayer(grupoSalNada[i]);
+            };
+        } else {
+            for (var i = 0; i < grupoSalNada.length; i++) {
+                map.addLayer(grupoSalNada[i]);
             };
         }
     })
@@ -72,10 +114,12 @@ $(document).ready( function() {
         $(this).toggleClass("botondesactivado");
         visibSalRef=!visibSalRef;
         if (!visibSalRef) {
+            $(this).css("background-color", "#b7c3c2");
             for (var i = 0; i < grupoSalRef.length; i++) {
                 map.removeLayer(grupoSalRef[i]);
             };
         } else {
+            $(this).css("background-color", colorSalRef);
             for (var i = 0; i < grupoSalRef.length; i++) {
                 map.addLayer(grupoSalRef[i]);
             };
@@ -85,25 +129,29 @@ $(document).ready( function() {
         $(this).toggleClass("botondesactivado");
         visibSalNoRef=!visibSalNoRef;
         if (!visibSalNoRef) {
+            $(this).css("background-color", "#b7c3c2");
             for (var i = 0; i < grupoSalNoRef.length; i++) {
                 map.removeLayer(grupoSalNoRef[i]);
             };
         } else {
+            $(this).css("background-color", colorSalNoRef);
             for (var i = 0; i < grupoSalNoRef.length; i++) {
                 map.addLayer(grupoSalNoRef[i]);
             };
         }
     })
-    $("#Peaje").click(function () {
+    $("#SalSinSal").click(function () {
         $(this).toggleClass("botondesactivado");
-        visibPeaje=!visibPeaje;
-        if (!visibPeaje) {
-            for (var i = 0; i < grupoPeaje.length; i++) {
-                map.removeLayer(grupoPeaje[i]);
+        visibSalSinSal=!visibSalSinSal;
+        if (!visibSalSinSal) {
+            $(this).css("background-color", "#b7c3c2");
+            for (var i = 0; i < grupoSalSinSal.length; i++) {
+                map.removeLayer(grupoSalSinSal[i]);
             };
         } else {
-            for (var i = 0; i < grupoPeaje.length; i++) {
-                map.addLayer(grupoPeaje[i]);
+            $(this).css("background-color", colorSalSinSalFondo);
+            for (var i = 0; i < grupoSalSinSal.length; i++) {
+                map.addLayer(grupoSalSinSal[i]);
             };
         }
     })
@@ -111,10 +159,12 @@ $(document).ready( function() {
         $(this).toggleClass("botondesactivado");
         visibAreas=!visibAreas;
         if (!visibAreas) {
+            $(this).css("background-color", "#b7c3c2");
             for (var i = 0; i < grupoAreas.length; i++) {
                 map.removeLayer(grupoAreas[i]);
             };
         } else {
+            $(this).css("background-color", colorAreasFondo);
             for (var i = 0; i < grupoAreas.length; i++) {
                 map.addLayer(grupoAreas[i]);
             };
