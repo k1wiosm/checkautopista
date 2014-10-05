@@ -441,6 +441,18 @@ function getData51 (response) {
                     }
                 };
             };
+            var copiagrupoSalNada = grupoSalNada;
+            var k;
+            for (var i = 0; i < grupoSalDestination.length; i++) {
+                for (var j = 0; j < copiagrupoSalNada.length; j++) {
+                    if (copiagrupoSalNada[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
+                        k = grupoSalNada.indexOf(copiagrupoSalNada[j]);
+                        map.removeLayer(copiagrupoSalNada[j]);
+                        grupoSalNada.splice(k,1);
+                        
+                    }
+                };
+            };
 
             for (var i = 0; i < grupoSalDestination.length; i++) {
                 if (grupoSalDestination[i].feature.properties.tags.ref !==undefined){

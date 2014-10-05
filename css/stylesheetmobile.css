@@ -103,15 +103,16 @@ form {
 }
 
 .boton {
-	border:2px solid;
+	border:3px solid;
 	border-radius: 100%;
 	padding: 2px;
 	width:4px;
 	height:4px;
-	background-color: #000000;
+	border-color:#ffffff;
+	background-color:#ffffff;
 	display:inline-block;
-
 }
+
 .leyenda_text {
 	display:inline;
 	margin-left:2px;
