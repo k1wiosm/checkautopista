@@ -35,7 +35,7 @@ $(document).ready( function() {
 
     $("input[name=submit]").click(function () {
         a=$("select[name=a]").val();
-        $("div#feedback").html("Cargando datos...");
+        $("div#feedback1").html("Cargando datos...");
         cargado=0;
         getData();
         getData3();
