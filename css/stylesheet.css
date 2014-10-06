@@ -145,9 +145,8 @@ ul {
 	font-family:Courier, monospace;
 }
 
-#feedback {
+.feedback {
 	color:grey;
-	margin-bottom:10px;
 }
 
 .botondesactivado {

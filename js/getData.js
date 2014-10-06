@@ -291,10 +291,10 @@ function getData () {
             });
             addData();
             cargado++;
-            $("div#feedback").html("Datos cargados (" + cargado + "/3) .");
+            $("div#feedback1").html("Datos cargados (" + cargado + "/3) .");
         }
     )
-    .fail(function() { $("div#feedback").append("Error al cargar."); });
+    .fail(function() { $("div#feedback2").html("Error al cargar.");});
 }
 
 function getData3 () {
@@ -322,10 +322,10 @@ function getData3 () {
             });
             addData3();
             cargado++;
-            $("div#feedback").html("Datos cargados (" + cargado + "/3) .");
+            $("div#feedback1").html("Datos cargados (" + cargado + "/3) .");
         }
     )
-    .fail(function() { $("div#feedback").append("Error al cargar."); });
+    .fail(function() { $("div#feedback2").html("Error al cargar.");});
 }
 
 
@@ -341,7 +341,7 @@ function getData41 () {
     $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {getData51(response);}
     )
-    .fail(function() { $("div#feedback").append("Error al cargar."); });
+    .fail(function() { $("div#feedback2").html("Error al cargar.");});
 }
 
 function getData51 (response) {
@@ -372,6 +372,7 @@ function getData51 (response) {
                 fillOpacity: 1
             };
             var viasSalidas = response;
+            console.log(viasSalidas);
 
             for (var i = 0; i < viasSalidas.elements.length; i++) {
                 if (viasSalidas.elements[i].type == "way") {            // Solo trabajo con las vias de salida
@@ -381,38 +382,46 @@ function getData51 (response) {
                         nodosalida = 0;
                     }
                     if (viasSalidas.elements[i].tags.access !== "no") { // Si realmente es una salida
-                        for (var j = 0; j < nodosAutopista.elements.length; j++) {  // Para cada nodo de la autopista
-                            if (nodosAutopista.elements[j].id == viasSalidas.elements[i].nodes[nodosalida]) { //Busco el nodo de unión con la salida
-                                lat=nodosAutopista.elements[j].lat;
-                                lon=nodosAutopista.elements[j].lon;
-                                if (nodosAutopista.elements[j].tags == undefined) {  // Si no tiene tags lo marco como salida sin marcar
-                                    circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);
-                                    circulo.bindPopup("<b>Salida sin marcar</b>");
-                                    circulo.addTo(map);
-                                    grupoSalSinSal.push(circulo);
-                                } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // Si no tiene motorway_junction  
-                                    circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // lo marco como salida sin marcar
-                                    circulo.bindPopup("<b>Salida sin marcar</b>");
-                                    circulo.addTo(map);
-                                    grupoSalSinSal.push(circulo);
-                                } else if (nodosAutopista.elements[j].tags.name == undefined && nodosAutopista.elements[j].tags.exit_to == undefined) {
-                                    if (viasSalidas.elements[i].tags.destination !== undefined){                    // Si tiene destination
-                                        circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalDestination);    // lo marco como salida con destination
-                                        circulo.bindPopup("<b> Salida " + nodosAutopista.elements[j].tags.ref + "</b>" + 
-                                            "<br> destination: " + viasSalidas.elements[i].tags.destination + "<br/>" + 
-                                            linkEditID("node", nodosAutopista.elements[j].id) );
-                                        if (nodosAutopista.elements[j].tags.ref == undefined) {
-                                            circulo.setStyle({fillColor:colorSalNoRef});
-                                        } else {
-                                            circulo.setStyle({fillColor:colorSalRef});
-                                        }
-                                        circulo.addTo(map);
-                                        circulo.feature = {properties: nodosAutopista.elements[j]};
-                                        grupoSalDestination.push(circulo);
-                                    }
-                                }
-                            };
+                        var esSalida = true;
+                        for (var m = 0; m < grupoVias.length; m++) {
+                            if (grupoVias[m].feature.properties.id == viasSalidas.elements[i].id) {
+                                esSalida = false;
+                            }
                         };
+                        if (esSalida) {
+                            for (var j = 0; j < nodosAutopista.elements.length; j++) {  // Para cada nodo de la autopista
+                                if (nodosAutopista.elements[j].id == viasSalidas.elements[i].nodes[nodosalida]) { //Busco el nodo de unión con la salida
+                                    lat=nodosAutopista.elements[j].lat;
+                                    lon=nodosAutopista.elements[j].lon;
+                                    if (nodosAutopista.elements[j].tags == undefined) {  // Si no tiene tags lo marco como salida sin marcar
+                                        circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);
+                                        circulo.bindPopup("<b>Posible salida sin marcar</b>");
+                                        circulo.addTo(map);
+                                        grupoSalSinSal.push(circulo);
+                                    } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // Si no tiene motorway_junction  
+                                        circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // lo marco como salida sin marcar
+                                        circulo.bindPopup("<b>Posible salida sin marcar</b>");
+                                        circulo.addTo(map);
+                                        grupoSalSinSal.push(circulo);
+                                    } else if (nodosAutopista.elements[j].tags.name == undefined && nodosAutopista.elements[j].tags.exit_to == undefined) {
+                                        if (viasSalidas.elements[i].tags.destination !== undefined){                    // Si tiene destination
+                                            circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalDestination);    // lo marco como salida con destination
+                                            circulo.bindPopup("<b> Salida " + nodosAutopista.elements[j].tags.ref + "</b>" + 
+                                                "<br> destination: " + viasSalidas.elements[i].tags.destination + "<br/>" + 
+                                                linkEditID("node", nodosAutopista.elements[j].id) );
+                                            if (nodosAutopista.elements[j].tags.ref == undefined) {
+                                                circulo.setStyle({fillColor:colorSalNoRef});
+                                            } else {
+                                                circulo.setStyle({fillColor:colorSalRef});
+                                            }
+                                            circulo.addTo(map);
+                                            circulo.feature = {properties: nodosAutopista.elements[j]};
+                                            grupoSalDestination.push(circulo);
+                                        }
+                                    }
+                                };
+                            };
+                        }
                     }
                 };
             };
@@ -479,11 +488,11 @@ function getData51 (response) {
             }
 
             cargado++;
-            $("div#feedback").html("Datos cargados (" + cargado + "/3) .");
+            $("div#feedback1").html("Datos cargados (" + cargado + "/3) .");
 
         }
     )
-    .fail(function() { $("div#feedback").append("Error al cargar."); });
+    .fail(function() { $("div#feedback2").html("Error al cargar.");});
 }
 
 function linkEditID (type, id) {    // Para obtener el link de edición en el editor ID dados el tipo de via y el ID del objeto
