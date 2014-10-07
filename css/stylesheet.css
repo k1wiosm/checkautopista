@@ -16,23 +16,9 @@ body {
     margin:0;
 }
 
-#header {
-	padding:10px;
-	width:90%;
-	height:105px;
-	padding-bottom:0;
-}
-
 img {
 	margin-right:10px;
 	float:left;
-}
-
-#headerright {
-	float:left;
-	width:80%;
-	height:auto;
-	margin:0px;
 }
 
 #logo {
@@ -53,21 +39,8 @@ img {
 	font-family:Arial;
 }
 
-#byk1wi {
-	display:inline;
-	font-family:Arial;
-	font-size: 10px;
-	color:grey;
-}
-
 #byk1wi a {
 	color:grey;
-}
-
-#map { 
-	margin:10px;
-	clear:all;
-	height: calc(100% - 130px) ;
 }
 
 .maxspeed {
@@ -79,34 +52,15 @@ img {
 	font-weight: bold;
 }
 
-#selector {
-	margin:2px;
-	float:left;
-	width:160px;
-	font-size:12px;
-	padding:5px;
-	font-family:Arial;
-}
-
-ul {
-	list-style-type:none;
-	padding: 0;
-}
-
 .boton {
 	border:3px solid;
 	border-radius: 100%;
-	padding: 2px;
+	padding:2px;
 	width:4px;
 	height:4px;
 	border-color:#ffffff;
 	background-color:#ffffff;
 	display:inline-block;
-}
-
-.leyenda_text {
-	display:inline;
-	margin-left:2px;
 }
 
 .linea {
@@ -153,4 +107,42 @@ ul {
 	background-color:#b7c3c2;
 	border-width:0;
 	margin:3px;
+}
+
+div.senal {
+	margin:0px;
+	display:block;
+	position:static;
+	width:calc(100% - 6px);
+	background-color:#19408b;
+	border: white 3px solid;
+	color: white;
+	font-family: TrafficTypSpaD;
+	border-radius:10px;
+	font-size: 12px;
+}
+
+div.senalElem {
+	width:calc(100% - 20px);
+	min-width:100px;
+	margin:2px;
+	padding: 5px;
+}
+
+div.senalReferencia {
+	color: white;
+	display: inline-block;
+	font-family: TrafficTypSpaD;
+	font-size: 10px;
+	border-color: white;
+	border-width:1px;
+	background-color:red;
+	padding:0px;
+	margin:2px;
+
+}
+
+.alltags {
+	font-family:Courier, monospace;
+	font-size: 10px;
 }

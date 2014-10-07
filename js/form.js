@@ -1,4 +1,4 @@
-var a = $.url().param("a");
+var a = $.url().param("a"); //obtengo el parametro de autopista personalizada desde la URL
 $(document).ready( function() {
     var autopista = ["A-1", "AP-1", "A-2", "AP-2", "A-3", "A-4", "AP-4", "A-5", "A-6", "AP-6", "A-7", "AP-7", "A-8", "AP-8", "AP-9","A-10", 
     "A-11", "A-12", "A-13", "A-14", "A-15", "AP-15", "A-16", "A-17", "A-18", "A-19", "A-21", "A-22", "A-23", "A-26", "A-27", "A-30", "A-31", 
@@ -6,11 +6,11 @@ $(document).ready( function() {
     "A-52", "AP-53", "A-54", "A-55", "A-58", "A-60", "AP-61", "A-62", "A-63", "A-64", "A-65", "A-66", "AP-66", "A-67", "A-68", "AP-68", "A-70", 
     "AP-71", "A-73", "A-75", "A-91", "A-92", "A-92M", "A-231"];
 
-    if ($.url().param("a") !== undefined){
+    if ($.url().param("a") !== undefined){      //Autopista personalizada
         $("select[name=a]").append('<option value="' + a + '" selected>' + a + '</option>');
     }
 
-    for (var i = 0; i<74; i++) {
+    for (var i = 0; i<74; i++) {                //Autopistas por defecto
         if (autopista[i] == a) {
             $("select[name=a]").append('<option value="' + autopista[i] + '" selected>' + autopista[i] + '</option>');
         } else {
@@ -18,6 +18,7 @@ $(document).ready( function() {
         }
     };
 
+    //Estilo de los botones de mostrar/ocultar
     $("#Peaje").css("border-color", colorPeaje);
     $("#Peaje").css("background-color", colorPeajeFondo);
     $("#SalDestination").css("border-color", colorSalDestination);
@@ -33,11 +34,12 @@ $(document).ready( function() {
     $("#Areas").css("border-color", colorAreas);
     $("#Areas").css("background-color", colorAreasFondo);
 
+    //Botón Ver
     $("input[name=submit]").click(function () {
         a=$("select[name=a]").val();
         $("div#feedback1").html("Cargando datos...");
         cargado=0;
-        getData();
+        getData1();
         getData3();
         getData41();
     });

@@ -44,12 +44,12 @@ var colorAreasFondo = "#d48fd1";
 
 
 
-// addData
+// addData1
 // Añado:       Vías y salidas
 // Compruebo:   maxspeed, lanes, name, ref, construction y proposed en vías
 //              exit_to, name, ref en salidas
 
-function addData() { 
+function addData1 () { 
     MarkerStyleDefault = {        // Estilo por defecto de los nodos
         radius: 6,
         fillColor: "#000000",
@@ -101,35 +101,70 @@ function addData() {
                         }
                     }
                 } else if (feature.properties.tags.barrier=="toll_booth") {
-                    return {color: colorPeaje, fillColor:colorPeajeFondo};
+                    return {fillColor:colorPeajeFondo, color: colorPeaje};
                 } else {
                     
                 }
             }
 
-        },
-        onEachFeature: function (feature, layer) {                              //Configuro los popup de nodos y vías
+        },                                                                          //Configuro los popup de nodos y vías
+        onEachFeature: function (feature, layer) {                                              //Popup de las vías
             if (feature.properties.tags.highway=='motorway' || feature.properties.tags.highway=='motorway_link'){
                 layer.bindPopup("<b>" + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: <div class='maxspeed'>" + feature.properties.tags.maxspeed + 
                     "</div><br/>lanes: " + feature.properties.tags.lanes);
             }
-            if (feature.properties.tags.highway=='motorway_junction') {
-                layer.bindPopup("<b> Salida " + feature.properties.tags.ref + "</b><br/> name: " + feature.properties.tags.name + 
-                    "<br/>exit_to: " + feature.properties.tags.exit_to + 
-                    "<br>" + linkEditID("node", feature.properties.id) );
+            if (feature.properties.tags.highway=='motorway_junction') {                         //Popup de las salidas
+                if (feature.properties.tags.ref !== undefined) {        // Preparo la ref
+                    ref = feature.properties.tags.ref
+                } else {
+                    ref = "&nbsp";
+                }
+                direcciones = [];
+                if(feature.properties.tags.exit_to !== undefined) {     // Preparo las direcciones
+                    direcciones=feature.properties.tags.exit_to.split(";");
+                } else if (feature.properties.tags.name !== undefined) {
+                    direcciones=feature.properties.tags.name.split(";");
+                }
+                popup = '<div class="senal">' +                         // Preparo el codigo HTML del popup
+                            '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="15px"/>' + ref + '</div>' +
+                            '<div class="senal senalElem" id="destination">';
+                for (i in direcciones) { 
+                    if(esReferencia(direcciones[i])){ // Si tiene la referencia de carretera
+                        direccion = direcciones[i].split(" ");
+                        for (j in direccion) {
+                            if (esReferencia(direccion[j])){
+                                popup += '<div class="senalReferencia">&nbsp' + direccion[j] + '&nbsp</div> ';
+                            } else {
+                                popup += ' ' + direccion[j];
+                            }
+                        }
+                        popup += '<br/>';
+                    } else {
+                        popup += direcciones[i] + '<br/>';
+                    }
+                }
+                popup +=    '</div></div>' + 
+                            '<div class="alltags"><br/>' + // Muestro todas las tags
+                            '<b>Nodo ID: </b>' + feature.properties.id + ' ' + linkEditID("node", feature.properties.id); // Añado el link a editor ID
+                for (key in feature.properties.tags) {                  
+                    popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + feature.properties.tags[key];
+                }
+                popup += '</div>';
+                layer.bindPopup(popup);
+
             }
-            if (feature.properties.tags.highway=='construction') {
+            if (feature.properties.tags.highway=='construction') {                                  // Popup de las vías en construcción
                 layer.bindPopup("<b>En construcción: " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + 
                     feature.properties.tags.lanes);
             }
-            if (feature.properties.tags.highway=='proposed') {
+            if (feature.properties.tags.highway=='proposed') {                                      // Popup de las vías propuestas
                 layer.bindPopup("<b>En proyecto: " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + 
                     feature.properties.tags.lanes);
             }
-            if (feature.properties.tags.barrier=='toll_booth') {
+            if (feature.properties.tags.barrier=='toll_booth') {                                    // Popup de los peajes
                 layer.bindPopup("<b>Peaje: " + feature.properties.tags.name + "</b>" +
                     "<br>" + linkEditID("node", feature.properties.id) );
             }
@@ -203,7 +238,7 @@ function addData() {
 // Añado:       Áreas de servicio y Áreas de descanso
 // Compruebo:   nombre
 
-function addData3() {
+function addData3 () {
     MarkerStyleAreas = {        // Estilo por defecto de los nodos
         radius: 6,
         fillColor: colorAreasFondo,
@@ -272,7 +307,7 @@ function addData3() {
     }    
 }
 
-function getData () {
+function getData1 () {
     consulta = '[out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + '"](area.area);way(r);node(w););out;';
     $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
@@ -289,9 +324,9 @@ function getData () {
                 "tiger:tlid": true,
                 "tiger:upload_uuid": true
             });
-            addData();
+            addData1();
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/3) .");
+            $("div#feedback1").html("Datos cargados (" + cargado + "/3).");
         }
     )
     .fail(function() { $("div#feedback2").html("Error al cargar.");});
@@ -322,7 +357,7 @@ function getData3 () {
             });
             addData3();
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/3) .");
+            $("div#feedback1").html("Datos cargados (" + cargado + "/3).");
         }
     )
     .fail(function() { $("div#feedback2").html("Error al cargar.");});
@@ -330,7 +365,8 @@ function getData3 () {
 
 
 // getData41 y getData51
-// Obtengo las salidas que no tienen ni siquiera marcado highway=motorway_junction
+// Obtengo: Vías de salidas
+// Compruebo: destination, posibles salidas sin marcar
 
 function getData41 () {
 
@@ -355,35 +391,34 @@ function getData51 (response) {
     
     $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
-            MarkerStyleSalSinSal = {        // Estilo por defecto de los nodos
+            MarkerStyleSalSinSal = {        // Estilo de los nodos de salida sin marcar
                 radius: 6,
                 fillColor: colorSalSinSalFondo,
-                color: colorSalSinSal,       //Color salidas sin marcar
+                color: colorSalSinSal,       
                 weight: 3,
                 opacity: 1,
                 fillOpacity: 1
             };
-            MarkerStyleSalDestination = {        // Estilo por defecto de los nodos
+            MarkerStyleSalDestination = {   // Estilo de los nodos de salida con destination
                 radius: 6,
                 fillColor: "#000000",
-                color: colorSalDestination,       //Color salidas con destination
+                color: colorSalDestination,
                 weight: 3,
                 opacity: 1,
                 fillOpacity: 1
             };
             var viasSalidas = response;
-            console.log(viasSalidas);
 
             for (var i = 0; i < viasSalidas.elements.length; i++) {
-                if (viasSalidas.elements[i].type == "way") {            // Solo trabajo con las vias de salida
-                    if (viasSalidas.elements[i].tags.oneway == "-1") {  // Obtengo el ID del nodo de unión con la autopista
-                        nodosalida = viasSalidas.elements[i].nodes.length;
+                if (viasSalidas.elements[i].type == "way") {            // Solo trabajo con las "way"s
+                    if (viasSalidas.elements[i].tags.oneway == "-1") {  // Obtengo el ID del primer nodo de la salida
+                        nodosalida = viasSalidas.elements[i].nodes.length; //Que me sirve para detectar si es salida o entrada
                     } else {
                         nodosalida = 0;
                     }
-                    if (viasSalidas.elements[i].tags.access !== "no") { // Si realmente es una salida
+                    if (viasSalidas.elements[i].tags.access !== "no") { // Compruebo si es posible el acceso
                         var esSalida = true;
-                        for (var m = 0; m < grupoVias.length; m++) {
+                        for (var m = 0; m < grupoVias.length; m++) { // Compruebo si realmente es una salida y no es parte de la autopista
                             if (grupoVias[m].feature.properties.id == viasSalidas.elements[i].id) {
                                 esSalida = false;
                             }
@@ -393,29 +428,73 @@ function getData51 (response) {
                                 if (nodosAutopista.elements[j].id == viasSalidas.elements[i].nodes[nodosalida]) { //Busco el nodo de unión con la salida
                                     lat=nodosAutopista.elements[j].lat;
                                     lon=nodosAutopista.elements[j].lon;
+
                                     if (nodosAutopista.elements[j].tags == undefined) {  // Si no tiene tags lo marco como salida sin marcar
                                         circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);
                                         circulo.bindPopup("<b>Posible salida sin marcar</b>");
                                         circulo.addTo(map);
                                         grupoSalSinSal.push(circulo);
+
                                     } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // Si no tiene motorway_junction  
                                         circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // lo marco como salida sin marcar
                                         circulo.bindPopup("<b>Posible salida sin marcar</b>");
                                         circulo.addTo(map);
                                         grupoSalSinSal.push(circulo);
+                                                                                        //  Si tiene destination lo marco como salida con destination
                                     } else if (nodosAutopista.elements[j].tags.name == undefined && nodosAutopista.elements[j].tags.exit_to == undefined) {
-                                        if (viasSalidas.elements[i].tags.destination !== undefined){                    // Si tiene destination
-                                            circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalDestination);    // lo marco como salida con destination
-                                            circulo.bindPopup("<b> Salida " + nodosAutopista.elements[j].tags.ref + "</b>" + 
-                                                "<br> destination: " + viasSalidas.elements[i].tags.destination + "<br/>" + 
-                                                linkEditID("node", nodosAutopista.elements[j].id) );
-                                            if (nodosAutopista.elements[j].tags.ref == undefined) {
+                                        if (viasSalidas.elements[i].tags.destination !== undefined){
+                                            circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalDestination);
+                                            circulo.feature = {properties: nodosAutopista.elements[j]}; // le copio las propiedades del nodo
+
+                                            if (circulo.feature.properties.tags.ref !== undefined) {        // Preparo la ref
+                                                ref = circulo.feature.properties.tags.ref
+                                            } else {
+                                                ref = "&nbsp";
+                                            }
+                                            direcciones=viasSalidas.elements[i].tags.destination.split(";"); // Preparo las direcciones
+
+                                            popup = '<div class="senal">' +                         // Preparo el codigo HTML del popup
+                                                        '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="15px"/>' + ref + '</div>' +
+                                                        '<div class="senal senalElem" id="destination">';
+                                            for (p in direcciones) { 
+                                                if(esReferencia(direcciones[p])){ // Si tiene la referencia de carretera
+                                                    direccion = direcciones[p].split(" ");
+                                                    for (q in direccion) {
+                                                        if (esReferencia(direccion[q])){
+                                                            popup += '<div class="senalReferencia">&nbsp' + direccion[q] + '&nbsp</div> ';
+                                                        } else {
+                                                            popup += ' ' + direccion[q];
+                                                        }
+                                                    }
+                                                    popup += '<br/>';
+                                                } else {
+                                                    popup += direcciones[p] + '<br/>';
+                                                }
+                                            }
+
+                                            popup +=    '</div></div>' + 
+                                                        '<div class="alltags"><br/>' + // Muestro todas las tags
+                                                        '<b>Nodo ID: </b>' + circulo.feature.properties.id + " " +
+                                                        linkEditID("node", circulo.feature.properties.id); // Añado el link a editor ID
+                                            for (key in circulo.feature.properties.tags) {                  
+                                                popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + circulo.feature.properties.tags[key];
+                                            }
+
+                                            popup += '<br/><br/><b>Via ID: </b>' + viasSalidas.elements[i].id + " " +
+                                                linkEditID("way", viasSalidas.elements[i].id); // Añado el link a editor ID
+                                            for (key in viasSalidas.elements[i].tags) {                  
+                                                popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + viasSalidas.elements[i].tags[key];
+                                            }
+                                            popup += '</div>';
+
+                                            circulo.bindPopup(popup);
+
+                                            if (circulo.feature.properties.tags.ref == undefined) {
                                                 circulo.setStyle({fillColor:colorSalNoRef});
                                             } else {
                                                 circulo.setStyle({fillColor:colorSalRef});
                                             }
                                             circulo.addTo(map);
-                                            circulo.feature = {properties: nodosAutopista.elements[j]};
                                             grupoSalDestination.push(circulo);
                                         }
                                     }
@@ -426,6 +505,7 @@ function getData51 (response) {
                 };
             };
 
+            //Borro los nodos que voy a actualizar con la nueva informacion de destination
             var copiagrupoSalRef = grupoSalRef;
             var k;
             for (var i = 0; i < grupoSalDestination.length; i++) {
@@ -463,6 +543,7 @@ function getData51 (response) {
                 };
             };
 
+            //Añado los nodos con la informacion de destination
             for (var i = 0; i < grupoSalDestination.length; i++) {
                 if (grupoSalDestination[i].feature.properties.tags.ref !==undefined){
                     grupoSalRef.push(grupoSalDestination[i]);
@@ -470,7 +551,6 @@ function getData51 (response) {
                     grupoSalNoRef.push(grupoSalDestination[i]);
                 }
             };
-
             for (var i = 0; i < grupoSalDestination.length; i++) {
                 map.addLayer(grupoSalDestination[i]);
             };
@@ -488,7 +568,7 @@ function getData51 (response) {
             }
 
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/3) .");
+            $("div#feedback1").html("Datos cargados (" + cargado + "/3).");
 
         }
     )
@@ -504,4 +584,10 @@ function linkEditID (type, id) {    // Para obtener el link de edición en el ed
         "print%2520mode%253D%2522meta%2522%252F%253E%250A%2520%2520%253Crecurse%2520type%253D%2522down%2522%252F%253E%250A%252" + 
         "0%2520%253Cprint%2520mode%253D%2522meta%2522%2520order%253D%2522quadtile%2522%252F%253E%250A%253C%252" + 
         "Fosm-script%253E'>Editar en level0</a>";
+}
+
+function esReferencia(string) {
+    return (string.indexOf("1") !== -1 || string.indexOf("2") !== -1 || string.indexOf("3") !== -1 || string.indexOf("4") !== -1 || 
+        string.indexOf("5") !== -1 || string.indexOf("6") !== -1 || string.indexOf("7") !== -1 || string.indexOf("8") !== -1 || 
+        string.indexOf("9") !== -1 || string.indexOf("0") !== -1);
 }
