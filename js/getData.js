@@ -127,7 +127,7 @@ function addData1 () {
                     direcciones=feature.properties.tags.name.split(";");
                 }
                 popup = '<div class="senal">' +                         // Preparo el codigo HTML del popup
-                            '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="15px"/>' + ref + '</div>' +
+                            '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="20px"/>' + ref + '&nbsp</div>' +
                             '<div class="senal senalElem" id="destination">';
                 for (i in direcciones) { 
                     if(esReferencia(direcciones[i])){ // Si tiene la referencia de carretera
@@ -145,7 +145,8 @@ function addData1 () {
                     }
                 }
                 popup +=    '</div></div>' + 
-                            '<div class="alltags"><br/>' + // Muestro todas las tags
+                            '<div class="mostrar">Mostrar todas las tags</div>' + 
+                            '<div class="alltags">' + // Muestro todas las tags
                             '<b>Nodo ID: </b>' + feature.properties.id + ' ' + linkEditID("node", feature.properties.id); // Añado el link a editor ID
                 for (key in feature.properties.tags) {                  
                     popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + feature.properties.tags[key];
@@ -454,7 +455,7 @@ function getData51 (response) {
                                             direcciones=viasSalidas.elements[i].tags.destination.split(";"); // Preparo las direcciones
 
                                             popup = '<div class="senal">' +                         // Preparo el codigo HTML del popup
-                                                        '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="15px"/>' + ref + '</div>' +
+                                                        '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="20px"/>' + ref + '&nbsp</div>' +
                                                         '<div class="senal senalElem" id="destination">';
                                             for (p in direcciones) { 
                                                 if(esReferencia(direcciones[p])){ // Si tiene la referencia de carretera
@@ -473,7 +474,8 @@ function getData51 (response) {
                                             }
 
                                             popup +=    '</div></div>' + 
-                                                        '<div class="alltags"><br/>' + // Muestro todas las tags
+                                                        '<div class="mostrar">Mostrar todas las tags</div>' + 
+                                                        '<div class="alltags">' + // Muestro todas las tags
                                                         '<b>Nodo ID: </b>' + circulo.feature.properties.id + " " +
                                                         linkEditID("node", circulo.feature.properties.id); // Añado el link a editor ID
                                             for (key in circulo.feature.properties.tags) {                  

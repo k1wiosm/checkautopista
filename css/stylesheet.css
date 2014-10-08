@@ -119,12 +119,12 @@ div.senal {
 	color: white;
 	font-family: TrafficTypSpaD;
 	border-radius:10px;
-	font-size: 12px;
+	font-size: 15px;
 }
 
 div.senalElem {
 	width:calc(100% - 20px);
-	min-width:100px;
+	min-width:150px;
 	margin:2px;
 	padding: 5px;
 }
@@ -133,7 +133,7 @@ div.senalReferencia {
 	color: white;
 	display: inline-block;
 	font-family: TrafficTypSpaD;
-	font-size: 10px;
+	font-size: 12px;
 	border-color: white;
 	border-width:1px;
 	background-color:red;
@@ -142,7 +142,22 @@ div.senalReferencia {
 
 }
 
-.alltags {
+div#ref {
+	text-align: right;
+}
+
+div.alltags {
 	font-family:Courier, monospace;
 	font-size: 10px;
+	display:none;
+}
+
+div.mostrar {
+	font-family:Courier, monospace;
+	font-size: 10px;
+	background-color: #DEDEDE;
+	display: inline-block;
+	border-radius: 2px;
+	padding: 0px 5px 0px 5px;
+
 }

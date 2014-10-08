@@ -172,4 +172,10 @@ $(document).ready( function() {
             };
         }
     })
+
+    //Botón Mostrar todo
+    $(document).on('click', 'div.mostrar', function() {
+        $("div.alltags").toggle();
+    });
+    
 });
