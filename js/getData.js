@@ -585,7 +585,7 @@ function linkEditID (type, id) {    // Para obtener el link de edición en el ed
         "%2522%252F%253E%250A%2520%2520%2520%2520%253C%252Fquery%253E%250A%2520%2520%253C%252Funion%253E%250A%2520%2520%253C" + 
         "print%2520mode%253D%2522meta%2522%252F%253E%250A%2520%2520%253Crecurse%2520type%253D%2522down%2522%252F%253E%250A%252" + 
         "0%2520%253Cprint%2520mode%253D%2522meta%2522%2520order%253D%2522quadtile%2522%252F%253E%250A%253C%252" + 
-        "Fosm-script%253E'>Editar en level0</a>";
+        "Fosm-script%253E'>level0<img class='link' src='img/link.png'/></a>";
 }
 
 function esReferencia(string) {

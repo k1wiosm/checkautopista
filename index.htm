@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>                                                          <!-- CSS general -->
         <link rel="stylesheet" type="text/css" href="css/stylesheetmobile.css" media="screen  and (max-width: 40.5em),handheld" />  <!-- CSS para mobile -->
         <link rel="stylesheet" type="text/css" href="css/stylesheetdesktop.css" media="screen  and (min-width: 40.5em)" />          <!-- CSS para desktop -->
-        <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi, user-scalable=0" />                          <!-- iPhone -->
+        <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi, user-scalable=0,initial-scale=1, minimum-scale=1, maximum-scale=1" />  <!-- iPhone -->                         
         <meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8" />                                   <!-- iPhone -->
         <meta name="HandheldFriendly" content="true" />                                                                             <!-- iPhone -->
         <meta name="apple-mobile-web-app-capable" content="yes" />                                                                  <!-- iPhone -->
@@ -15,9 +15,11 @@
         <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>                                                   <!-- Leaflet-js -->
         <script src='js/osmtogeojson.js'></script>                                                                                  <!-- osmtogeojsom -->
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">                        <!-- LocateControl -->
-        <link rel="stylesheet" href="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/src/L.Control.Locate.css" />           <!-- LocateControl -->
-        <script src="//rawgithub.com/domoritz/leaflet-locatecontrol/gh-pages/src/L.Control.Locate.js" ></script>                    <!-- LocateControl -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>                                    <!-- jQuery -->
+        <link rel="stylesheet" href="css/L.Control.Locate.css" />                                                                   <!-- LocateControl -->
+        <script src="js/L.Control.Locate.js" ></script>                                                                             <!-- LocateControl -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>                                     <!-- jQuery -->
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />            <!-- jQuery -->
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>                                    <!-- jQuery -->
         <script src="js/purl.js"></script>                                                                                          <!-- allmarkedup/purl -->
         <link rel="stylesheet" href="css/Leaflet.EditInOSM.css" />                                                                  <!-- EditInOSM -->
         <script src="js/Leaflet.EditInOSM.js"></script>                                                                             <!-- EditInOSM -->
@@ -44,6 +46,7 @@
                 <div id="lema">Herramienta de control de calidad de las autopistas españolas en la base de datos de OSM.</div>
             </div>
         </div>
+        <div id="mostrar">Esconder &#8594;</div>
         <div id="selector">
             <ul>
                 <li>Selecciona la autopista:</li>
@@ -75,8 +78,7 @@
                 <li><div class="linea" id="ViaNoName"></div><div class="leyenda_text">Vía sin <span class="code">name</span></div></li>    
                 <li><div class="linea" id="ViaConstruccion"></div><div class="leyenda_text">En construcción</div></li>   
                 <li><div class="linea" id="ViaProyecto"></div><div class="leyenda_text">En proyecto</div></li> 
-                <br/>
-                <li><b style="color:red">Nuevo:</b> Además, ahora puedes activar o desactivar categorías de nodos pulsando en los circulos en la leyenda.</li>            
+                            
         </div>
         <div id="map">
             <script src="js/prepareMap.js"></script>

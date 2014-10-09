@@ -1,4 +1,5 @@
 var a = $.url().param("a"); //obtengo el parametro de autopista personalizada desde la URL
+var visibSelector = true;
 $(document).ready( function() {
     var autopista = ["A-1", "AP-1", "A-2", "AP-2", "A-3", "A-4", "AP-4", "A-5", "A-6", "AP-6", "A-7", "AP-7", "A-8", "AP-8", "AP-9","A-10", 
     "A-11", "A-12", "A-13", "A-14", "A-15", "AP-15", "A-16", "A-17", "A-18", "A-19", "A-21", "A-22", "A-23", "A-26", "A-27", "A-30", "A-31", 
@@ -176,6 +177,22 @@ $(document).ready( function() {
     //Botón Mostrar todo
     $(document).on('click', 'div.mostrar', function() {
         $("div.alltags").toggle();
+    });
+
+    //Boton esconder menu
+    $("#esconder").click(function(){
+        $("#selector").toggle();
+        $("#mostrar").toggle();
+    });
+
+    $("#mostrar").click(function(){
+        $("#selector").toggle();
+        visibSelector=!visibSelector;
+        if (visibSelector) {
+            $("#mostrar").html("Esconder &#8594;");
+        } else {
+            $("#mostrar").html("&#8592; Mostrar");
+        }
     });
     
 });
