@@ -23,7 +23,7 @@ img#emblema {
 #header {
 	margin-top:2px;
 	padding:10px;
-	width:500px;
+	width:380px;
 	height:60px;
 	padding-bottom:0;
 	position: absolute;
@@ -46,6 +46,9 @@ img#emblema {
 	color:grey;
 }
 
+a {
+	color:black;
+}
 #byk1wi a {
 	color:grey;
 }
@@ -79,10 +82,6 @@ img#emblema {
 	position: absolute;
 	height:100%;
 	width:100%;
-}
-
-#header {
-	display:none;
 }
 
 #selector {
