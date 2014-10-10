@@ -5,28 +5,31 @@ var capaDatos;
 var cargado;
 
 var grupoVias = [];
+var grupoPeaje = [];
+var grupoSalDestination = [];
 var grupoSalExitTo = [];
 var grupoSalName = [];
 var grupoSalNada = [];
 var grupoSalRef = [];
 var grupoSalNoRef = [];
-var grupoSalDestination = [];
 var grupoSalSinSal = [];
-var grupoPeaje = [];
-var grupoOtros = [];
 var grupoAreas = [];
+var grupoOtros = [];
+
+var grupos = [grupoPeaje, grupoSalDestination, grupoSalExitTo, grupoSalName, grupoSalNada, grupoSalRef, grupoSalNoRef, grupoSalSinSal, grupoAreas];
+var gruposnombre = ["Peaje", "SalDestination", "SalExitTo", "SalName", "SalNada", "SalRef", "SalNoRef", "SalSinSal", "Areas"];
 
 var visibVias = true;
+var visibPeaje = true;
+var visibSalDestination = true;
 var visibSalExitTo = true;
 var visibSalName = true;
 var visibSalNada = true;
 var visibSalRef = true;
 var visibSalNoRef = true;
-var visibSalDestination = true;
 var visibSalSinSal = true;
-var visibPeaje = true;
-var visibOtros = true;
 var visibAreas = true;
+var visibOtros = true;
 
 //Colores
 var colorPeaje = "#0000ff";
@@ -35,12 +38,13 @@ var colorSalDestination = "#1e452b";
 var colorSalExitTo = "#00b140";
 var colorSalName = "#00ffff";
 var colorSalNada = "#ff0000";
-var colorSalRef = "#00ff00";
-var colorSalNoRef = "#eca411";
+var colorSalRefFondo = "#00ff00";
+var colorSalNoRefFondo = "#eca411";
 var colorSalSinSal = "#ae0000";
 var colorSalSinSalFondo = "#985652";
 var colorAreas = "#f043b4";
 var colorAreasFondo = "#d48fd1";
+var colorDesactivadoFondo = "#b7c3c2";
 
 
 
@@ -84,20 +88,20 @@ function addData1 () {
                 if (feature.properties.tags.highway=="motorway_junction") {
                     if (feature.properties.tags.ref==undefined) {
                         if (feature.properties.tags.exit_to!==undefined){
-                            return {fillColor: colorSalNoRef, color: colorSalExitTo};
+                            return {fillColor: colorSalNoRefFondo, color: colorSalExitTo};
                         } else if (feature.properties.tags.name!==undefined){
-                            return {fillColor: colorSalNoRef, color: colorSalName};
+                            return {fillColor: colorSalNoRefFondo, color: colorSalName};
                         } else {
-                            return {fillColor: colorSalNoRef, color: colorSalNada};
+                            return {fillColor: colorSalNoRefFondo, color: colorSalNada};
                         }
                     } else {
 
                         if (feature.properties.tags.exit_to!==undefined){
-                            return {fillColor: colorSalRef, color: colorSalExitTo};
+                            return {fillColor: colorSalRefFondo, color: colorSalExitTo};
                         } else if (feature.properties.tags.name!==undefined){
-                            return {fillColor: colorSalRef, color: colorSalName};
+                            return {fillColor: colorSalRefFondo, color: colorSalName};
                         } else {
-                            return {fillColor: colorSalRef, color: colorSalNada};
+                            return {fillColor: colorSalRefFondo, color: colorSalNada};
                         }
                     }
                 } else if (feature.properties.tags.barrier=="toll_booth") {
@@ -492,9 +496,9 @@ function getData51 (response) {
                                             circulo.bindPopup(popup);
 
                                             if (circulo.feature.properties.tags.ref == undefined) {
-                                                circulo.setStyle({fillColor:colorSalNoRef});
+                                                circulo.setStyle({fillColor:colorSalNoRefFondo});
                                             } else {
-                                                circulo.setStyle({fillColor:colorSalRef});
+                                                circulo.setStyle({fillColor:colorSalRefFondo});
                                             }
                                             circulo.addTo(map);
                                             grupoSalDestination.push(circulo);

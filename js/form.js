@@ -19,7 +19,7 @@ $(document).ready( function() {
         }
     };
 
-    //Estilo de los botones de mostrar/ocultar
+    //Estilo de los botones de la leyenda
     $("#Peaje").css("border-color", colorPeaje);
     $("#Peaje").css("background-color", colorPeajeFondo);
     $("#SalDestination").css("border-color", colorSalDestination);
@@ -27,9 +27,9 @@ $(document).ready( function() {
     $("#SalName").css("border-color", colorSalName);
     $("#SalNada").css("border-color", colorSalNada);   
     $("#SalRef").css("border-color", "#ffffff");
-    $("#SalRef").css("background-color", colorSalRef);
+    $("#SalRef").css("background-color", colorSalRefFondo);
     $("#SalNoRef").css("border-color", "#ffffff");
-    $("#SalNoRef").css("background-color", colorSalNoRef);
+    $("#SalNoRef").css("background-color", colorSalNoRefFondo);
     $("#SalSinSal").css("border-color", colorSalSinSal);
     $("#SalSinSal").css("background-color", colorSalSinSalFondo);
     $("#Areas").css("border-color", colorAreas);
@@ -46,132 +46,8 @@ $(document).ready( function() {
     });
 
     //Para ocultar datos
-    $("#Peaje").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibPeaje=!visibPeaje;
-        if (!visibPeaje) {
-            $(this).css("background-color", "#b7c3c2");
-            for (var i = 0; i < grupoPeaje.length; i++) {
-                map.removeLayer(grupoPeaje[i]);
-            };
-        } else {
-            $(this).css("background-color", colorPeajeFondo);
-            for (var i = 0; i < grupoPeaje.length; i++) {
-                map.addLayer(grupoPeaje[i]);
-            };
-        }
-    })
-    $("#SalDestination").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibSalDestination=!visibSalDestination;
-        if (!visibSalDestination) {
-            for (var i = 0; i < grupoSalDestination.length; i++) {
-                map.removeLayer(grupoSalDestination[i]);
-            };
-        } else {
-            for (var i = 0; i < grupoSalDestination.length; i++) {
-                map.addLayer(grupoSalDestination[i]);
-            };
-        }
-    })
-    $("#SalExitTo").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibSalExitTo=!visibSalExitTo;
-        if (!visibSalExitTo) {
-            for (var i = 0; i < grupoSalExitTo.length; i++) {
-                map.removeLayer(grupoSalExitTo[i]);
-            };
-        } else {
-            for (var i = 0; i < grupoSalExitTo.length; i++) {
-                map.addLayer(grupoSalExitTo[i]);
-            };
-        }
-    })
-    $("#SalName").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibSalName=!visibSalName;
-        if (!visibSalName) {
-            for (var i = 0; i < grupoSalName.length; i++) {
-                map.removeLayer(grupoSalName[i]);
-            };
-        } else {
-            for (var i = 0; i < grupoSalName.length; i++) {
-                map.addLayer(grupoSalName[i]);
-            };
-        }
-    })
-    $("#SalNada").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibSalNada=!visibSalNada;
-        if (!visibSalNada) {
-            for (var i = 0; i < grupoSalNada.length; i++) {
-                map.removeLayer(grupoSalNada[i]);
-            };
-        } else {
-            for (var i = 0; i < grupoSalNada.length; i++) {
-                map.addLayer(grupoSalNada[i]);
-            };
-        }
-    })
-    $("#SalRef").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibSalRef=!visibSalRef;
-        if (!visibSalRef) {
-            $(this).css("background-color", "#b7c3c2");
-            for (var i = 0; i < grupoSalRef.length; i++) {
-                map.removeLayer(grupoSalRef[i]);
-            };
-        } else {
-            $(this).css("background-color", colorSalRef);
-            for (var i = 0; i < grupoSalRef.length; i++) {
-                map.addLayer(grupoSalRef[i]);
-            };
-        }
-    })
-    $("#SalNoRef").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibSalNoRef=!visibSalNoRef;
-        if (!visibSalNoRef) {
-            $(this).css("background-color", "#b7c3c2");
-            for (var i = 0; i < grupoSalNoRef.length; i++) {
-                map.removeLayer(grupoSalNoRef[i]);
-            };
-        } else {
-            $(this).css("background-color", colorSalNoRef);
-            for (var i = 0; i < grupoSalNoRef.length; i++) {
-                map.addLayer(grupoSalNoRef[i]);
-            };
-        }
-    })
-    $("#SalSinSal").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibSalSinSal=!visibSalSinSal;
-        if (!visibSalSinSal) {
-            $(this).css("background-color", "#b7c3c2");
-            for (var i = 0; i < grupoSalSinSal.length; i++) {
-                map.removeLayer(grupoSalSinSal[i]);
-            };
-        } else {
-            $(this).css("background-color", colorSalSinSalFondo);
-            for (var i = 0; i < grupoSalSinSal.length; i++) {
-                map.addLayer(grupoSalSinSal[i]);
-            };
-        }
-    })
-    $("#Areas").click(function () {
-        $(this).toggleClass("botondesactivado");
-        visibAreas=!visibAreas;
-        if (!visibAreas) {
-            $(this).css("background-color", "#b7c3c2");
-            for (var i = 0; i < grupoAreas.length; i++) {
-                map.removeLayer(grupoAreas[i]);
-            };
-        } else {
-            $(this).css("background-color", colorAreasFondo);
-            for (var i = 0; i < grupoAreas.length; i++) {
-                map.addLayer(grupoAreas[i]);
-            };
-        }
+    $(".boton").click(function () {
+        actualizarGrupoEnMapa(this.id);
     })
 
     //Botón Mostrar todo
@@ -180,11 +56,6 @@ $(document).ready( function() {
     });
 
     //Boton esconder menu
-    $("#esconder").click(function(){
-        $("#selector").toggle();
-        $("#mostrar").toggle();
-    });
-
     $("#mostrar").click(function(){
         $("#selector").toggle();
         visibSelector=!visibSelector;
@@ -196,3 +67,62 @@ $(document).ready( function() {
     });
     
 });
+
+function actualizarGrupoEnMapa (nombre) {
+    window["visib" + nombre] = !window["visib" + nombre]; // Invierto el valor guardado en visib___
+    visib = window["visib" + nombre];
+    grupo = window["grupo" + nombre];
+    if (window["color" + nombre + "Fondo"] !== undefined) { //Obtengo el color de fondo asignado a este grupo___
+        colorBg = window["color" + nombre + "Fondo"];
+    } else {
+        colorBg = "white";
+    }
+    if (window["color" + nombre] !== undefined) {   //Obtengo el color de borde asignado a este grupo___
+        color = window["color" + nombre];
+    } else {
+        color = "white";
+    }                                               // Borro o añado los nodos según la visib___
+    if (!visib) { //Borro nodos                                  
+        $("#"+nombre).css("border-color", "white");     //Estilo de la leyenda
+        $("#"+nombre).css("background-color", colorDesactivadoFondo);
+        for (var i = 0; i < grupo.length; i++) { // Para cada nodo de este grupo___
+            x = getGrupo(grupo[i]); //grupos a los que pertenece este nodo
+            if(x.length>1) { // si pertenece a más de un grupo
+                if (nombre.indexOf("Ref") == -1) { // si no es de ref
+                    grupo[i].setStyle({radius:5, color:"black", weight:1});
+                    if (window["visib" + x[1]] == false) { // Si el otro grupo tambien esta apagado borro el nodo
+                    map.removeLayer(grupo[i]);
+                    };
+                } else { // si es de ref
+                    grupo[i].setStyle({fillOpacity:0});
+                    if (window["visib" + x[0]] == false) { // Si el otro grupo tambien esta apagado borro el nodo
+                    map.removeLayer(grupo[i]);
+                    };
+                };
+            } else {
+                map.removeLayer(grupo[i]);
+            };
+        };
+    } else {    //Añado nodos
+        $("#"+nombre).css("border-color", color);   //Estilo de la leyenda
+        $("#"+nombre).css("background-color", colorBg);
+        for (var i = 0; i < grupo.length; i++) { // Para cada nodo de este grupo___
+            if (nombre.indexOf("Ref") == -1) { // si no es de ref
+                grupo[i].setStyle({radius:6, color:color, weight:3});
+            } else { // si es de ref
+                grupo[i].setStyle({fillOpacity:1});
+            }
+            map.addLayer(grupo[i]);
+        };
+    };
+}
+
+function getGrupo (elem) {
+    var solucion = [];
+    for (i in grupos) {
+        if (grupos[i].indexOf(elem) > -1) {
+            solucion.push(gruposnombre[i]);
+        }
+    }
+    return solucion;
+}
