@@ -4,7 +4,7 @@ CheckAutopista
 http://checkautopista.hol.es/
 
 Herramienta de control de calidad de autopistas en OSM. Se puede comprobar cualquier autopista del mundo, siempre y cuando esté marcada como relación con ```route=road```.
-*Quality Assurance tool for the OSM motorways. It allows to check any motorway in the world, as long as it's tagged as a relation with ```route=road```.*
+*Quality Assurance tool for motorways in OSM. It allows to check any motorway in the world, as long as it's tagged as a relation with ```route=road```.*
 
 Funcionamiento interno: Para obtener los datos se utiliza Overpass API y se utiliza Leaflet para mostrarlos.
 *How it works: To obtain the data it uses Overpass API and it uses Leaflet to show them.*
