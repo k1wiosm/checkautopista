@@ -119,7 +119,7 @@ function addData1 () {
 
         },                                                                          //Configuro los popup de nodos y vías
         onEachFeature: function (feature, layer) {                                              //Popup de las vías
-            if (feature.properties.tags.highway=='motorway' || feature.properties.tags.highway=='motorway_link'){
+            if (feature.geometry.type=='LineString'){
                 layer.bindPopup("<b>" + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: <div class='maxspeed'>" + feature.properties.tags.maxspeed + 
                     "</div><br/>lanes: " + feature.properties.tags.lanes);
@@ -297,8 +297,54 @@ function addData3 () {
 
 }
 
+function getData0 () {
+
+    bounds = map.getBounds();
+
+    n = bounds._northEast.lat;
+    e = bounds._northEast.lng;
+    s = bounds._southWest.lat;
+    w = bounds._southWest.lng;
+
+    console.log(n, e, s, w);
+
+
+    consulta = '[out:json][timeout:25];(relation["route"="road"](' + s + ',' + w + ',' + n + ',' + e + '););(._;);out body;'
+
+    rq0 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+            $("select[name=autopistas]").empty();
+            autopistas = [];
+            for (i in response.elements) {
+                autopistas.push({id:response.elements[i].id, ref:response.elements[i].tags.ref});
+            }
+            autopistas.sort(function(a,b){
+                if (a.ref > b.ref) {
+                    return +1;
+                } else {
+                    return -1;
+                }
+            });
+            for (i in autopistas) {
+                $("select[name=autopistas]").append('<option value="' + autopistas[i].id + '">' + autopistas[i].ref + '</option>');
+            }
+            console.log(autopistas);
+            $("div#feedback1").html("Autopistas cargadas.");
+            $("input[name=cargar]").prop("disabled",false);
+            $("input[name=ver]").prop("value","Ver autopistas");
+        }
+    )
+    .fail(function() { 
+        $("div#feedback1").html("Error al cargar.");
+        $("input[name=cargar]").prop("disabled",false);
+        $("input[name=ver]").prop("value","Ver autopistas");
+    });
+
+}
+
 function getData1 () {
-    consulta = '[out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + '"](area.area);way(r);node(w););out;';
+
+    consulta = '[out:json][timeout:25];(relation(' + id + ');way(r);node(w););out body;';
 
     rq1 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
@@ -319,10 +365,11 @@ function getData1 () {
             cargado++;
             $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
             if (cargado + errores == 4) {
-                $("input[name=submit]").prop("value","Ver");
+                $("input[name=cargar]").prop("value","Cargar");
                 if (cargado == 0) {
                     $("#feedback1").html("");
                 }
+                $("input[name=ver]").prop("disabled",false);
             }
         }
     )
@@ -330,18 +377,18 @@ function getData1 () {
         errores++;
         $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
         if (cargado + errores == 4) {
-            $("input[name=submit]").prop("value","Ver");
+            $("input[name=cargar]").prop("value","Cargar");
             if (cargado == 0) {
                 $("#feedback1").html("");
             }
+            $("input[name=ver]").prop("disabled",false);
         }
     });
 }
 
 function getData3 () {
 
-    consulta = '[out:json][timeout:50];area(3601311341)->.area;(relation["ref"="' + a + 
-        '"](area.area);way(r);node(w););(way(around:200)["highway"="services"]->.a;node' + 
+    consulta = '[out:json][timeout:50];(relation(' + id + ');way(r);node(w););(way(around:200)["highway"="services"]->.a;node' + 
         '(around:200)["highway"="services"]->.a;way(around:200)["highway"="rest_area"]->.a;nod' + 
         'e(around:200)["highway"="rest_area"]->.a;);(._;>;);out body;';
 
@@ -365,10 +412,11 @@ function getData3 () {
             cargado++;
             $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
             if (cargado + errores == 4) {
-                $("input[name=submit]").prop("value","Ver");
+                $("input[name=cargar]").prop("value","Cargar");
                 if (cargado == 0) {
                     $("#feedback1").html("");
                 }
+                $("input[name=ver]").prop("disabled",false);
             }
         }
     )
@@ -376,10 +424,11 @@ function getData3 () {
         errores++;
         $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
         if (cargado + errores == 4) {
-            $("input[name=submit]").prop("value","Ver");
+            $("input[name=cargar]").prop("value","Cargar");
             if (cargado == 0) {
                 $("#feedback1").html("");
             }
+            $("input[name=ver]").prop("disabled",false);
         }
     });
 }
@@ -391,8 +440,7 @@ function getData3 () {
 
 function getData41 () {
 
-    consulta = '[out:json][timeout:25];area(3601311341)->.area;relation["ref"="'+ a +  //Obtengo los nodos de la autopista
-        '"](area.area);way(r);node(w);out body;';
+    consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);out body;';
 
     
     rq41 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
@@ -407,10 +455,11 @@ function getData41 () {
         errores++;
         $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
         if (cargado + errores == 4) {
-            $("input[name=submit]").prop("value","Ver");
+            $("input[name=cargar]").prop("value","Cargar");
             if (cargado == 0) {
                 $("#feedback1").html("");
             }
+            $("input[name=ver]").prop("disabled",false);
         }
     });
 }
@@ -420,8 +469,8 @@ function getData51 (response) {
     var nodosAutopista = response;
     var nodosalida = 0;
 
-    consulta = '[out:json][timeout:50];area(3601311341)->.area;relation["ref"="' + a +  //Obtengo vias de salidas
-    '"](area.area);way(r);node(w);way(bn);(way._["highway"="motorway_link"]->.A;way._["highway"="service"];);(._;>;);out body;'; 
+    consulta = '[out:json][timeout:50];relation(' + id + 
+        ');way(r);node(w);way(bn);(way._["highway"="motorway_link"]->.A;way._["highway"="trunk_link"]->.A;way._["highway"="service"];);(._;>;);out body;'; 
 
     
     rq51 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
@@ -600,10 +649,11 @@ function getData51 (response) {
             cargado++;
             $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
             if (cargado + errores == 4) {
-                $("input[name=submit]").prop("value","Ver");
+                $("input[name=cargar]").prop("value","Cargar");
                 if (cargado == 0) {
                     $("#feedback1").html("");
                 }
+                $("input[name=ver]").prop("disabled",false);
             }
         }
     )
@@ -611,10 +661,11 @@ function getData51 (response) {
         errores++;
         $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
         if (cargado + errores == 4) {
-            $("input[name=submit]").prop("value","Ver");
+            $("input[name=cargar]").prop("value","Cargar");
             if (cargado == 0) {
                 $("#feedback1").html("");
             }
+            $("input[name=ver]").prop("disabled",false);
         }
     });
 }
