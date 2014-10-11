@@ -37,17 +37,30 @@ $(document).ready( function() {
 
     //Botón Ver
     $("input[name=submit]").click(function () {
-        a=$("select[name=a]").val();
-        $("div#feedback1").html("Cargando datos...");
-        cargado=0;
-        getData1();
-        getData3();
-        getData41();
+        if (this.value == "Cancelar") {
+            $(this).prop("value","Ver");
+            rq1.abort();
+            rq3.abort();
+            rq41.abort();
+            rq51.abort();
+        } else {
+            $(this).prop("value","Cancelar");
+            a=$("select[name=a]").val();
+            $("div#feedback1").html("Cargando datos...");
+            $("div#feedback2").html("");
+            cargado=0;
+            errores=0;
+            getData1();
+            getData3();
+            getData41();
+        }
     });
 
     //Para ocultar datos
     $(".boton").click(function () {
-        actualizarGrupoEnMapa(this.id);
+        nombre = this.id;
+        window["visib" + nombre] = !window["visib" + nombre]; // Invierto el valor guardado en visib___
+        actualizarGrupoEnMapa(nombre);
     })
 
     //Botón Mostrar todo
@@ -69,7 +82,6 @@ $(document).ready( function() {
 });
 
 function actualizarGrupoEnMapa (nombre) {
-    window["visib" + nombre] = !window["visib" + nombre]; // Invierto el valor guardado en visib___
     visib = window["visib" + nombre];
     grupo = window["grupo" + nombre];
     if (window["color" + nombre + "Fondo"] !== undefined) { //Obtengo el color de fondo asignado a este grupo___

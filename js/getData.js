@@ -3,6 +3,12 @@ var dataOSM;
 var dataGeoJSON;
 var capaDatos;
 var cargado;
+var errores;
+
+var rq1;
+var rq3;
+var rq41;
+var rq51;
 
 var grupoVias = [];
 var grupoPeaje = [];
@@ -212,31 +218,13 @@ function addData1 () {
     };
 
     //Para ocultar datos
-    if (!visibPeaje) {
-        for (var i = 0; i < grupoPeaje.length; i++) {
-            map.removeLayer(grupoPeaje[i]);
-        };
-    }
-    if (!visibSalExitTo) {
-        for (var i = 0; i < grupoSalExitTo.length; i++) {
-            map.removeLayer(grupoSalExitTo[i]);
-        };
-    }
-    if (!visibSalName) {
-        for (var i = 0; i < grupoSalName.length; i++) {
-            map.removeLayer(grupoSalName[i]);
-        };
-    }
-    if (!visibSalRef) {
-        for (var i = 0; i < grupoSalRef.length; i++) {
-            map.removeLayer(grupoSalRef[i]);
-        };
-    }
-    if (!visibSalNoRef) {
-        for (var i = 0; i < grupoSalNoRef.length; i++) {
-            map.removeLayer(grupoSalNoRef[i]);
-        };
-    }
+    actualizarGrupoEnMapa ("Peaje");
+    actualizarGrupoEnMapa ("SalExitTo");
+    actualizarGrupoEnMapa ("SalName");
+    actualizarGrupoEnMapa ("SalNada");
+    actualizarGrupoEnMapa ("SalRef");
+    actualizarGrupoEnMapa ("SalNoRef");
+
 }
 
 // addData3
@@ -305,16 +293,14 @@ function addData3 () {
     };
 
     //Para ocultar datos
-    if (!visibAreas) {
-        for (var i = 0; i < grupoAreas.length; i++) {
-            map.removeLayer(grupoAreas[i]);
-        };
-    }    
+    actualizarGrupoEnMapa ("Areas");
+
 }
 
 function getData1 () {
     consulta = '[out:json][timeout:25];area(3601311341)->.area;(relation["ref"="' + a + '"](area.area);way(r);node(w););out;';
-    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+
+    rq1 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
             dataOSM = response;
             dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
@@ -331,10 +317,25 @@ function getData1 () {
             });
             addData1();
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/3).");
+            $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
+            if (cargado + errores == 4) {
+                $("input[name=submit]").prop("value","Ver");
+                if (cargado == 0) {
+                    $("#feedback1").html("");
+                }
+            }
         }
     )
-    .fail(function() { $("div#feedback2").html("Error al cargar.");});
+    .fail(function() { 
+        errores++;
+        $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
+        if (cargado + errores == 4) {
+            $("input[name=submit]").prop("value","Ver");
+            if (cargado == 0) {
+                $("#feedback1").html("");
+            }
+        }
+    });
 }
 
 function getData3 () {
@@ -345,7 +346,7 @@ function getData3 () {
         'e(around:200)["highway"="rest_area"]->.a;);(._;>;);out body;';
 
     
-    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+    rq3 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
             dataOSM = response;
             dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
@@ -362,10 +363,25 @@ function getData3 () {
             });
             addData3();
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/3).");
+            $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
+            if (cargado + errores == 4) {
+                $("input[name=submit]").prop("value","Ver");
+                if (cargado == 0) {
+                    $("#feedback1").html("");
+                }
+            }
         }
     )
-    .fail(function() { $("div#feedback2").html("Error al cargar.");});
+    .fail(function() { 
+        errores++;
+        $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
+        if (cargado + errores == 4) {
+            $("input[name=submit]").prop("value","Ver");
+            if (cargado == 0) {
+                $("#feedback1").html("");
+            }
+        }
+    });
 }
 
 
@@ -379,10 +395,24 @@ function getData41 () {
         '"](area.area);way(r);node(w);out body;';
 
     
-    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
-        function (response) {getData51(response);}
+    rq41 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+            getData51(response);
+            cargado++;
+            $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
+        }
     )
-    .fail(function() { $("div#feedback2").html("Error al cargar.");});
+    .fail(function() { 
+        errores++;
+        errores++;
+        $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
+        if (cargado + errores == 4) {
+            $("input[name=submit]").prop("value","Ver");
+            if (cargado == 0) {
+                $("#feedback1").html("");
+            }
+        }
+    });
 }
 
 function getData51 (response) {
@@ -394,7 +424,7 @@ function getData51 (response) {
     '"](area.area);way(r);node(w);way(bn);(way._["highway"="motorway_link"]->.A;way._["highway"="service"];);(._;>;);out body;'; 
 
     
-    $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+    rq51 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
             MarkerStyleSalSinSal = {        // Estilo de los nodos de salida sin marcar
                 radius: 6,
@@ -562,23 +592,31 @@ function getData51 (response) {
             };
 
             //Para ocultar datos
-            if (!visibSalSinSal) {
-                for (var i = 0; i < grupoSalSinSal.length; i++) {
-                    map.removeLayer(grupoSalSinSal[i]);
-                };
-            }  
-            if (!visibSalDestination) {
-                for (var i = 0; i < grupoSalDestination.length; i++) {
-                    map.removeLayer(grupoSalDestination[i]);
-                };
-            }
+            actualizarGrupoEnMapa ("SalRef");
+            actualizarGrupoEnMapa ("SalNoRef");
+            actualizarGrupoEnMapa ("SalDestination");
+            actualizarGrupoEnMapa ("SalSinSal");
 
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/3).");
-
+            $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
+            if (cargado + errores == 4) {
+                $("input[name=submit]").prop("value","Ver");
+                if (cargado == 0) {
+                    $("#feedback1").html("");
+                }
+            }
         }
     )
-    .fail(function() { $("div#feedback2").html("Error al cargar.");});
+    .fail(function() { 
+        errores++;
+        $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
+        if (cargado + errores == 4) {
+            $("input[name=submit]").prop("value","Ver");
+            if (cargado == 0) {
+                $("#feedback1").html("");
+            }
+        }
+    });
 }
 
 function linkEditID (type, id) {    // Para obtener el link de edición en el editor ID dados el tipo de via y el ID del objeto
