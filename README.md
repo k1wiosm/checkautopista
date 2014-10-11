@@ -3,11 +3,9 @@ checkautopista
 
 http://checkautopista.hol.es/
 
-Herramienta de control de calidad de las autopistas españolas en la base de datos de OSM.
+Herramienta de control de calidad de autopistas en OSM. Se puede comprobar cualquier autopista del mundo, siempre y cuando esté marcada como relación con ```route=road```.
 
-Para obtener los datos utiliza Overpass API, los datos son convertidos con osmtogeojson y se utiliza Leaflet para mostrarlos.
-
-Para comprobar una autopista/autovía que no está en la lista basta con modificar la URL: http://checkautopista.hol.es/?a=B-40
+Funcionamiento interno: Para obtener los datos se utiliza Overpass API y se utiliza Leaflet para mostrarlos.
 
 Control de calidad
 ==================
