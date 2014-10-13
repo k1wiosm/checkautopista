@@ -1,10 +1,14 @@
 $(document).ready( function() {
 	var userlang = (window.navigator.userLanguage || window.navigator.language);
+	var lang = $.url().param("lang");
+	if (lang) { userlang=lang;}
     if (userlang.substr(0,2) == "en") {
     	$.i18n.load(my_dictionary_en);
     } else {
     	$.i18n.load(my_dictionary_es);
     }
+
+
 	
 
 	$('div#lema')._t('lema', '<a href="http://www.openstreetmap.org/">', '</a>');
