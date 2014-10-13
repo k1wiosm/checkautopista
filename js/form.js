@@ -1,5 +1,6 @@
 var visibSelector = true;
 var id;
+var cargando = false;
 $(document).ready( function() {
 
     //Estilo de los botones de la leyenda
@@ -20,18 +21,19 @@ $(document).ready( function() {
 
     //Botón Ver
     $("input[name=ver]").click(function () {
-        if (this.value == "Cancelar") {
-            $(this).prop("value","Ver");
+        if (cargando) {
+            $(this).prop("value",$.i18n._('ver'));
             rq0.abort();
         } else {
             if (map.getZoom()>9) {
-                $(this).prop("value","Cancelar");
+                cargando=true;
+                $(this).prop("value",$.i18n._('cancelar'));
                 $("input[name=cargar]").prop("disabled",true);
-                $("div#feedback1").html("Cargando autopistas...");
+                $("div#feedback1").html($.i18n._('cargandoautopistas'));
                 $("div#feedback2").html("");
                 getData0();
             } else {
-                $("div#feedback1").html("Debes acercarte más.");
+                $("div#feedback1").html($.i18n._('acercamas'));
                 $("div#feedback2").html("");
             }
         }
@@ -39,17 +41,18 @@ $(document).ready( function() {
 
     //Botón Cargar
     $("input[name=cargar]").click(function () {
-        if (this.value == "Cancelar") {
-            $(this).prop("value","Ver");
+        if (cargando) {
+            $(this).prop("value",$.i18n._('ver'));
             rq1.abort();
             rq3.abort();
             rq41.abort();
             rq51.abort();
         } else {
-            $(this).prop("value","Cancelar");
+            cargando=true;
+            $(this).prop("value",$.i18n._('cancelar'));
             id=$("select[name=autopistas]").val();
             $("input[name=ver]").prop("disabled",true);
-            $("div#feedback1").html("Cargando datos...");
+            $("div#feedback1").html($.i18n._('cargandodatos'));
             $("div#feedback2").html("");
             cargado=0;
             errores=0;
@@ -76,9 +79,9 @@ $(document).ready( function() {
         $("#selector").toggle();
         visibSelector=!visibSelector;
         if (visibSelector) {
-            $("#mostrar").html("Esconder &#8594;");
+            $("#mostrar").html($.i18n._('esconder') +" &#8594;");
         } else {
-            $("#mostrar").html("&#8592; Mostrar");
+            $("#mostrar").html("&#8592;" + $.i18n._('mostrar'));
         }
     });
     

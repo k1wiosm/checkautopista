@@ -53,7 +53,7 @@
             },
             AttributionBox: function (config) {
                 var className = 'leaflet-control-attribution',
-                    helpText = "Editar en JOSM",
+                    helpText =  "JOSM<img class='link' src='img/link.png'/>",
                     addEditors = function (container, editors) {
                         addEditorToWidget(container, editors[0], helpText);
                     };

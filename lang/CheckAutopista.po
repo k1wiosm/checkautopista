@@ -1,0 +1,140 @@
+# CheckAutopista v1.0
+
+#: lema
+msgid "Herramienta de control de calidad de autopistas en %sOSM%s."
+msgstr ""
+
+#: leyenda
+msgid "Leyenda"
+msgstr ""
+
+#: Peaje
+msgid "Peaje"
+msgstr ""
+
+#: SalDestination
+msgid "Salida con %1$sdestination%2$s"
+msgstr ""
+
+#: SalExitTo
+msgid "Salida con %1$sexit_to%2$s"
+msgstr ""
+
+#: SalName
+msgid "Salida con %1$sname%2$s"
+msgstr ""
+
+#: SalNada
+msgid "Salida sin %1$sdestination%2$s ni %1$sexit_to%2$s ni %1$sname%2$s"
+msgstr ""
+
+#: SalRef
+msgid "Salida con %1$sref%2$s"
+msgstr ""
+
+#: SalNoRef
+msgid "Salida sin %1$sref%2$s"
+msgstr ""
+
+#: SalSinSal
+msgid "Posible salida sin marcar"
+msgstr ""
+
+#: Areas
+msgid "Áreas de servicio y de descanso"
+msgstr ""
+
+#: areadeservicio
+msgid "Área de servicio"
+msgstr ""
+
+#: areadedescanso
+msgid "Área de descanso"
+msgstr ""
+
+#: ViaTodo
+msgid "Vía completa"
+msgstr ""
+
+#: ViaNoMaxspeed
+msgid "Vía sin %1$smaxspeed%2$s"
+msgstr ""
+
+#: ViaNoLanes
+msgid "Vía sin %1$slanes%2$s"
+msgstr ""
+
+#: ViaNoMaxspeedNoLanes
+msgid "Vía sin %1$smaxspeed%2$s y sin %1$slanes%2$s"
+msgstr ""
+
+#: ViaNoName
+msgid "Vía sin %1$sname%2$s"
+msgstr ""
+
+#: ViaConstruccion
+msgid "En construcción"
+msgstr ""
+
+#: ViaProyecto
+msgid "En proyecto"
+msgstr ""
+
+#: verautopistas
+msgid "Ver autopistas"
+msgstr ""
+
+#: cancelar
+msgid "Cancelar"
+msgstr ""
+
+#: esconder
+msgid "Esconder"
+msgstr ""
+
+#: mostrar
+msgid "Mostrar"
+msgstr ""
+
+#: cargandoautopistas
+msgid "Cargando autopistas..."
+msgstr ""
+
+#: autopistascargadas
+msgid "Autopistas cargadas."
+msgstr ""
+
+#: acercamas
+msgid "Debes acercarte más."
+msgstr ""
+
+#: cargar
+msgid "Cargar"
+msgstr ""
+
+#: cargandodatos
+msgid "Cargando datos..."
+msgstr ""
+
+#: datoscargados
+msgid "Datos cargados"
+msgstr ""
+
+#: erroralcargar
+msgid "Error al cargar"
+msgstr ""
+
+#: mostrartodastags
+msgid "Mostrar todas las tags"
+msgstr ""
+
+#: nodo
+msgid "Nodo"
+msgstr ""
+
+#: via
+msgid "Vía"
+msgstr ""
+
+
+

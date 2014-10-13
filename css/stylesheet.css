@@ -239,4 +239,5 @@ div.mostrar {
 img.link {
 	display:inline;
 	float: none;
+	margin:0px;
 }

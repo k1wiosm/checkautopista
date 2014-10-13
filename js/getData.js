@@ -155,9 +155,9 @@ function addData1 () {
                     }
                 }
                 popup +=    '</div></div>' + 
-                            '<div class="mostrar">Mostrar todas las tags</div>' + 
+                            '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>' + 
                             '<div class="alltags">' + // Muestro todas las tags
-                            '<b>Nodo ID: </b>' + feature.properties.id + ' ' + linkEditID("node", feature.properties.id); // Añado el link a editor ID
+                            '<b>' + $.i18n._('nodo') + ' ID: </b>' + feature.properties.id + ' ' + linkEditID("node", feature.properties.id); // Añado el link a editor ID
                 for (key in feature.properties.tags) {                  
                     popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + feature.properties.tags[key];
                 }
@@ -166,17 +166,17 @@ function addData1 () {
 
             }
             if (feature.properties.tags.highway=='construction') {                                  // Popup de las vías en construcción
-                layer.bindPopup("<b>En construcción: " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
+                layer.bindPopup("<b>" + $.i18n._('enconstruccion') + ": " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + 
                     feature.properties.tags.lanes);
             }
             if (feature.properties.tags.highway=='proposed') {                                      // Popup de las vías propuestas
-                layer.bindPopup("<b>En proyecto: " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
+                layer.bindPopup("<b>" + $.i18n._('enproyecto') + ": " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + 
                     feature.properties.tags.lanes);
             }
             if (feature.properties.tags.barrier=='toll_booth') {                                    // Popup de los peajes
-                layer.bindPopup("<b>Peaje: " + feature.properties.tags.name + "</b>" +
+                layer.bindPopup("<b>"+ $.i18n._('Peaje') + ": " + feature.properties.tags.name + "</b>" +
                     "<br>" + linkEditID("node", feature.properties.id) );
             }
         },
@@ -248,9 +248,9 @@ function addData3 () {
         onEachFeature: function (feature, layer) {                              //Configuro los popup
             var tipo;
             if (feature.properties.tags.highway=="services") {
-                tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>Área de servicio";
+                tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>" + $.i18n._('areadeservicio');
             } else if (feature.properties.tags.highway=="rest_area") {
-                tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>Área de descanso";
+                tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>" + $.i18n._('areadedescanso');
             }
             if(feature.geometry.type=="Point"){
                 layer.bindPopup("<b> " + tipo + ": " + feature.properties.tags.name + 
@@ -279,9 +279,9 @@ function addData3 () {
             if(grupoAreas[i].feature.geometry.type=="Polygon"){
                 var tipo;
                 if (grupoAreas[i].feature.properties.tags.highway=="services") {
-                    tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>Área de servicio";
+                    tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>" + $.i18n._('areadeservicio');
                 } else if (grupoAreas[i].feature.properties.tags.highway=="rest_area") {
-                    tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>Área de descanso";
+                    tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>" + $.i18n._('areadedescanso');
                 }
                 circulo = L.circleMarker(grupoAreas[i].getBounds().getCenter(), MarkerStyleAreas);
                 circulo.bindPopup("<b> " + tipo + ": " + grupoAreas[i].feature.properties.tags.name + 
@@ -329,15 +329,17 @@ function getData0 () {
                 $("select[name=autopistas]").append('<option value="' + autopistas[i].id + '">' + autopistas[i].ref + '</option>');
             }
             console.log(autopistas);
-            $("div#feedback1").html("Autopistas cargadas.");
+            $("div#feedback1").html($.i18n._('autopistascargadas'));
             $("input[name=cargar]").prop("disabled",false);
-            $("input[name=ver]").prop("value","Ver autopistas");
+            $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
+            cargando=false;
         }
     )
     .fail(function() { 
-        $("div#feedback1").html("Error al cargar.");
+        $("div#feedback1").html($.i18n._('erroralcargar') +".");
         $("input[name=cargar]").prop("disabled",false);
-        $("input[name=ver]").prop("value","Ver autopistas");
+        $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
+        cargando=false;
     });
 
 }
@@ -363,25 +365,27 @@ function getData1 () {
             });
             addData1();
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
+            $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
             if (cargado + errores == 4) {
-                $("input[name=cargar]").prop("value","Cargar");
+                $("input[name=cargar]").prop("value", $.i18n._('cargar') );
                 if (cargado == 0) {
                     $("#feedback1").html("");
                 }
                 $("input[name=ver]").prop("disabled",false);
+                cargando=false;
             }
         }
     )
     .fail(function() { 
         errores++;
-        $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
+        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
         if (cargado + errores == 4) {
-            $("input[name=cargar]").prop("value","Cargar");
+            $("input[name=cargar]").prop("value", $.i18n._('cargar') );
             if (cargado == 0) {
                 $("#feedback1").html("");
             }
             $("input[name=ver]").prop("disabled",false);
+            cargando=false;
         }
     });
 }
@@ -410,25 +414,27 @@ function getData3 () {
             });
             addData3();
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
+            $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
             if (cargado + errores == 4) {
-                $("input[name=cargar]").prop("value","Cargar");
+                $("input[name=cargar]").prop("value", $.i18n._('cargar') );
                 if (cargado == 0) {
                     $("#feedback1").html("");
                 }
                 $("input[name=ver]").prop("disabled",false);
+                cargando=false;
             }
         }
     )
     .fail(function() { 
         errores++;
-        $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
+        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
         if (cargado + errores == 4) {
-            $("input[name=cargar]").prop("value","Cargar");
+            $("input[name=cargar]").prop("value", $.i18n._('cargar') );
             if (cargado == 0) {
                 $("#feedback1").html("");
             }
             $("input[name=ver]").prop("disabled",false);
+            cargando=false;
         }
     });
 }
@@ -447,19 +453,20 @@ function getData41 () {
         function (response) {
             getData51(response);
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
+            $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
         }
     )
     .fail(function() { 
         errores++;
         errores++;
-        $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
+        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
         if (cargado + errores == 4) {
-            $("input[name=cargar]").prop("value","Cargar");
+            $("input[name=cargar]").prop("value", $.i18n._('cargar') );
             if (cargado == 0) {
                 $("#feedback1").html("");
             }
             $("input[name=ver]").prop("disabled",false);
+            cargando=false;
         }
     });
 }
@@ -515,13 +522,13 @@ function getData51 (response) {
 
                                     if (nodosAutopista.elements[j].tags == undefined) {  // Si no tiene tags lo marco como salida sin marcar
                                         circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);
-                                        circulo.bindPopup("<b>Posible salida sin marcar</b>");
+                                        circulo.bindPopup("<b>" + $.i18n._('SalSinSal') + "</b>");
                                         circulo.addTo(map);
                                         grupoSalSinSal.push(circulo);
 
                                     } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // Si no tiene motorway_junction  
                                         circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // lo marco como salida sin marcar
-                                        circulo.bindPopup("<b>Posible salida sin marcar</b>");
+                                        circulo.bindPopup("<b>" + $.i18n._('SalSinSal') + "</b>");
                                         circulo.addTo(map);
                                         grupoSalSinSal.push(circulo);
                                                                                         //  Si tiene destination lo marco como salida con destination
@@ -557,15 +564,15 @@ function getData51 (response) {
                                             }
 
                                             popup +=    '</div></div>' + 
-                                                        '<div class="mostrar">Mostrar todas las tags</div>' + 
+                                                        '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>' + 
                                                         '<div class="alltags">' + // Muestro todas las tags
-                                                        '<b>Nodo ID: </b>' + circulo.feature.properties.id + " " +
+                                                        '<b>' + $.i18n._('nodo') + ' ID: </b>' + circulo.feature.properties.id + " " +
                                                         linkEditID("node", circulo.feature.properties.id); // Añado el link a editor ID
                                             for (key in circulo.feature.properties.tags) {                  
                                                 popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + circulo.feature.properties.tags[key];
                                             }
 
-                                            popup += '<br/><br/><b>Via ID: </b>' + viasSalidas.elements[i].id + " " +
+                                            popup += '<br/><br/><b>' + $.i18n._('via') + ' ID: </b>' + viasSalidas.elements[i].id + " " +
                                                 linkEditID("way", viasSalidas.elements[i].id); // Añado el link a editor ID
                                             for (key in viasSalidas.elements[i].tags) {                  
                                                 popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + viasSalidas.elements[i].tags[key];
@@ -647,25 +654,27 @@ function getData51 (response) {
             actualizarGrupoEnMapa ("SalSinSal");
 
             cargado++;
-            $("div#feedback1").html("Datos cargados (" + cargado + "/4).");
+            $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
             if (cargado + errores == 4) {
-                $("input[name=cargar]").prop("value","Cargar");
+                $("input[name=cargar]").prop("value", $.i18n._('cargar') );
                 if (cargado == 0) {
                     $("#feedback1").html("");
                 }
                 $("input[name=ver]").prop("disabled",false);
+                cargando=false;
             }
         }
     )
     .fail(function() { 
         errores++;
-        $("div#feedback2").html("Error al cargar (" + errores + "/4)." );
+        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
         if (cargado + errores == 4) {
-            $("input[name=cargar]").prop("value","Cargar");
+            $("input[name=cargar]").prop("value", $.i18n._('cargar') );
             if (cargado == 0) {
                 $("#feedback1").html("");
             }
             $("input[name=ver]").prop("disabled",false);
+            cargando=false;
         }
     });
 }
