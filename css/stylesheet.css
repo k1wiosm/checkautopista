@@ -241,3 +241,7 @@ img.link {
 	float: none;
 	margin:0px;
 }
+
+a#getpermalink {
+	display: inline-block;
+}

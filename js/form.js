@@ -84,6 +84,14 @@ $(document).ready( function() {
             $("#mostrar").html("&#8592;" + $.i18n._('mostrar'));
         }
     });
+
+    //Permalink
+    $("a#getpermalink").hover(function(){
+        var lat = map.getCenter().lat;
+        var lon = map.getCenter().lng;
+        var zoom = map.getZoom();
+        $(this).prop("href","?lat=" + lat + "&lon=" + lon + "&zoom=" + zoom);
+    });
     
 });
 
