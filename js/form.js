@@ -89,8 +89,11 @@ $(document).ready( function() {
     $("a#getpermalink").hover(function(){
         var lat = map.getCenter().lat;
         var lon = map.getCenter().lng;
-        var zoom = map.getZoom();
-        $(this).prop("href","?lat=" + lat + "&lon=" + lon + "&zoom=" + zoom);
+        var zoom = map.getZoom(); 
+        var link = "?lat=" + lat + "&lon=" + lon + "&zoom=" + zoom;
+        var lang = $.url().param("lang");   // Obtengo el idioma deseado de la url
+        if (lang) { link += "&lang=" + lang ;} ;
+        $(this).prop("href", link);
     });
     
 });
