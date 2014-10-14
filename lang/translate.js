@@ -1,15 +1,25 @@
 $(document).ready( function() {
-	var userlang = (window.navigator.userLanguage || window.navigator.language);
-	var lang = $.url().param("lang");
+	var userlang = (window.navigator.userLanguage || window.navigator.language); // Obtengo el idioma del navegador
+	var lang = $.url().param("lang");	// Obtengo el idioma deseado de la url
 	if (lang) { userlang=lang;}
-    if (userlang.substr(0,2) == "en") {
-    	$.i18n.load(my_dictionary_en);
-    } else {
-    	$.i18n.load(my_dictionary_es);
-    }
+	var langcode = userlang.substr(0,2);	// Me quedo con lo importante del codigo de idioma
 
-
-	
+	switch(langcode) {
+	    case "en":
+	        $.i18n.load(my_dictionary_en);
+	        break;
+	    case "de":
+	        $.i18n.load(my_dictionary_en);
+	        break;
+	    case "ca":
+	        $.i18n.load(my_dictionary_ca);
+	        break;
+	    case "es":
+	        $.i18n.load(my_dictionary_es);
+	        break;
+	    default:
+	        $.i18n.load(my_dictionary_es);
+	}
 
 	$('div#lema')._t('lema', '<a href="http://www.openstreetmap.org/">', '</a>');
 	$('input[name=ver]').prop('value', $.i18n._('verautopistas'));
