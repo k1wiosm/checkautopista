@@ -306,36 +306,55 @@ function getData0 () {
     s = bounds._southWest.lat;
     w = bounds._southWest.lng;
 
-    console.log(n, e, s, w);
 
 
-    consulta = '[out:json][timeout:25];(relation["route"="road"](' + s + ',' + w + ',' + n + ',' + e + '););(._;);out body;'
+    consulta = '[out:json][timeout:25];(relation["route"="road"](' + s + ',' + w + ',' + n + ',' + e + '););(._;way(r););out body;'
 
     rq0 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
+
             $("select[name=autopistas]").empty();
-            autopistas = [];
+            var autopistas = [];
+            var vias = [];
             for (i in response.elements) {
-                autopistas.push({id:response.elements[i].id, ref:response.elements[i].tags.ref});
+                if (response.elements[i].type == "relation") {  // Ordeno los datos obtenidos en autopistas (relacion) y vias (ways)
+                    autopistas.push({id:response.elements[i].id, ref:response.elements[i].tags.ref, members:response.elements[i].members});
+                } else if (response.elements[i].type == "way") {
+                    vias.push({id:response.elements[i].id, tags:response.elements[i].tags});
+                }
             }
-            autopistas.sort(function(a,b){
+
+            var copiaautopistas = autopistas;
+            autopistas = [];
+
+            for (i in copiaautopistas) {    // Borro las autopistas que no lo son
+                var primeravia = vias[findWithAttr(vias, "id", copiaautopistas[i].members[0].ref)]; //la primera via de la autopista
+                if (primeravia.tags) {
+                    if (primeravia.tags.highway == "motorway" || primeravia.tags.highway == "motorway_link" || primeravia.tags.highway == "trunk" || primeravia.tags.highway == "trunk_link") {
+                        autopistas.push(copiaautopistas[i]);
+                    }
+                }
+            }
+
+            autopistas.sort(function(a,b){      // Ordeno por referencia las autopistas
                 if (a.ref > b.ref) {
                     return +1;
                 } else {
                     return -1;
                 }
             });
-            for (i in autopistas) {
+            
+            for (i in autopistas) {     // Añado las autopistas al selector
                 $("select[name=autopistas]").append('<option value="' + autopistas[i].id + '">' + autopistas[i].ref + '</option>');
             }
-            console.log(autopistas);
+
             $("div#feedback1").html($.i18n._('autopistascargadas'));
             $("input[name=cargar]").prop("disabled",false);
             $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
             cargando=false;
         }
     )
-    .fail(function() { 
+    .fail( function() { 
         $("div#feedback1").html($.i18n._('erroralcargar') +".");
         $("input[name=cargar]").prop("disabled",false);
         $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
@@ -694,4 +713,13 @@ function esReferencia(string) {
     return (string.indexOf("1") !== -1 || string.indexOf("2") !== -1 || string.indexOf("3") !== -1 || string.indexOf("4") !== -1 || 
         string.indexOf("5") !== -1 || string.indexOf("6") !== -1 || string.indexOf("7") !== -1 || string.indexOf("8") !== -1 || 
         string.indexOf("9") !== -1 || string.indexOf("0") !== -1);
+}
+
+function findWithAttr(array, attr, value) {
+    var i;
+    for (i in array) {
+        if (array[i][attr] == value) {
+            return i;
+        }
+    }
 }
