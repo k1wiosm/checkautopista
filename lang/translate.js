@@ -20,6 +20,9 @@ $(document).ready( function() {
 	    case "pt":
 	        $.i18n.load(my_dictionary_pt);
 	        break;
+	    case "tl":
+	        $.i18n.load(my_dictionary_tl);
+	        break;
 	    default:
 	        $.i18n.load(my_dictionary_es);
 	}
