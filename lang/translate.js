@@ -17,6 +17,9 @@ $(document).ready( function() {
 	    case "es":
 	        $.i18n.load(my_dictionary_es);
 	        break;
+      case "fr":
+          $.i18n.load(my_dictionary_fr);
+          break;
 	    case "pt":
 	        $.i18n.load(my_dictionary_pt);
 	        break;
