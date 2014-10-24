@@ -165,8 +165,9 @@ ul {
 #ViaNoMaxspeedNoLanes {
 	border-color:#D430AB;
 }
-#ViaNoName {
-	border-color:#ff0000;
+line {
+    stroke: blue;
+    stroke-width: 4px;
 }
 #ViaConstruccion {
 	border-color:#000000;

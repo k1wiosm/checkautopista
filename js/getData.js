@@ -72,22 +72,24 @@ function addData1 () {
     capaDatos = new L.geoJson(dataGeoJSON, {
         style: function(feature) {
             if (feature.geometry.type=='LineString') {                          // Estilo de las vías  
+                var dash = "1,0";
                 if (feature.properties.tags.highway=='construction'){
-                    return {"color": "#000000"};
+                    return {"color": "#000000", opacity:"0.8"};
                 } else if (feature.properties.tags.highway=='proposed'){
-                    return {"color": "#82858a"};
+                    return {"color": "#82858a", opacity:"0.8"};
                 } else if (feature.properties.tags.name==undefined) {
-                    return {"color": "#ff0000"};
-                } else if (feature.properties.tags.maxspeed==undefined){
+                    dash = "1,10";
+                };
+                if (feature.properties.tags.maxspeed==undefined){
                     if (feature.properties.tags.lanes==undefined){
-                        return {"color": "#D430AB"};
+                        return {"color": "#D430AB", dashArray: dash, opacity:"0.8"};
                     } else {
-                        return {"color": "#ffff00"};
+                        return {"color": "#ffff00", dashArray: dash, opacity:"0.8"};
                     }
                 } else if (feature.properties.tags.lanes==undefined){
-                        return {"color": "#ff8d00"};
+                        return {"color": "#ff8d00", dashArray: dash, opacity:"0.8"};
                 } else {
-                        return {"color": "#0000ff"};
+                        return {"color": "#0000ff", dashArray: dash, opacity:"0.8"};
                 }
 
             } else {                                                            // Estilo de los nodos
@@ -329,9 +331,12 @@ function getData0 () {
 
             for (i in copiaautopistas) {    // Borro las autopistas que no lo son
                 var primeravia = vias[findWithAttr(vias, "id", copiaautopistas[i].members[0].ref)]; //la primera via de la autopista
-                if (primeravia.tags) {
-                    if (primeravia.tags.highway == "motorway" || primeravia.tags.highway == "motorway_link" || primeravia.tags.highway == "trunk" || primeravia.tags.highway == "trunk_link") {
-                        autopistas.push(copiaautopistas[i]);
+                if (primeravia) {
+                    if (primeravia.tags) {
+                        if (primeravia.tags.highway == "motorway" || primeravia.tags.highway == "motorway_link" || primeravia.tags.highway == "trunk" 
+                        || primeravia.tags.highway == "trunk_link") {
+                            autopistas.push(copiaautopistas[i]);
+                        }
                     }
                 }
             }
