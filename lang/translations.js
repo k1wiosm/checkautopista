@@ -148,7 +148,7 @@ var my_dictionary_pt = {
 
 var my_dictionary_tl = {
 	"lema":"Gamit sa pantiyak ng kalidad ng mga pangunahing lansangan sa %sOSM%s.",
-	"leyenda":"Legend",
+	"leyenda":"Pananda",
 	"Peaje":"Tollbooth",
 	"SalDestination":"Labasan na may %1$sdestination%2$s",
 	"SalExitTo":"Labasan na may %1$sexit_to%2$s",
