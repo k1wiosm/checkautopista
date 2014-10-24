@@ -168,7 +168,7 @@ function addData1 () {
 
             }
             if (feature.properties.tags.highway=='construction') {                                  // Popup de las vías en construcción
-                layer.bindPopup("<b>" + $.i18n._('enconstruccion') + ": " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
+                layer.bindPopup("<b>" + $.i18n._('ViaConstruccion') + ": " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + 
                     feature.properties.tags.lanes);
             }

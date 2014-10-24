@@ -52,5 +52,4 @@ $(document).ready( function() {
 	$('div.leyenda_text#ViaProyecto')._t('ViaProyecto');
 	$('div#mostrar').text($.i18n._('esconder') + " →");
 
-
 });
