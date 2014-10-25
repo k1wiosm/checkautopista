@@ -54,12 +54,12 @@ var colorDesactivadoFondo = "#b7c3c2";
 
 
 // addData1
-// Añado:       Vías y salidas
-// Compruebo:   maxspeed, lanes, name, ref, construction y proposed en vías
-//              exit_to, name, ref en salidas
+// Adds:        Ways and exits
+// Checks:      maxspeed, lanes, name, ref, construction and proposed on ways
+//              exit_to, name, ref on exits
 
 function addData1 () { 
-    MarkerStyleDefault = {        // Estilo por defecto de los nodos
+    MarkerStyleDefault = {        // Default style for the exit nodes
         radius: 6,
         fillColor: "#000000",
         color: "#000000",
@@ -70,7 +70,7 @@ function addData1 () {
 
     capaDatos = new L.geoJson(dataGeoJSON, {
         style: function(feature) {
-            if (feature.geometry.type=='LineString') {                          // Estilo de las vías  
+            if (feature.geometry.type=='LineString') {                          // Ways style  
                 var dash = "1,0";
                 if (feature.properties.tags.highway=='construction'){
                     return {"color": "#000000", opacity:"0.8"};
@@ -91,7 +91,7 @@ function addData1 () {
                         return {"color": "#0000ff", dashArray: dash, opacity:"0.8"};
                 }
 
-            } else {                                                            // Estilo de los nodos
+            } else {                                                            // Nodes style
                 if (feature.properties.tags.highway=="motorway_junction") {
                     if (feature.properties.tags.ref==undefined) {
                         if (feature.properties.tags.exit_to!==undefined){
@@ -118,30 +118,30 @@ function addData1 () {
                 }
             }
 
-        },                                                                          //Configuro los popup de nodos y vías
-        onEachFeature: function (feature, layer) {                                              //Popup de las vías
+        },                                                                          //Configure the ways and nodes popups
+        onEachFeature: function (feature, layer) {                                              //Ways popups
             if (feature.geometry.type=='LineString'){
                 layer.bindPopup("<b>" + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: <div class='maxspeed'>" + feature.properties.tags.maxspeed + 
                     "</div><br/>lanes: " + feature.properties.tags.lanes);
             }
-            if (feature.properties.tags.highway=='motorway_junction') {                         //Popup de las salidas
-                if (feature.properties.tags.ref !== undefined) {        // Preparo la ref
+            if (feature.properties.tags.highway=='motorway_junction') {                         //Exit popups
+                if (feature.properties.tags.ref !== undefined) {        // Prepare the ref
                     ref = feature.properties.tags.ref
                 } else {
                     ref = "&nbsp";
                 }
                 direcciones = [];
-                if(feature.properties.tags.exit_to !== undefined) {     // Preparo las direcciones
+                if(feature.properties.tags.exit_to !== undefined) {     // Prepare the directions
                     direcciones=feature.properties.tags.exit_to.split(";");
                 } else if (feature.properties.tags.name !== undefined) {
                     direcciones=feature.properties.tags.name.split(";");
                 }
-                popup = '<div class="senal">' +                         // Preparo el codigo HTML del popup
+                popup = '<div class="senal">' +                         // Prepare the HTML code of the popup
                             '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="20px"/>' + ref + '&nbsp</div>' +
                             '<div class="senal senalElem" id="destination">';
                 for (i in direcciones) { 
-                    if(esReferencia(direcciones[i])){ // Si tiene la referencia de carretera
+                    if(esReferencia(direcciones[i])){ // If it has a reference in the directions
                         direccion = direcciones[i].split(" ");
                         for (j in direccion) {
                             if (esReferencia(direccion[j])){
@@ -157,8 +157,8 @@ function addData1 () {
                 }
                 popup +=    '</div></div>' + 
                             '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>' + 
-                            '<div class="alltags">' + // Muestro todas las tags
-                            '<b>' + $.i18n._('nodo') + ' ID: </b>' + feature.properties.id + ' ' + linkEditID("node", feature.properties.id); // Añado el link a editor ID
+                            '<div class="alltags">' + // Show all tags
+                            '<b>' + $.i18n._('nodo') + ' ID: </b>' + feature.properties.id + ' ' + linkEditID("node", feature.properties.id); // Link to ID editor
                 for (key in feature.properties.tags) {                  
                     popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + feature.properties.tags[key];
                 }
@@ -166,59 +166,61 @@ function addData1 () {
                 layer.bindPopup(popup);
 
             }
-            if (feature.properties.tags.highway=='construction') {                                  // Popup de las vías en construcción
-                layer.bindPopup("<b>" + $.i18n._('ViaConstruccion') + ": " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
+            if (feature.properties.tags.highway=='construction') {                                  // Popup of ways under construction
+                layer.bindPopup("<b>" + $.i18n._('ViaConstruccion') + ": " + feature.properties.tags.name + 
+                    " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + 
                     feature.properties.tags.lanes);
             }
-            if (feature.properties.tags.highway=='proposed') {                                      // Popup de las vías propuestas
+            if (feature.properties.tags.highway=='proposed') {                                      // Popup of ways in project
                 layer.bindPopup("<b>" + $.i18n._('enproyecto') + ": " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
                     feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: " + feature.properties.tags.maxspeed + "<br/>lanes: " + 
                     feature.properties.tags.lanes);
             }
-            if (feature.properties.tags.barrier=='toll_booth') {                                    // Popup de los peajes
+            if (feature.properties.tags.barrier=='toll_booth') {                                    // Popup of Tollbooth
                 layer.bindPopup("<b>"+ $.i18n._('Peaje') + ": " + feature.properties.tags.name + "</b>" +
                     "<br>" + linkEditID("node", feature.properties.id) );
             }
         },
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, MarkerStyleDefault);        // Convierto los nodos en circleMarker
+            return L.circleMarker(latlng, MarkerStyleDefault);        // Convert nodes to circleMarker
         }
 
     })
     .addTo(map);
 
-    // Organizo los nodos y vías en grupos
+    // Organize nodes and ways in groups
     layers = capaDatos.getLayers()
     for (var i = 0; i < layers.length; i++) {                           
-        if (layers[i].feature.geometry.type=='LineString') { // Organizo las vias
+        if (layers[i].feature.geometry.type=='LineString') {                                // Organize the ways
             grupoVias.push(layers[i]);
-        } else if (layers[i].feature.properties.tags.highway=="motorway_junction") {    // Organizo las salidas
-            if (layers[i].feature.properties.tags.ref!==undefined){ // Organizo según ref si o no
+
+        } else if (layers[i].feature.properties.tags.highway=="motorway_junction") {        // Organizo the exits
+            if (layers[i].feature.properties.tags.ref!==undefined){ // Organize depending on ref
                 grupoSalRef.push(layers[i]);
             } else {
                 grupoSalNoRef.push(layers[i]);
             }
-            if (layers[i].feature.properties.tags.exit_to!==undefined){ // Organizo segun exit_to, name o nada
+            if (layers[i].feature.properties.tags.exit_to!==undefined){ //Organize depending on exit_to, name or nothing
                 grupoSalExitTo.push(layers[i]);
             } else if (layers[i].feature.properties.tags.name!==undefined){
                 grupoSalName.push(layers[i]);
             } else {
                 grupoSalNada.push(layers[i]);
             }
-        } else if (layers[i].feature.properties.tags.barrier=="toll_booth") {   // Organizo los peajes
+        } else if (layers[i].feature.properties.tags.barrier=="toll_booth") {   // Organize the tollbooths
             grupoPeaje.push(layers[i]);
         } else {
-            grupoOtros.push(layers[i]);;    // Resto
+            grupoOtros.push(layers[i]);;    // The rest
         }
     };
 
-    //Borro los nodos inutiles
+    // Delete unused nodes
     for (var i = 0; i < grupoOtros.length; i++) {
         map.removeLayer(grupoOtros[i]);
     };
 
-    //Para ocultar datos
+    // Hide data
     actualizarGrupoEnMapa ("Peaje");
     actualizarGrupoEnMapa ("SalExitTo");
     actualizarGrupoEnMapa ("SalName");
@@ -229,14 +231,14 @@ function addData1 () {
 }
 
 // addData3
-// Añado:       Áreas de servicio y Áreas de descanso
-// Compruebo:   nombre
+// Add:         Service and rest areas
+// Check:       name
 
 function addData3 () {
-    MarkerStyleAreas = {        // Estilo por defecto de los nodos
+    MarkerStyleAreas = {
         radius: 6,
         fillColor: colorAreasFondo,
-        color: colorAreas,       //Color areas de servicio
+        color: colorAreas,       //Service and rest areas color
         weight: 3,
         opacity: 1,
         fillOpacity: 1
@@ -246,7 +248,7 @@ function addData3 () {
         style: function(feature) {  
             return {color: "#f043b4"}
         },
-        onEachFeature: function (feature, layer) {                              //Configuro los popup
+        onEachFeature: function (feature, layer) {                              //Popup config
             var tipo;
             if (feature.properties.tags.highway=="services") {
                 tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>" + $.i18n._('areadeservicio');
@@ -262,19 +264,19 @@ function addData3 () {
             }
         },
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, MarkerStyleAreas);        // Convierto los nodos en circleMarker
+            return L.circleMarker(latlng, MarkerStyleAreas);        // Convert nodes to circleMarker
         }
 
     })
     .addTo(map);
 
-    // Organizo los nodos y vías en grupos
+    // Organize service and rest areas in its group
     layers = capaDatos.getLayers()
     for (var i = 0; i < layers.length; i++) {                           
         grupoAreas.push(layers[i]);
     };
 
-    // Convierto las áreas a circulos
+    // Convert areas to nodes
     for (var i = 0; i < grupoAreas.length; i++) {
         if(grupoAreas[i].feature!==undefined){
             if(grupoAreas[i].feature.geometry.type=="Polygon"){
@@ -293,7 +295,7 @@ function addData3 () {
         }
     };
 
-    //Para ocultar datos
+    // Hide data
     actualizarGrupoEnMapa ("Areas");
 
 }
@@ -318,7 +320,7 @@ function getData0 () {
             var autopistas = [];
             var vias = [];
             for (i in response.elements) {
-                if (response.elements[i].type == "relation") {  // Ordeno los datos obtenidos en autopistas (relacion) y vias (ways)
+                if (response.elements[i].type == "relation") {  // Organize the received data on autopistas (relations) y vias (ways)
                     autopistas.push({id:response.elements[i].id, ref:response.elements[i].tags.ref, members:response.elements[i].members});
                 } else if (response.elements[i].type == "way") {
                     vias.push({id:response.elements[i].id, tags:response.elements[i].tags});
@@ -328,8 +330,8 @@ function getData0 () {
             var copiaautopistas = autopistas;
             autopistas = [];
 
-            for (i in copiaautopistas) {    // Borro las autopistas que no lo son
-                var primeravia = vias[findWithAttr(vias, "id", copiaautopistas[i].members[0].ref)]; //la primera via de la autopista
+            for (i in copiaautopistas) {    // Delete false freeways
+                var primeravia = vias[findWithAttr(vias, "id", copiaautopistas[i].members[0].ref)]; //The first way of the freeway
                 if (primeravia) {
                     if (primeravia.tags) {
                         if (primeravia.tags.highway == "motorway" || primeravia.tags.highway == "motorway_link" || primeravia.tags.highway == "trunk" 
@@ -340,7 +342,7 @@ function getData0 () {
                 }
             }
 
-            autopistas.sort(function(a,b){      // Ordeno por referencia las autopistas
+            autopistas.sort(function(a,b){      // Sort freeways by reference
                 if (a.ref > b.ref) {
                     return +1;
                 } else {
@@ -348,7 +350,7 @@ function getData0 () {
                 }
             });
             
-            for (i in autopistas) {     // Añado las autopistas al selector
+            for (i in autopistas) {     // Add freeways to selector
                 $("select[name=autopistas]").append('<option value="' + autopistas[i].id + '">' + autopistas[i].ref + '</option>');
             }
 
@@ -462,9 +464,9 @@ function getData3 () {
 }
 
 
-// getData41 y getData51
-// Obtengo: Vías de salidas
-// Compruebo: destination, posibles salidas sin marcar
+// getData41 and getData51
+// Obtain:      Exit ways
+// Check:       destination, Possible unmarked exits
 
 function getData41 () {
 
@@ -503,7 +505,7 @@ function getData51 (response) {
     
     rq51 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
-            MarkerStyleSalSinSal = {        // Estilo de los nodos de salida sin marcar
+            MarkerStyleSalSinSal = {        // Possible Unmarked Exits style
                 radius: 6,
                 fillColor: colorSalSinSalFondo,
                 color: colorSalSinSal,       
@@ -511,7 +513,7 @@ function getData51 (response) {
                 opacity: 1,
                 fillOpacity: 1
             };
-            MarkerStyleSalDestination = {   // Estilo de los nodos de salida con destination
+            MarkerStyleSalDestination = {   // Exits with destination style
                 radius: 6,
                 fillColor: "#000000",
                 color: colorSalDestination,
@@ -522,54 +524,54 @@ function getData51 (response) {
             var viasSalidas = response;
 
             for (var i = 0; i < viasSalidas.elements.length; i++) {
-                if (viasSalidas.elements[i].type == "way") {            // Solo trabajo con las "way"s
-                    if (viasSalidas.elements[i].tags.oneway == "-1") {  // Obtengo el ID del primer nodo de la salida
-                        nodosalida = viasSalidas.elements[i].nodes.length; //Que me sirve para detectar si es salida o entrada
+                if (viasSalidas.elements[i].type == "way") {            // I get only the "way"s
+                    if (viasSalidas.elements[i].tags.oneway == "-1") {  // Get the ID of the first node on the way
+                        nodosalida = viasSalidas.elements[i].nodes.length; // And I use it to detect if it's an exit or an entry to the freeway
                     } else {
                         nodosalida = 0;
                     }
-                    if (viasSalidas.elements[i].tags.access !== "no" && viasSalidas.elements[i].tags.access !== "private") { // Compruebo si es posible el acceso
+                    if (viasSalidas.elements[i].tags.access !== "no" && viasSalidas.elements[i].tags.access !== "private") { // Check if access is possible
                         var esSalida = true;
-                        for (var m = 0; m < grupoVias.length; m++) { // Compruebo si realmente es una salida y no es parte de la autopista
+                        for (var m = 0; m < grupoVias.length; m++) { // Check if it's actually an exit or if it's part of the freeway
                             if (grupoVias[m].feature.properties.id == viasSalidas.elements[i].id) {
                                 esSalida = false;
                             }
                         };
                         if (esSalida) {
-                            for (var j = 0; j < nodosAutopista.elements.length; j++) {  // Para cada nodo de la autopista
-                                if (nodosAutopista.elements[j].id == viasSalidas.elements[i].nodes[nodosalida]) { //Busco el nodo de unión con la salida
+                            for (var j = 0; j < nodosAutopista.elements.length; j++) {  // For each node on the freeway
+                                if (nodosAutopista.elements[j].id == viasSalidas.elements[i].nodes[nodosalida]) { // Get the junction node
                                     lat=nodosAutopista.elements[j].lat;
                                     lon=nodosAutopista.elements[j].lon;
 
-                                    if (nodosAutopista.elements[j].tags == undefined) {  // Si no tiene tags lo marco como salida sin marcar
+                                    if (nodosAutopista.elements[j].tags == undefined) {  // If it has no tags, I mark it as Possible Unmarked Exit
                                         circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);
                                         circulo.bindPopup("<b>" + $.i18n._('SalSinSal') + "</b>");
                                         circulo.addTo(map);
                                         grupoSalSinSal.push(circulo);
 
-                                    } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // Si no tiene motorway_junction  
-                                        circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // lo marco como salida sin marcar
+                                    } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // If it has no motorway_junction  
+                                        circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // I mark it as Possible Unmarked Exit
                                         circulo.bindPopup("<b>" + $.i18n._('SalSinSal') + "</b>");
                                         circulo.addTo(map);
                                         grupoSalSinSal.push(circulo);
-                                                                                        //  Si tiene destination lo marco como salida con destination
+                                                                                        //  If it has destination I mark it as Exit with Destination
                                     } else if (nodosAutopista.elements[j].tags.name == undefined && nodosAutopista.elements[j].tags.exit_to == undefined) {
                                         if (viasSalidas.elements[i].tags.destination !== undefined){
                                             circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalDestination);
-                                            circulo.feature = {properties: nodosAutopista.elements[j]}; // le copio las propiedades del nodo
+                                            circulo.feature = {properties: nodosAutopista.elements[j]}; // Copy the node properties
 
-                                            if (circulo.feature.properties.tags.ref !== undefined) {        // Preparo la ref
+                                            if (circulo.feature.properties.tags.ref !== undefined) {        // Prepare the ref
                                                 ref = circulo.feature.properties.tags.ref
                                             } else {
                                                 ref = "&nbsp";
                                             }
-                                            direcciones=viasSalidas.elements[i].tags.destination.split(";"); // Preparo las direcciones
+                                            direcciones=viasSalidas.elements[i].tags.destination.split(";"); // Prepare the directions
 
-                                            popup = '<div class="senal">' +                         // Preparo el codigo HTML del popup
+                                            popup = '<div class="senal">' +                         // Prepare popup HTML code
                                                         '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="20px"/>' + ref + '&nbsp</div>' +
                                                         '<div class="senal senalElem" id="destination">';
                                             for (p in direcciones) { 
-                                                if(esReferencia(direcciones[p])){ // Si tiene la referencia de carretera
+                                                if(esReferencia(direcciones[p])){ // If it has a reference in the directions
                                                     direccion = direcciones[p].split(" ");
                                                     for (q in direccion) {
                                                         if (esReferencia(direccion[q])){
@@ -586,15 +588,15 @@ function getData51 (response) {
 
                                             popup +=    '</div></div>' + 
                                                         '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>' + 
-                                                        '<div class="alltags">' + // Muestro todas las tags
+                                                        '<div class="alltags">' + // Show all tags
                                                         '<b>' + $.i18n._('nodo') + ' ID: </b>' + circulo.feature.properties.id + " " +
-                                                        linkEditID("node", circulo.feature.properties.id); // Añado el link a editor ID
+                                                        linkEditID("node", circulo.feature.properties.id); // Add link to ID editor
                                             for (key in circulo.feature.properties.tags) {                  
                                                 popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + circulo.feature.properties.tags[key];
                                             }
 
                                             popup += '<br/><br/><b>' + $.i18n._('via') + ' ID: </b>' + viasSalidas.elements[i].id + " " +
-                                                linkEditID("way", viasSalidas.elements[i].id); // Añado el link a editor ID
+                                                linkEditID("way", viasSalidas.elements[i].id); // Add link to ID editor
                                             for (key in viasSalidas.elements[i].tags) {                  
                                                 popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + viasSalidas.elements[i].tags[key];
                                             }
@@ -618,7 +620,7 @@ function getData51 (response) {
                 };
             };
 
-            //Borro los nodos que voy a actualizar con la nueva informacion de destination
+            // Delete old nodes that I'll update now with the destination info
             var copiagrupoSalRef = grupoSalRef;
             var k;
             for (var i = 0; i < grupoSalDestination.length; i++) {
@@ -656,7 +658,7 @@ function getData51 (response) {
                 };
             };
 
-            //Añado los nodos con la informacion de destination
+            // Add nodes with destination=
             for (var i = 0; i < grupoSalDestination.length; i++) {
                 if (grupoSalDestination[i].feature.properties.tags.ref !==undefined){
                     grupoSalRef.push(grupoSalDestination[i]);
@@ -668,7 +670,7 @@ function getData51 (response) {
                 map.addLayer(grupoSalDestination[i]);
             };
 
-            //Para ocultar datos
+            // Hide data
             actualizarGrupoEnMapa ("SalRef");
             actualizarGrupoEnMapa ("SalNoRef");
             actualizarGrupoEnMapa ("SalDestination");
@@ -700,7 +702,7 @@ function getData51 (response) {
     });
 }
 
-function getData6 () { // Adds the desired freeway (id on permalink) to the selector and calls other functions to load it
+function getData6 () { // Adds the desired freeway (getting the id from permalink) to the selector and calls other functions to load it
 
     consulta = '[out:json][timeout:10];relation(' + id + ');out bb;';
 
@@ -729,7 +731,7 @@ function getData6 () { // Adds the desired freeway (id on permalink) to the sele
     });
 }
 
-function linkEditID (type, id) {    // Para obtener el link de edición en el editor ID dados el tipo de via y el ID del objeto
+function linkEditID (type, id) {    // ID editor link
     return "<a target='_blank' href='http://level0.osmz.ru/?url=%2F%2Foverpass-api.de%2Fapi%2Finterpreter%3Fdata%3D%" + 
         "253Cosm-script%2520output%253D%2522xml%2522%2520timeout%253D%252225%2522%253E%250A%2520%2520%253Cunion%253E%250" + 
         "A%2520%2520%2520%2520%253Cquery%2520type%253D%2522" + type + "%2522%253E%250A%2520%2520%2520%2520%2520%2520%253Cid-query%" + 
