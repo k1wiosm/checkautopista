@@ -158,7 +158,7 @@ function addData1 () {
                 popup +=    '</div></div>' + 
                             '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>' + 
                             '<div class="alltags">' + // Show all tags
-                            '<b>' + $.i18n._('nodo') + ' ID: </b>' + feature.properties.id + ' ' + linkEditID("node", feature.properties.id); // Link to ID editor
+                            '<b>' + $.i18n._('nodo') + ' ID: </b>' + feature.properties.id + '<br/>&nbsp&nbsp&nbsp' + linkEditors("node", feature.properties.id); // Link to editors
                 for (key in feature.properties.tags) {                  
                     popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + feature.properties.tags[key];
                 }
@@ -179,7 +179,7 @@ function addData1 () {
             }
             if (feature.properties.tags.barrier=='toll_booth') {                                    // Popup of Tollbooth
                 layer.bindPopup("<b>"+ $.i18n._('Peaje') + ": " + feature.properties.tags.name + "</b>" +
-                    "<br>" + linkEditID("node", feature.properties.id) );
+                    "<br>&nbsp&nbsp&nbsp" + linkEditors("node", feature.properties.id) );
             }
         },
         pointToLayer: function (feature, latlng) {
@@ -256,10 +256,10 @@ function addData3 () {
             }
             if(feature.geometry.type=="Point"){
                 layer.bindPopup("<b> " + tipo + ": " + feature.properties.tags.name + 
-                    "<br>" + linkEditID("node", feature.properties.id) );
+                    "<br>&nbsp&nbsp&nbsp" + linkEditors("node", feature.properties.id) );
             } else {
                 layer.bindPopup("<b> " + tipo + ": " + feature.properties.tags.name + 
-                    "<br>" + linkEditID("way", feature.properties.id) );
+                    "<br>&nbsp&nbsp&nbsp" + linkEditors("way", feature.properties.id) );
             }
         },
         pointToLayer: function (feature, latlng) {
@@ -287,7 +287,7 @@ function addData3 () {
                 }
                 circulo = L.circleMarker(grupoAreas[i].getBounds().getCenter(), MarkerStyleAreas);
                 circulo.bindPopup("<b> " + tipo + ": " + grupoAreas[i].feature.properties.tags.name + 
-                    "<br>" + linkEditID("way", grupoAreas[i].feature.properties.id) );
+                    "<br>&nbsp&nbsp&nbsp" + linkEditors("way", grupoAreas[i].feature.properties.id) );
                 circulo.addTo(map);
                 grupoAreas.push(circulo);
             }
@@ -309,7 +309,6 @@ function getData0 () {
     e = bounds._northEast.lng;
     s = bounds._southWest.lat;
     w = bounds._southWest.lng;
-
 
 
     consulta = '[out:json][timeout:25];relation["route"="road"](' + s + ',' + w + ',' + n + ',' + e + ');(._;way(r););out body;'
@@ -594,14 +593,14 @@ function getData51 (response) {
                                             popup +=    '</div></div>' + 
                                                         '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>' + 
                                                         '<div class="alltags">' + // Show all tags
-                                                        '<b>' + $.i18n._('nodo') + ' ID: </b>' + circulo.feature.properties.id + " " +
-                                                        linkEditID("node", circulo.feature.properties.id); // Add link to ID editor
+                                                        '<b>' + $.i18n._('nodo') + ' ID: </b>' + circulo.feature.properties.id + "<br/>&nbsp&nbsp&nbsp" +
+                                                        linkEditors("node", circulo.feature.properties.id); // Add Link to editors
                                             for (key in circulo.feature.properties.tags) {                  
                                                 popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + circulo.feature.properties.tags[key];
                                             }
 
-                                            popup += '<br/><br/><b>' + $.i18n._('via') + ' ID: </b>' + viasSalidas.elements[i].id + " " +
-                                                linkEditID("way", viasSalidas.elements[i].id); // Add link to ID editor
+                                            popup += '<br/><br/><b>' + $.i18n._('via') + ' ID: </b>' + viasSalidas.elements[i].id + "<br/>&nbsp&nbsp&nbsp" +
+                                                linkEditors("way", viasSalidas.elements[i].id); // Add Link to editors
                                             for (key in viasSalidas.elements[i].tags) {                  
                                                 popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + viasSalidas.elements[i].tags[key];
                                             }
@@ -739,15 +738,9 @@ function getData6 () {
     });
 }
 
-function linkEditID (type, id) {    // ID editor link
-    return "<a target='_blank' href='http://level0.osmz.ru/?url=%2F%2Foverpass-api.de%2Fapi%2Finterpreter%3Fdata%3D%" + 
-        "253Cosm-script%2520output%253D%2522xml%2522%2520timeout%253D%252225%2522%253E%250A%2520%2520%253Cunion%253E%250" + 
-        "A%2520%2520%2520%2520%253Cquery%2520type%253D%2522" + type + "%2522%253E%250A%2520%2520%2520%2520%2520%2520%253Cid-query%" + 
-        "2520type%253D%2522" + type + "%2522%2520ref%253D%2522" + id + 
-        "%2522%252F%253E%250A%2520%2520%2520%2520%253C%252Fquery%253E%250A%2520%2520%253C%252Funion%253E%250A%2520%2520%253C" + 
-        "print%2520mode%253D%2522meta%2522%252F%253E%250A%2520%2520%253Crecurse%2520type%253D%2522down%2522%252F%253E%250A%252" + 
-        "0%2520%253Cprint%2520mode%253D%2522meta%2522%2520order%253D%2522quadtile%2522%252F%253E%250A%253C%252" + 
-        "Fosm-script%253E'>level0<img class='link' src='img/link.png'/></a>";
+function linkEditors (type, id) {
+    return '<a target="_blank" href="http://level0.osmz.ru/?url=' + type + '/' + id + '">level0<img class="link" src="img/link.png"/></a>' + 
+    '<a target="_blank" href="http://127.0.0.1:8111/load_object?new_layer=false&objects=' + type + id + '">JOSM<img class="link" src="img/link.png"/></a>';
 }
 
 function esReferencia(string) {

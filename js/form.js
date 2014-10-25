@@ -37,6 +37,7 @@ $(document).ready( function() {
 
     //Hide data
     $(".boton").click(function () {
+        ga('send', 'event', 'Esconder datos', 'click');
         nombre = this.id;
         window["visib" + nombre] = !window["visib" + nombre]; // Flip saved value in visib___
         actualizarGrupoEnMapa(nombre);
@@ -44,6 +45,7 @@ $(document).ready( function() {
 
     //"Show all tags" button
     $(document).on('click', 'div.mostrar', function() {
+        ga('send', 'event', 'Ver todas las tags', 'click');
         $("div.alltags").toggle();
     });
 
@@ -52,14 +54,17 @@ $(document).ready( function() {
         $("#selector").toggle();
         visibSelector=!visibSelector;
         if (visibSelector) {
+            ga('send', 'event', 'Mostrar menu', 'click');
             $("#mostrar").html($.i18n._('esconder') +" &#8594;");
         } else {
+            ga('send', 'event', 'Esconder menu', 'click');
             $("#mostrar").html("&#8592;" + $.i18n._('mostrar'));
         }
     });
 
     //Permalink
     $("a#getpermalink").hover(function(){
+        ga('send', 'event', 'Permalink', 'click');
         var lat = map.getCenter().lat;
         var lon = map.getCenter().lng;
         var zoom = map.getZoom(); 
@@ -77,6 +82,7 @@ function Ver() {
         $("input[name=ver]").prop("value",$.i18n._('ver'));
         rq0.abort();
     } else {
+        ga('send', 'event', 'Ver', 'click');
         if (map.getZoom()>9) {
             cargando=true;
             $("input[name=ver]").prop("value",$.i18n._('cancelar'));
@@ -102,6 +108,7 @@ function Cargar() {
         cargando=true;
         $("input[name=cargar]").prop("value",$.i18n._('cancelar'));
         id=$("select[name=autopistas]").val();
+        ga('send', 'event', 'Cargar', 'click', id);
         $("input[name=ver]").prop("disabled",true);
         $("div#feedback1").html($.i18n._('cargandodatos'));
         $("div#feedback2").html("");
