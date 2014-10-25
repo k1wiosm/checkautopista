@@ -310,7 +310,7 @@ function getData0 () {
 
 
 
-    consulta = '[out:json][timeout:25];(relation["route"="road"](' + s + ',' + w + ',' + n + ',' + e + '););(._;way(r););out body;'
+    consulta = '[out:json][timeout:25];relation["route"="road"](' + s + ',' + w + ',' + n + ',' + e + ');(._;way(r););out body;'
 
     rq0 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
@@ -529,7 +529,7 @@ function getData51 (response) {
                     } else {
                         nodosalida = 0;
                     }
-                    if (viasSalidas.elements[i].tags.access !== "no") { // Compruebo si es posible el acceso
+                    if (viasSalidas.elements[i].tags.access !== "no" && viasSalidas.elements[i].tags.access !== "private") { // Compruebo si es posible el acceso
                         var esSalida = true;
                         for (var m = 0; m < grupoVias.length; m++) { // Compruebo si realmente es una salida y no es parte de la autopista
                             if (grupoVias[m].feature.properties.id == viasSalidas.elements[i].id) {
