@@ -416,9 +416,8 @@ function getData1 () {
 
 function getData3 () {
 
-    consulta = '[out:json][timeout:50];(relation(' + id + ');way(r);node(w););(way(around:200)["highway"="services"]->.a;node' + 
-        '(around:200)["highway"="services"]->.a;way(around:200)["highway"="rest_area"]->.a;nod' + 
-        'e(around:200)["highway"="rest_area"]->.a;);(._;>;);out body;';
+    consulta = '[out:json][timeout:20];relation(' + id + ');way(r);node(w);(node(around:1000)["highway"~"services|rest_' + 
+        'area"]->.x;way(around:1000)["highway"~"services|rest_area"];);(._;>;);out;';
 
     
     rq3 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
