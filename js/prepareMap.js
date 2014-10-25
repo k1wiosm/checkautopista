@@ -1,10 +1,10 @@
-var zoom = $.url().param("zoom");
-var lat = $.url().param("lat");
-var lon = $.url().param("lon");
+var userzoom = $.url().param("zoom");
+var userlat = $.url().param("lat");
+var userlon = $.url().param("lon");
 
-if (zoom == undefined) {zoom = 6;};
-if (lat == undefined) {lat = 40.179;};
-if (lon == undefined) {lon = -4.482;};
+if (userzoom == undefined) {zoom = 6;} else { zoom = userzoom; }
+if (userlat == undefined) {lat = 40.179;} else { lat = userlat; }
+if (userlon == undefined) {lon = -4.482;} else { lon = userlon; }
 
 var map = L.map('map', {editInOSMControlOptions: {widget:"attributionBox", editors:["josm"]}}).setView([lat, lon], zoom);
 

@@ -544,8 +544,8 @@ function getData51 (response) {
                         if (esSalida) {
                             for (var j = 0; j < nodosAutopista.elements.length; j++) {  // For each node on the freeway
                                 if (nodosAutopista.elements[j].id == viasSalidas.elements[i].nodes[nodosalida]) { // Get the junction node
-                                    lat=nodosAutopista.elements[j].lat;
-                                    lon=nodosAutopista.elements[j].lon;
+                                    var lat=nodosAutopista.elements[j].lat;
+                                    var lon=nodosAutopista.elements[j].lon;
 
                                     if (nodosAutopista.elements[j].tags == undefined) {  // If it has no tags, I mark it as Possible Unmarked Exit
                                         circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);
@@ -716,7 +716,7 @@ function getData6 () {
     rq1 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
             if(response.elements[0]) {
-                if (!(lat && lon && zoom)) {
+                if (!(userlat && userlon && userzoom)) {
                     var n = response.elements[0].bounds.maxlat;
                     var w = response.elements[0].bounds.minlon;
                     var s = response.elements[0].bounds.minlat;
