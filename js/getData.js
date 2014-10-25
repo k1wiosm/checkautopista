@@ -416,7 +416,7 @@ function getData1 () {
 
 function getData3 () {
 
-    consulta = '[out:json][timeout:20];relation(' + id + ');way(r);node(w);(node(around:1000)["highway"~"services|rest_' + 
+    consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);(node(around:1000)["highway"~"services|rest_' + 
         'area"]->.x;way(around:1000)["highway"~"services|rest_area"];);(._;>;);out;';
 
     
@@ -469,7 +469,7 @@ function getData3 () {
 
 function getData41 () {
 
-    consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);out body;';
+    consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);out;';
 
     
     rq41 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
@@ -499,8 +499,7 @@ function getData51 (response) {
     var nodosAutopista = response;
     var nodosalida = 0;
 
-    consulta = '[out:json][timeout:50];relation(' + id + 
-        ');way(r);node(w);way(bn);(way._["highway"="motorway_link"]->.A;way._["highway"="trunk_link"]->.A;way._["highway"="service"];);(._;>;);out body;'; 
+    consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);way(bn);way._["highway"~"motorway_link|trunk_link|service"];(._;>;);out;'; 
 
     
     rq51 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
