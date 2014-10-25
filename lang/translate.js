@@ -1,25 +1,25 @@
 $(document).ready( function() {
-	var userlang = (window.navigator.userLanguage || window.navigator.language); // Obtengo el idioma del navegador
-	var lang = $.url().param("lang");	// Obtengo el idioma deseado de la url
+	var userlang = (window.navigator.userLanguage || window.navigator.language); // Get the browser language
+	var lang = $.url().param("lang");	// Get the language from permalink
 	if (lang) { userlang=lang;}
-	var langcode = userlang.substr(0,2);	// Me quedo con lo importante del codigo de idioma
+	var langcode = userlang.substr(0,2);	// Get the essential part of lang code
 
 	switch(langcode) {
-	    case "en":
-	        $.i18n.load(my_dictionary_en);
+	    case "ca":
+	        $.i18n.load(my_dictionary_ca);
 	        break;
 	    case "de":
 	        $.i18n.load(my_dictionary_en);
 	        break;
-	    case "ca":
-	        $.i18n.load(my_dictionary_ca);
+	    case "en":
+	        $.i18n.load(my_dictionary_en);
 	        break;
 	    case "es":
 	        $.i18n.load(my_dictionary_es);
 	        break;
-      case "fr":
-          $.i18n.load(my_dictionary_fr);
-          break;
+	    case "fr":
+	        $.i18n.load(my_dictionary_fr);
+	        break;
 	    case "pt":
 	        $.i18n.load(my_dictionary_pt);
 	        break;
@@ -27,7 +27,7 @@ $(document).ready( function() {
 	        $.i18n.load(my_dictionary_tl);
 	        break;
 	    default:
-	        $.i18n.load(my_dictionary_es);
+	        $.i18n.load(my_dictionary_en);
 	}
 
 	$('div#lema')._t('lema', '<a href="http://www.openstreetmap.org/">', '</a>');

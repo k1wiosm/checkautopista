@@ -3,7 +3,7 @@ var id;
 var cargando = false;
 $(document).ready( function() {
 
-    //Estilo de los botones de la leyenda
+    //Legend buttons style
     $("#Peaje").css("border-color", colorPeaje);
     $("#Peaje").css("background-color", colorPeajeFondo);
     $("#SalDestination").css("border-color", colorSalDestination);
@@ -19,35 +19,35 @@ $(document).ready( function() {
     $("#Areas").css("border-color", colorAreas);
     $("#Areas").css("background-color", colorAreasFondo);
 
-    //Detectar autopista deseada por permalink
+    //Detect wanted freeway from permalink
     id = $.url().param("id");
     if (id) {
         getData6(id);
     }
 
-    //Botón Ver
+    //"View" button
     $("input[name=ver]").click(function () {
         Ver();
     });
 
-    //Botón Cargar
+    //"Load" button
     $("input[name=cargar]").click(function () {
         Cargar();
     });
 
-    //Para ocultar datos
+    //Hide data
     $(".boton").click(function () {
         nombre = this.id;
-        window["visib" + nombre] = !window["visib" + nombre]; // Invierto el valor guardado en visib___
+        window["visib" + nombre] = !window["visib" + nombre]; // Flip saved value in visib___
         actualizarGrupoEnMapa(nombre);
     })
 
-    //Botón Mostrar todo
+    //"Show all tags" button
     $(document).on('click', 'div.mostrar', function() {
         $("div.alltags").toggle();
     });
 
-    //Boton esconder menu
+    //"Hide menu" button
     $("#mostrar").click(function(){
         $("#selector").toggle();
         visibSelector=!visibSelector;
@@ -116,30 +116,30 @@ function Cargar() {
 function actualizarGrupoEnMapa (nombre) {
     visib = window["visib" + nombre];
     grupo = window["grupo" + nombre];
-    if (window["color" + nombre + "Fondo"] !== undefined) { //Obtengo el color de fondo asignado a este grupo___
+    if (window["color" + nombre + "Fondo"] !== undefined) { // Get the background color assigned to this grupo___
         colorBg = window["color" + nombre + "Fondo"];
     } else {
         colorBg = "white";
     }
-    if (window["color" + nombre] !== undefined) {   //Obtengo el color de borde asignado a este grupo___
+    if (window["color" + nombre] !== undefined) {   // Get the border color assigned to this grupo___
         color = window["color" + nombre];
     } else {
         color = "white";
-    }                                               // Borro o añado los nodos según la visib___
-    if (!visib) { //Borro nodos                                  
-        $("#"+nombre).css("border-color", "white");     //Estilo de la leyenda
+    }                                               // Hide or show nodes depending on visib___
+    if (!visib) { // Hide nodes                                  
+        $("#"+nombre).css("border-color", "white");     //Legend style
         $("#"+nombre).css("background-color", colorDesactivadoFondo);
-        for (var i = 0; i < grupo.length; i++) { // Para cada nodo de este grupo___
-            x = getGrupo(grupo[i]); //grupos a los que pertenece este nodo
-            if(x.length>1) { // si pertenece a más de un grupo
-                if (nombre.indexOf("Ref") == -1) { // si no es de ref
+        for (var i = 0; i < grupo.length; i++) { // For each node of this grupo___
+            x = getGrupo(grupo[i]); // Groups this node is part of
+            if(x.length>1) { // If it's part of more than one group
+                if (nombre.indexOf("Ref") == -1) { // If it's not one of ref
                     grupo[i].setStyle({radius:5, color:"black", weight:1});
-                    if (window["visib" + x[1]] == false) { // Si el otro grupo tambien esta apagado borro el nodo
+                    if (window["visib" + x[1]] == false) { // If the other group is also deactivated I delete the node
                     map.removeLayer(grupo[i]);
                     };
-                } else { // si es de ref
+                } else { // If it's one of ref
                     grupo[i].setStyle({fillOpacity:0});
-                    if (window["visib" + x[0]] == false) { // Si el otro grupo tambien esta apagado borro el nodo
+                    if (window["visib" + x[0]] == false) { // If the other group is also deactivated I delete the node
                     map.removeLayer(grupo[i]);
                     };
                 };
@@ -147,13 +147,13 @@ function actualizarGrupoEnMapa (nombre) {
                 map.removeLayer(grupo[i]);
             };
         };
-    } else {    //Añado nodos
-        $("#"+nombre).css("border-color", color);   //Estilo de la leyenda
+    } else {    //Add nodes
+        $("#"+nombre).css("border-color", color);   //Legend style
         $("#"+nombre).css("background-color", colorBg);
-        for (var i = 0; i < grupo.length; i++) { // Para cada nodo de este grupo___
-            if (nombre.indexOf("Ref") == -1) { // si no es de ref
+        for (var i = 0; i < grupo.length; i++) { // For each node if this grupo___
+            if (nombre.indexOf("Ref") == -1) { // If it's not one of ref
                 grupo[i].setStyle({radius:6, color:color, weight:3});
-            } else { // si es de ref
+            } else { // If it's one of ref
                 grupo[i].setStyle({fillOpacity:1});
             }
             map.addLayer(grupo[i]);

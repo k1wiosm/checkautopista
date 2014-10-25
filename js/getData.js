@@ -36,7 +36,7 @@ var visibSalSinSal = true;
 var visibAreas = true;
 var visibOtros = true;
 
-//Colores
+//Colors
 var colorPeaje = "#0000ff";
 var colorPeajeFondo = "#55a0bd";
 var colorSalDestination = "#1e452b";
