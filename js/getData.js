@@ -1,4 +1,3 @@
-var a = $.url().param("a");
 var dataOSM;
 var dataGeoJSON;
 var capaDatos;
@@ -698,6 +697,35 @@ function getData51 (response) {
             $("input[name=ver]").prop("disabled",false);
             cargando=false;
         }
+    });
+}
+
+function getData6 () { // Adds the desired freeway (id on permalink) to the selector and calls other functions to load it
+
+    consulta = '[out:json][timeout:10];relation(' + id + ');out bb;';
+
+    rq1 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+            if(response.elements[0]) {
+                if (!(lat && lon && zoom)) {
+                    var n = response.elements[0].bounds.maxlat;
+                    var w = response.elements[0].bounds.minlon;
+                    var s = response.elements[0].bounds.minlat;
+                    var e = response.elements[0].bounds.maxlon;
+                    map.fitBounds([[s, w],[n, e]]);
+                }
+
+                var ref = response.elements[0].tags.ref;
+                $("select[name=autopistas]").append('<option value="' + id + '">' + ref + '</option>');
+                $("input[name=cargar]").prop("disabled", false );
+                Cargar();
+            } else {
+                console.log("ERROR: ID incorrect.");
+            }
+        }
+    )
+    .fail(function() { 
+        $("div#feedback1").html($.i18n._('erroralcargar'));
     });
 }
 

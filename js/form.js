@@ -19,47 +19,20 @@ $(document).ready( function() {
     $("#Areas").css("border-color", colorAreas);
     $("#Areas").css("background-color", colorAreasFondo);
 
+    //Detectar autopista deseada por permalink
+    id = $.url().param("id");
+    if (id) {
+        getData6(id);
+    }
+
     //Botón Ver
     $("input[name=ver]").click(function () {
-        if (cargando) {
-            $(this).prop("value",$.i18n._('ver'));
-            rq0.abort();
-        } else {
-            if (map.getZoom()>9) {
-                cargando=true;
-                $(this).prop("value",$.i18n._('cancelar'));
-                $("input[name=cargar]").prop("disabled",true);
-                $("div#feedback1").html($.i18n._('cargandoautopistas'));
-                $("div#feedback2").html("");
-                getData0();
-            } else {
-                $("div#feedback1").html($.i18n._('acercamas'));
-                $("div#feedback2").html("");
-            }
-        }
+        Ver();
     });
 
     //Botón Cargar
     $("input[name=cargar]").click(function () {
-        if (cargando) {
-            $(this).prop("value",$.i18n._('ver'));
-            rq1.abort();
-            rq3.abort();
-            rq41.abort();
-            rq51.abort();
-        } else {
-            cargando=true;
-            $(this).prop("value",$.i18n._('cancelar'));
-            id=$("select[name=autopistas]").val();
-            $("input[name=ver]").prop("disabled",true);
-            $("div#feedback1").html($.i18n._('cargandodatos'));
-            $("div#feedback2").html("");
-            cargado=0;
-            errores=0;
-            getData1();
-            getData3();
-            getData41();
-        }
+        Cargar();
     });
 
     //Para ocultar datos
@@ -91,12 +64,54 @@ $(document).ready( function() {
         var lon = map.getCenter().lng;
         var zoom = map.getZoom(); 
         var link = "?lat=" + lat + "&lon=" + lon + "&zoom=" + zoom;
-        var lang = $.url().param("lang");   // Obtengo el idioma deseado de la url
-        if (lang) { link += "&lang=" + lang ;} ;
+        if (id) {link += "&id=" + id; }     // If a freeway is loaded we save it in the permalink
+        var lang = $.url().param("lang"); 
+        if (lang) { link += "&lang=" + lang; } // If a language is loaded we save it in the permalink
         $(this).prop("href", link);
     });
     
 });
+
+function Ver() {
+    if (cargando) {
+        $("input[name=ver]").prop("value",$.i18n._('ver'));
+        rq0.abort();
+    } else {
+        if (map.getZoom()>9) {
+            cargando=true;
+            $("input[name=ver]").prop("value",$.i18n._('cancelar'));
+            $("input[name=cargar]").prop("disabled",true);
+            $("div#feedback1").html($.i18n._('cargandoautopistas'));
+            $("div#feedback2").html("");
+            getData0();
+        } else {
+            $("div#feedback1").html($.i18n._('acercamas'));
+            $("div#feedback2").html("");
+        }
+    }
+}
+
+function Cargar() {
+    if (cargando) {
+        $("input[name=cargar]").prop("value",$.i18n._('ver'));
+        rq1.abort();
+        rq3.abort();
+        rq41.abort();
+        rq51.abort();
+    } else {
+        cargando=true;
+        $("input[name=cargar]").prop("value",$.i18n._('cancelar'));
+        id=$("select[name=autopistas]").val();
+        $("input[name=ver]").prop("disabled",true);
+        $("div#feedback1").html($.i18n._('cargandodatos'));
+        $("div#feedback2").html("");
+        cargado=0;
+        errores=0;
+        getData1();
+        getData3();
+        getData41();
+    }
+}
 
 function actualizarGrupoEnMapa (nombre) {
     visib = window["visib" + nombre];
