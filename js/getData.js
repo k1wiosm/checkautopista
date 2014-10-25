@@ -227,7 +227,6 @@ function addData1 () {
     actualizarGrupoEnMapa ("SalNada");
     actualizarGrupoEnMapa ("SalRef");
     actualizarGrupoEnMapa ("SalNoRef");
-
 }
 
 // addData3
@@ -297,8 +296,10 @@ function addData3 () {
 
     // Hide data
     actualizarGrupoEnMapa ("Areas");
-
 }
+
+// getData0
+// Gets the freeways that are visible on the map and adds them to the selector
 
 function getData0 () {
 
@@ -366,8 +367,10 @@ function getData0 () {
         $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
         cargando=false;
     });
-
 }
+
+// getData1
+// Gets the data for addData1
 
 function getData1 () {
 
@@ -414,6 +417,9 @@ function getData1 () {
         }
     });
 }
+
+// getData3
+// Gets tha data for addData3
 
 function getData3 () {
 
@@ -462,7 +468,6 @@ function getData3 () {
         }
     });
 }
-
 
 // getData41 and getData51
 // Obtain:      Exit ways
@@ -702,7 +707,10 @@ function getData51 (response) {
     });
 }
 
-function getData6 () { // Adds the desired freeway (getting the id from permalink) to the selector and calls other functions to load it
+// getData6
+// Adds the desired freeway (getting the id from permalink) to the selector and calls other functions to load it
+
+function getData6 () { 
 
     consulta = '[out:json][timeout:10];relation(' + id + ');out bb;';
 
