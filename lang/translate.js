@@ -9,7 +9,7 @@ $(document).ready( function() {
 	        $.i18n.load(my_dictionary_ca);
 	        break;
 	    case "de":
-	        $.i18n.load(my_dictionary_en);
+	        $.i18n.load(my_dictionary_de);
 	        break;
 	    case "en":
 	        $.i18n.load(my_dictionary_en);
