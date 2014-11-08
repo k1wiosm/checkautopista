@@ -31,3 +31,9 @@ En las salidas se comprueba:
 También aparecen marcados los peajes y las áreas de servicio y de descanso.
 *Also it shows information about the tollbooths and the rest areas.*
 
+Idiomas *Languages*
+======================================
+
+CheckAutopista está disponible en Catalán, Alemán, Inglés, Español, Francés, Portugués, Tagalo y Ucraniano. Puedes colaborar con la traducción aquí: https://www.transifex.com/projects/p/checkautopista/
+*CheckAutopista is available in Catalán, German, English, Spanish, French, Portuguese, Tagalog and Ukranian. You can colaborate translating here: https://www.transifex.com/projects/p/checkautopista/*
+

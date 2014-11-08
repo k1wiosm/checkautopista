@@ -26,6 +26,9 @@ $(document).ready( function() {
 	    case "tl":
 	        $.i18n.load(my_dictionary_tl);
 	        break;
+	    case "uk":
+	    	$.i18n.load(my_dictionary_uk);
+	    	break;
 	    default:
 	        $.i18n.load(my_dictionary_en);
 	}
