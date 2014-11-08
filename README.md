@@ -35,5 +35,6 @@ Idiomas *Languages*
 ======================================
 
 CheckAutopista está disponible en Catalán, Alemán, Inglés, Español, Francés, Portugués, Tagalo y Ucraniano. Puedes colaborar con la traducción aquí: https://www.transifex.com/projects/p/checkautopista/
+
 *CheckAutopista is available in Catalán, German, English, Spanish, French, Portuguese, Tagalog and Ukranian. You can colaborate translating here: https://www.transifex.com/projects/p/checkautopista/*
 
