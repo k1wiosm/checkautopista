@@ -51,14 +51,11 @@ var colorAreas = "#f043b4";
 var colorAreasFondo = "#d48fd1";
 var colorDesactivadoFondo = "#b7c3c2";
 
+function addBasicData () { 
+    // Adds:        Ways and exits
+    // Checks:      maxspeed, lanes, name, ref, construction and proposed on ways
+    //              exit_to, name, ref on exits
 
-
-// addData1
-// Adds:        Ways and exits
-// Checks:      maxspeed, lanes, name, ref, construction and proposed on ways
-//              exit_to, name, ref on exits
-
-function addData1 () { 
     MarkerStyleDefault = {        // Default style for the exit nodes
         radius: 6,
         fillColor: "#000000",
@@ -221,19 +218,18 @@ function addData1 () {
     };
 
     // Hide data
-    actualizarGrupoEnMapa ("Peaje");
-    actualizarGrupoEnMapa ("SalExitTo");
-    actualizarGrupoEnMapa ("SalName");
-    actualizarGrupoEnMapa ("SalNada");
-    actualizarGrupoEnMapa ("SalRef");
-    actualizarGrupoEnMapa ("SalNoRef");
+    updateGroupVisib ("Peaje");
+    updateGroupVisib ("SalExitTo");
+    updateGroupVisib ("SalName");
+    updateGroupVisib ("SalNada");
+    updateGroupVisib ("SalRef");
+    updateGroupVisib ("SalNoRef");
 }
 
-// addData3
-// Add:         Service and rest areas
-// Check:       name
+function addAreas () {
+    // Add:         Service and rest areas
+    // Check:       name
 
-function addData3 () {
     MarkerStyleAreas = {
         radius: 6,
         fillColor: colorAreasFondo,
@@ -295,13 +291,11 @@ function addData3 () {
     };
 
     // Hide data
-    actualizarGrupoEnMapa ("Areas");
+    updateGroupVisib ("Areas");
 }
 
-// getData0
-// Gets the freeways that are visible on the map and adds them to the selector
-
-function getData0 () {
+function getVisibleFreeways () {
+    // Gets the freeways that are visible on the map and adds them to the selector
 
     bounds = map.getBounds();
 
@@ -368,10 +362,8 @@ function getData0 () {
     });
 }
 
-// getData1
-// Gets the data for addData1
-
-function getData1 () {
+function getBasicData () {
+    // Gets the data for addBasicData
 
     consulta = '[out:json][timeout:25];(relation(' + id + ');way(r);node(w););out body;';
 
@@ -390,7 +382,7 @@ function getData1 () {
                 "tiger:tlid": true,
                 "tiger:upload_uuid": true
             });
-            addData1();
+            addBasicData();
             cargado++;
             $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
             if (cargado + errores == 4) {
@@ -417,10 +409,8 @@ function getData1 () {
     });
 }
 
-// getData3
-// Gets tha data for addData3
-
-function getData3 () {
+function getAreas () {
+    // Gets tha data for addAreas
 
     consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);(node(around:1000)["highway"~"services|rest_' + 
         'area"]->.x;way(around:1000)["highway"~"services|rest_area"];);(._;>;);out;';
@@ -441,7 +431,7 @@ function getData3 () {
                 "tiger:tlid": true,
                 "tiger:upload_uuid": true
             });
-            addData3();
+            addAreas();
             cargado++;
             $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
             if (cargado + errores == 4) {
@@ -468,18 +458,16 @@ function getData3 () {
     });
 }
 
-// getData41 and getData51
-// Obtain:      Exit ways
-// Check:       destination, Possible unmarked exits
-
-function getData41 () {
+function getDestinationUnmarked1 () {
+    // Gets all nodes of the freeway
+    // Loads them into getDestinationUnmarked2
 
     consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);out;';
 
     
     rq41 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
-            getData51(response);
+            getDestinationUnmarked2(response);
             cargado++;
             $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
         }
@@ -499,7 +487,10 @@ function getData41 () {
     });
 }
 
-function getData51 (response) {
+function getDestinationUnmarked2 (response) {
+    // Receives all nodes of the freeway from getDestinationUnmarked1
+    // Gets exit ways
+    // Checks destination, Possible unmarked exits
 
     var nodosAutopista = response;
     var nodosalida = 0;
@@ -625,42 +616,9 @@ function getData51 (response) {
             };
 
             // Delete old nodes that I'll update now with the destination info
-            var copiagrupoSalRef = grupoSalRef;
-            var k;
-            for (var i = 0; i < grupoSalDestination.length; i++) {
-                for (var j = 0; j < copiagrupoSalRef.length; j++) {
-                    if (copiagrupoSalRef[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
-                        k = grupoSalRef.indexOf(copiagrupoSalRef[j]);
-                        map.removeLayer(copiagrupoSalRef[j]);
-                        grupoSalRef.splice(k,1);
-                        
-                    }
-                };
-            };
-            var copiagrupoSalNoRef = grupoSalNoRef;
-            var k;
-            for (var i = 0; i < grupoSalDestination.length; i++) {
-                for (var j = 0; j < copiagrupoSalNoRef.length; j++) {
-                    if (copiagrupoSalNoRef[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
-                        k = grupoSalNoRef.indexOf(copiagrupoSalNoRef[j]);
-                        map.removeLayer(copiagrupoSalNoRef[j]);
-                        grupoSalNoRef.splice(k,1);
-
-                    }
-                };
-            };
-            var copiagrupoSalNada = grupoSalNada;
-            var k;
-            for (var i = 0; i < grupoSalDestination.length; i++) {
-                for (var j = 0; j < copiagrupoSalNada.length; j++) {
-                    if (copiagrupoSalNada[j].feature.properties.id == grupoSalDestination[i].feature.properties.id){
-                        k = grupoSalNada.indexOf(copiagrupoSalNada[j]);
-                        map.removeLayer(copiagrupoSalNada[j]);
-                        grupoSalNada.splice(k,1);
-                        
-                    }
-                };
-            };
+            grupoSalRef = deleteOldNodes(grupoSalRef, grupoSalDestination);
+            grupoSalNoRef = deleteOldNodes(grupoSalNoRef, grupoSalDestination);
+            grupoSalNada = deleteOldNodes(grupoSalNada, grupoSalDestination);
 
             // Add nodes with destination=
             for (var i = 0; i < grupoSalDestination.length; i++) {
@@ -675,10 +633,10 @@ function getData51 (response) {
             };
 
             // Hide data
-            actualizarGrupoEnMapa ("SalRef");
-            actualizarGrupoEnMapa ("SalNoRef");
-            actualizarGrupoEnMapa ("SalDestination");
-            actualizarGrupoEnMapa ("SalSinSal");
+            updateGroupVisib ("SalRef");
+            updateGroupVisib ("SalNoRef");
+            updateGroupVisib ("SalDestination");
+            updateGroupVisib ("SalSinSal");
 
             cargado++;
             $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
@@ -706,17 +664,16 @@ function getData51 (response) {
     });
 }
 
-// getData6
-// Adds the desired freeway (getting the id from permalink) to the selector and calls other functions to load it
-
-function getData6 () { 
+function getFreewayRefAndLoadIt () { 
+    // Adds the desired freeway (getting the id from permalink) to the selector
+    // Calls other functions to load the freeway
 
     consulta = '[out:json][timeout:10];relation(' + id + ');out bb;';
 
     rq1 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
         function (response) {
             if(response.elements[0]) {
-                if (!(userlat && userlon && userzoom)) {
+                if (!(userlat && userlon && userzoom)) { // If there is not a desired location, fit the data
                     var n = response.elements[0].bounds.maxlat;
                     var w = response.elements[0].bounds.minlon;
                     var s = response.elements[0].bounds.minlat;
@@ -729,7 +686,7 @@ function getData6 () {
                 $("input[name=cargar]").prop("disabled", false );
                 Cargar();
             } else {
-                console.log("ERROR: ID incorrect.");
+                console.log("ERROR: Wrong ID.");
             }
         }
     )
@@ -756,4 +713,22 @@ function findWithAttr(array, attr, value) {
             return i;
         }
     }
+}
+
+function deleteOldNodes (groupToDelete, groupNew) {
+    // Deletes old nodes that are in groupToDelete that also are in groupNew
+    // This is used to update with Tag:destination=* info
+
+    var copygroupToDelete = groupToDelete;
+    var k;
+    for (var i = 0; i < groupNew.length; i++) {
+        for (var j = 0; j < copygroupToDelete.length; j++) {
+            if (copygroupToDelete[j].feature.properties.id == groupNew[i].feature.properties.id){
+                map.removeLayer(copygroupToDelete[j]);
+                k = groupToDelete.indexOf(copygroupToDelete[j]);
+                groupToDelete.splice(k,1);
+            };
+        };
+    };
+    return groupToDelete;
 }

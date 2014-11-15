@@ -4,32 +4,36 @@
         <title>CheckAutopista</title>
         <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>                               <!-- Google Fonts -->
         <link rel="stylesheet" type="text/css" href="css/MyFontsWebfontsKit.css">                                                   <!-- MyFonts -->
-        <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>                                                          <!-- CSS general -->
-        <link rel="stylesheet" type="text/css" href="css/stylesheetmobile.css" media="screen  and (max-width: 40.5em),handheld" />  <!-- CSS para mobile -->
-        <link rel="stylesheet" type="text/css" href="css/stylesheetdesktop.css" media="screen  and (min-width: 40.5em)" />          <!-- CSS para desktop -->
-        <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi, user-scalable=0,initial-scale=1, minimum-scale=1, maximum-scale=1" />  <!-- iPhone -->                         
-        <meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8" />                                   <!-- iPhone -->
-        <meta name="HandheldFriendly" content="true" />                                                                             <!-- iPhone -->
-        <meta name="apple-mobile-web-app-capable" content="yes" />                                                                  <!-- iPhone -->
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />                                         <!-- Leaflet-js -->
-        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>                                                   <!-- Leaflet-js -->
-        <script src='js/osmtogeojson.js'></script>                                                                                  <!-- osmtogeojsom -->
-        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">                        <!-- LocateControl -->
-        <link rel="stylesheet" href="css/L.Control.Locate.css" />                                                                   <!-- LocateControl -->
-        <script src="js/L.Control.Locate.js" ></script>                                                                             <!-- LocateControl -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>                                     <!-- jQuery -->
-        <script src="js/purl.js"></script>                                                                                          <!-- allmarkedup/purl -->
-        <link rel="stylesheet" href="css/Leaflet.EditInOSM.css" />                                                                  <!-- EditInOSM -->
-        <script src="js/Leaflet.EditInOSM.js"></script>                                                                             <!-- EditInOSM -->
 
-        <script src="lang/jquery.i18n.js"></script>                                                                                 <!-- i18n -->
-        <script src="lang/translations.js"></script>                                                                                <!-- translations -->
-        <script src="lang/translate.js"></script>                                                                                   <!-- translate -->
+        <meta name="viewport" content="width=device-width, target-densitydpi=high-dpi, user-scalable=0,initial-scale=1, minimum-scale=1, maximum-scale=1" />  <!-- iPhone -->
+        <meta http-equiv="Content-Type" content="application/vnd.wap.xhtml+xml; charset=utf-8" />       <!-- iPhone -->
+        <meta name="HandheldFriendly" content="true" />                                                 <!-- iPhone -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />                                      <!-- iPhone -->
+
+        <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>                                                          <!-- CSS -->
+        <link rel="stylesheet" type="text/css" href="css/stylesheetmobile.css" media="screen  and (max-width: 40.5em),handheld" />  <!-- CSS mobile -->
+        <link rel="stylesheet" type="text/css" href="css/stylesheetdesktop.css" media="screen  and (min-width: 40.5em)" />          <!-- CSS desktop -->
+
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />     <!-- Leaflet-js: The map library -->
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>               <!-- Leaflet-js -->
+        <script src='js/osmtogeojson.js'></script>          <!-- osmtogeojsom -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">    <!-- LocateControl: Adds locate button -->
+        <link rel="stylesheet" href="css/L.Control.Locate.css" />                                               <!-- LocateControl -->
+        <script src="js/L.Control.Locate.js" ></script>                                                         <!-- LocateControl -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>     <!-- jQuery -->
+        <script src="js/purl.js"></script>      <!-- allmarkedup/purl: Parses the url for the parameters -->
+        <link rel="stylesheet" href="css/Leaflet.EditInOSM.css" />      <!-- EditInOSM: Adds button for JOSM at top right corner -->
+        <script src="js/Leaflet.EditInOSM.js"></script>                 <!-- EditInOSM -->
+
+        <script src="lang/jquery.i18n.js"></script>     <!-- Library for i18n -->
+        <script src="lang/translations.js"></script>    <!-- Translations storage -->
+        <script src="lang/translate.js"></script>       <!-- Translates -->
 
 
         <script src="js/form.js"></script>
 
-        <script>
+        <!-- Google Analytics Script -->
+        <script> 
           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

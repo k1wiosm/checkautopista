@@ -22,7 +22,7 @@ $(document).ready( function() {
     //Detect wanted freeway from permalink
     id = $.url().param("id");
     if (id) {
-        getData6(id);
+        getFreewayRefAndLoadIt(id);
     }
 
     //"View" button
@@ -40,7 +40,7 @@ $(document).ready( function() {
         ga('send', 'event', 'Esconder datos', 'click');
         nombre = this.id;
         window["visib" + nombre] = !window["visib" + nombre]; // Flip saved value in visib___
-        actualizarGrupoEnMapa(nombre);
+        updateGroupVisib(nombre);
     })
 
     //"Show all tags" button
@@ -89,7 +89,7 @@ function Ver() {
             $("input[name=cargar]").prop("disabled",true);
             $("div#feedback1").html($.i18n._('cargandoautopistas'));
             $("div#feedback2").html("");
-            getData0();
+            getVisibleFreeways();
         } else {
             $("div#feedback1").html($.i18n._('acercamas'));
             $("div#feedback2").html("");
@@ -114,13 +114,15 @@ function Cargar() {
         $("div#feedback2").html("");
         cargado=0;
         errores=0;
-        getData1();
-        getData3();
-        getData41();
+        getBasicData();
+        getAreas();
+        getDestinationUnmarked1();
     }
 }
 
-function actualizarGrupoEnMapa (nombre) {
+function updateGroupVisib (nombre) {
+    // Hides or Shows the group on the map depending on the visib___ of that group
+    
     visib = window["visib" + nombre];
     grupo = window["grupo" + nombre];
     if (window["color" + nombre + "Fondo"] !== undefined) { // Get the background color assigned to this grupo___
