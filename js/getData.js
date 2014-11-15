@@ -51,6 +51,105 @@ var colorAreas = "#f043b4";
 var colorAreasFondo = "#d48fd1";
 var colorDesactivadoFondo = "#b7c3c2";
 
+function getVisibleFreeways () {
+    // Gets the freeways that are visible on the map and adds them to the selector
+
+    bounds = map.getBounds();
+
+    n = bounds._northEast.lat;
+    e = bounds._northEast.lng;
+    s = bounds._southWest.lat;
+    w = bounds._southWest.lng;
+
+
+    consulta = '[out:json][timeout:25];relation["route"="road"](' + s + ',' + w + ',' + n + ',' + e + ');(._;way(r););out body;'
+
+    rq0 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+
+            $("select[name=autopistas]").empty();
+            var autopistas = [];
+            var vias = [];
+            for (i in response.elements) {
+                if (response.elements[i].type == "relation") {  // Organize the received data on autopistas (relations) y vias (ways)
+                    autopistas.push({id:response.elements[i].id, ref:response.elements[i].tags.ref, members:response.elements[i].members});
+                } else if (response.elements[i].type == "way") {
+                    vias.push({id:response.elements[i].id, tags:response.elements[i].tags});
+                }
+            }
+
+            var copiaautopistas = autopistas;
+            autopistas = [];
+
+            for (i in copiaautopistas) {    // Delete false freeways
+                var primeravia = vias[findWithAttr(vias, "id", copiaautopistas[i].members[0].ref)]; //The first way of the freeway
+                if (primeravia) {
+                    if (primeravia.tags) {
+                        if (primeravia.tags.highway == "motorway" || primeravia.tags.highway == "motorway_link" || primeravia.tags.highway == "trunk" 
+                        || primeravia.tags.highway == "trunk_link") {
+                            autopistas.push(copiaautopistas[i]);
+                        }
+                    }
+                }
+            }
+
+            autopistas.sort(function(a,b){      // Sort freeways by reference
+                if (a.ref > b.ref) {
+                    return +1;
+                } else {
+                    return -1;
+                }
+            });
+            
+            for (i in autopistas) {     // Add freeways to selector
+                $("select[name=autopistas]").append('<option value="' + autopistas[i].id + '">' + autopistas[i].ref + '</option>');
+            }
+
+            $("div#feedback1").html($.i18n._('autopistascargadas'));
+            $("input[name=cargar]").prop("disabled",false);
+            $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
+            cargando=false;
+        }
+    )
+    .fail( function() { 
+        $("div#feedback1").html($.i18n._('erroralcargar') +".");
+        $("input[name=cargar]").prop("disabled",false);
+        $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
+        cargando=false;
+    });
+}
+
+function getBasicData () {
+    // Gets the data for addBasicData
+
+    consulta = '[out:json][timeout:25];(relation(' + id + ');way(r);node(w););out body;';
+
+    rq1 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+            dataOSM = response;
+            dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
+                "source": true,
+                "source_ref": true,
+                "source:ref": true,
+                "history": true,
+                "attribution": true,
+                "created_by": true,
+                "converted_by": false,
+                "tiger:county": true,
+                "tiger:tlid": true,
+                "tiger:upload_uuid": true
+            });
+            addBasicData();
+            cargado++;
+            updateFeedback();
+        }
+    )
+    .fail(function() { 
+        errores++;
+        updateFeedback();
+    });
+}
+
 function addBasicData () { 
     // Adds:        Ways and exits
     // Checks:      maxspeed, lanes, name, ref, construction and proposed on ways
@@ -226,6 +325,39 @@ function addBasicData () {
     updateGroupVisib ("SalNoRef");
 }
 
+function getAreas () {
+    // Gets tha data for addAreas
+
+    consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);(node(around:1000)["highway"~"services|rest_' + 
+        'area"]->.x;way(around:1000)["highway"~"services|rest_area"];);(._;>;);out;';
+
+    
+    rq3 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
+        function (response) {
+            dataOSM = response;
+            dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
+                "source": true,
+                "source_ref": true,
+                "source:ref": true,
+                "history": true,
+                "attribution": true,
+                "created_by": true,
+                "converted_by": false,
+                "tiger:county": true,
+                "tiger:tlid": true,
+                "tiger:upload_uuid": true
+            });
+            addAreas();
+            cargado++;
+            updateFeedback();
+        }
+    )
+    .fail(function() { 
+        errores++;
+        updateFeedback();
+    });
+}
+
 function addAreas () {
     // Add:         Service and rest areas
     // Check:       name
@@ -294,170 +426,6 @@ function addAreas () {
     updateGroupVisib ("Areas");
 }
 
-function getVisibleFreeways () {
-    // Gets the freeways that are visible on the map and adds them to the selector
-
-    bounds = map.getBounds();
-
-    n = bounds._northEast.lat;
-    e = bounds._northEast.lng;
-    s = bounds._southWest.lat;
-    w = bounds._southWest.lng;
-
-
-    consulta = '[out:json][timeout:25];relation["route"="road"](' + s + ',' + w + ',' + n + ',' + e + ');(._;way(r););out body;'
-
-    rq0 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
-        function (response) {
-
-            $("select[name=autopistas]").empty();
-            var autopistas = [];
-            var vias = [];
-            for (i in response.elements) {
-                if (response.elements[i].type == "relation") {  // Organize the received data on autopistas (relations) y vias (ways)
-                    autopistas.push({id:response.elements[i].id, ref:response.elements[i].tags.ref, members:response.elements[i].members});
-                } else if (response.elements[i].type == "way") {
-                    vias.push({id:response.elements[i].id, tags:response.elements[i].tags});
-                }
-            }
-
-            var copiaautopistas = autopistas;
-            autopistas = [];
-
-            for (i in copiaautopistas) {    // Delete false freeways
-                var primeravia = vias[findWithAttr(vias, "id", copiaautopistas[i].members[0].ref)]; //The first way of the freeway
-                if (primeravia) {
-                    if (primeravia.tags) {
-                        if (primeravia.tags.highway == "motorway" || primeravia.tags.highway == "motorway_link" || primeravia.tags.highway == "trunk" 
-                        || primeravia.tags.highway == "trunk_link") {
-                            autopistas.push(copiaautopistas[i]);
-                        }
-                    }
-                }
-            }
-
-            autopistas.sort(function(a,b){      // Sort freeways by reference
-                if (a.ref > b.ref) {
-                    return +1;
-                } else {
-                    return -1;
-                }
-            });
-            
-            for (i in autopistas) {     // Add freeways to selector
-                $("select[name=autopistas]").append('<option value="' + autopistas[i].id + '">' + autopistas[i].ref + '</option>');
-            }
-
-            $("div#feedback1").html($.i18n._('autopistascargadas'));
-            $("input[name=cargar]").prop("disabled",false);
-            $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
-            cargando=false;
-        }
-    )
-    .fail( function() { 
-        $("div#feedback1").html($.i18n._('erroralcargar') +".");
-        $("input[name=cargar]").prop("disabled",false);
-        $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
-        cargando=false;
-    });
-}
-
-function getBasicData () {
-    // Gets the data for addBasicData
-
-    consulta = '[out:json][timeout:25];(relation(' + id + ');way(r);node(w););out body;';
-
-    rq1 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
-        function (response) {
-            dataOSM = response;
-            dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
-                "source": true,
-                "source_ref": true,
-                "source:ref": true,
-                "history": true,
-                "attribution": true,
-                "created_by": true,
-                "converted_by": false,
-                "tiger:county": true,
-                "tiger:tlid": true,
-                "tiger:upload_uuid": true
-            });
-            addBasicData();
-            cargado++;
-            $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
-            if (cargado + errores == 4) {
-                $("input[name=cargar]").prop("value", $.i18n._('cargar') );
-                if (cargado == 0) {
-                    $("#feedback1").html("");
-                }
-                $("input[name=ver]").prop("disabled",false);
-                cargando=false;
-            }
-        }
-    )
-    .fail(function() { 
-        errores++;
-        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
-        if (cargado + errores == 4) {
-            $("input[name=cargar]").prop("value", $.i18n._('cargar') );
-            if (cargado == 0) {
-                $("#feedback1").html("");
-            }
-            $("input[name=ver]").prop("disabled",false);
-            cargando=false;
-        }
-    });
-}
-
-function getAreas () {
-    // Gets tha data for addAreas
-
-    consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);(node(around:1000)["highway"~"services|rest_' + 
-        'area"]->.x;way(around:1000)["highway"~"services|rest_area"];);(._;>;);out;';
-
-    
-    rq3 = $.getJSON('http://overpass-api.de/api/interpreter?data=' + consulta,
-        function (response) {
-            dataOSM = response;
-            dataGeoJSON = osmtogeojson(dataOSM, uninterestingTags = {
-                "source": true,
-                "source_ref": true,
-                "source:ref": true,
-                "history": true,
-                "attribution": true,
-                "created_by": true,
-                "converted_by": false,
-                "tiger:county": true,
-                "tiger:tlid": true,
-                "tiger:upload_uuid": true
-            });
-            addAreas();
-            cargado++;
-            $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
-            if (cargado + errores == 4) {
-                $("input[name=cargar]").prop("value", $.i18n._('cargar') );
-                if (cargado == 0) {
-                    $("#feedback1").html("");
-                }
-                $("input[name=ver]").prop("disabled",false);
-                cargando=false;
-            }
-        }
-    )
-    .fail(function() { 
-        errores++;
-        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
-        if (cargado + errores == 4) {
-            $("input[name=cargar]").prop("value", $.i18n._('cargar') );
-            if (cargado == 0) {
-                $("#feedback1").html("");
-            }
-            $("input[name=ver]").prop("disabled",false);
-            cargando=false;
-        }
-    });
-}
-
 function getDestinationUnmarked1 () {
     // Gets all nodes of the freeway
     // Loads them into getDestinationUnmarked2
@@ -469,21 +437,13 @@ function getDestinationUnmarked1 () {
         function (response) {
             getDestinationUnmarked2(response);
             cargado++;
-            $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
+            updateFeedback();
         }
     )
     .fail(function() { 
         errores++;
         errores++;
-        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
-        if (cargado + errores == 4) {
-            $("input[name=cargar]").prop("value", $.i18n._('cargar') );
-            if (cargado == 0) {
-                $("#feedback1").html("");
-            }
-            $("input[name=ver]").prop("disabled",false);
-            cargando=false;
-        }
+        updateFeedback();
     });
 }
 
@@ -639,28 +599,12 @@ function getDestinationUnmarked2 (response) {
             updateGroupVisib ("SalSinSal");
 
             cargado++;
-            $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
-            if (cargado + errores == 4) {
-                $("input[name=cargar]").prop("value", $.i18n._('cargar') );
-                if (cargado == 0) {
-                    $("#feedback1").html("");
-                }
-                $("input[name=ver]").prop("disabled",false);
-                cargando=false;
-            }
+            updateFeedback();
         }
     )
     .fail(function() { 
         errores++;
-        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
-        if (cargado + errores == 4) {
-            $("input[name=cargar]").prop("value", $.i18n._('cargar') );
-            if (cargado == 0) {
-                $("#feedback1").html("");
-            }
-            $("input[name=ver]").prop("disabled",false);
-            cargando=false;
-        }
+        updateFeedback();
     });
 }
 
@@ -731,4 +675,21 @@ function deleteOldNodes (groupToDelete, groupNew) {
         };
     };
     return groupToDelete;
+}
+
+function updateFeedback () {
+    if (cargado > 0) {
+        $("div#feedback1").html($.i18n._('datoscargados') + " (" + cargado + "/4).");
+    };
+    if (errores > 0) {
+        $("div#feedback2").html($.i18n._('erroralcargar') + " (" + errores + "/4)." );
+    };
+    if (cargado + errores == 4) {
+        $("input[name=cargar]").prop("value", $.i18n._('cargar') );
+        if (cargado == 0) {
+            $("#feedback1").html("");
+        };
+        $("input[name=ver]").prop("disabled",false);
+        cargando=false;
+    };
 }
