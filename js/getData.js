@@ -109,6 +109,7 @@ function getVisibleFreeways () {
             $("input[name=cargar]").prop("disabled",false);
             $("input[name=ver]").prop("value",$.i18n._('verautopistas'));
             cargando=false;
+            $("#selector").show();
         }
     )
     .fail( function() { 
@@ -223,42 +224,21 @@ function addBasicData () {
             }
             if (feature.properties.tags.highway=='motorway_junction') {                         //Exit popups
                 if (feature.properties.tags.ref !== undefined) {        // Prepare the ref
-                    ref = feature.properties.tags.ref
+                    var ref = feature.properties.tags.ref;
                 } else {
-                    ref = "&nbsp";
+                    var ref = "&nbsp";
                 }
-                direcciones = [];
+
+                var direcciones = "";
                 if(feature.properties.tags.exit_to !== undefined) {     // Prepare the directions
-                    direcciones=feature.properties.tags.exit_to.split(";");
+                    direcciones = feature.properties.tags.exit_to;
                 } else if (feature.properties.tags.name !== undefined) {
-                    direcciones=feature.properties.tags.name.split(";");
+                    direcciones = feature.properties.tags.name;
                 }
-                popup = '<div class="senal">' +                         // Prepare the HTML code of the popup
-                            '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="20px"/>' + ref + '&nbsp</div>' +
-                            '<div class="senal senalElem" id="destination">';
-                for (i in direcciones) { 
-                    if(esReferencia(direcciones[i])){ // If it has a reference in the directions
-                        direccion = direcciones[i].split(" ");
-                        for (j in direccion) {
-                            if (esReferencia(direccion[j])){
-                                popup += '<div class="senalReferencia">&nbsp' + direccion[j] + '&nbsp</div> ';
-                            } else {
-                                popup += ' ' + direccion[j];
-                            }
-                        }
-                        popup += '<br/>';
-                    } else {
-                        popup += direcciones[i] + '<br/>';
-                    }
-                }
-                popup +=    '</div></div>' + 
-                            '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>' + 
-                            '<div class="alltags">' + // Show all tags
-                            '<b>' + $.i18n._('nodo') + ' ID: </b>' + feature.properties.id + '<br/>&nbsp&nbsp&nbsp' + linkEditors("node", feature.properties.id); // Link to editors
-                for (key in feature.properties.tags) {                  
-                    popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + feature.properties.tags[key];
-                }
-                popup += '</div>';
+
+                popup = htmlPanel(direcciones, ref);
+                popup += htmlShowAllTags ('node', feature.properties.id, feature.properties.tags, true);
+
                 layer.bindPopup(popup);
 
             }
@@ -275,7 +255,7 @@ function addBasicData () {
             }
             if (feature.properties.tags.barrier=='toll_booth') {                                    // Popup of Tollbooth
                 layer.bindPopup("<b>"+ $.i18n._('Peaje') + ": " + feature.properties.tags.name + "</b>" +
-                    "<br>&nbsp&nbsp&nbsp" + linkEditors("node", feature.properties.id) );
+                    "<br>&nbsp&nbsp&nbsp" + htmlLinkEditors("node", feature.properties.id) );
             }
         },
         pointToLayer: function (feature, latlng) {
@@ -375,23 +355,25 @@ function addAreas () {
         style: function(feature) {  
             return {color: "#f043b4"}
         },
-        onEachFeature: function (feature, layer) {                              //Popup config
-            var tipo;
+        onEachFeature: function (feature, layer) {      //Popup config
+            var imgandtitle;
             if (feature.properties.tags.highway=="services") {
-                tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>" + $.i18n._('areadeservicio');
+                imgandtitle='<img src="https://upload.wikimedia.org/wikipedia/commons/b/b6/' + 
+                    'Spain_traffic_signal_s127.svg" height=50px/>' + $.i18n._('areadeservicio');
             } else if (feature.properties.tags.highway=="rest_area") {
-                tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>" + $.i18n._('areadedescanso');
+                imgandtitle='<img src="https://upload.wikimedia.org/wikipedia/commons/5/56/' + 
+                    'Spain_traffic_signal_s123.svg" height=50px/>' + $.i18n._('areadedescanso');
             }
             if(feature.geometry.type=="Point"){
-                layer.bindPopup("<b> " + tipo + ": " + feature.properties.tags.name + 
-                    "<br>&nbsp&nbsp&nbsp" + linkEditors("node", feature.properties.id) );
+                layer.bindPopup("<b> " + imgandtitle + ": " + feature.properties.tags.name + 
+                    "<br>&nbsp&nbsp&nbsp" + htmlLinkEditors("node", feature.properties.id) );
             } else {
-                layer.bindPopup("<b> " + tipo + ": " + feature.properties.tags.name + 
-                    "<br>&nbsp&nbsp&nbsp" + linkEditors("way", feature.properties.id) );
+                layer.bindPopup("<b> " + imgandtitle + ": " + feature.properties.tags.name + 
+                    "<br>&nbsp&nbsp&nbsp" + htmlLinkEditors("way", feature.properties.id) );
             }
         },
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, MarkerStyleAreas);        // Convert nodes to circleMarker
+            return L.circleMarker(latlng, MarkerStyleAreas);    // Convert nodes to circleMarker
         }
 
     })
@@ -399,23 +381,26 @@ function addAreas () {
 
     // Organize service and rest areas in its group
     layers = capaDatos.getLayers()
-    for (var i = 0; i < layers.length; i++) {                           
+    for (i in layers) {
         grupoAreas.push(layers[i]);
     };
 
     // Convert areas to nodes
-    for (var i = 0; i < grupoAreas.length; i++) {
-        if(grupoAreas[i].feature!==undefined){
-            if(grupoAreas[i].feature.geometry.type=="Polygon"){
-                var tipo;
-                if (grupoAreas[i].feature.properties.tags.highway=="services") {
-                    tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/b/b6/Spain_traffic_signal_s127.svg' height=50px/>" + $.i18n._('areadeservicio');
-                } else if (grupoAreas[i].feature.properties.tags.highway=="rest_area") {
-                    tipo="<img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Spain_traffic_signal_s123.svg' height=50px/>" + $.i18n._('areadedescanso');
+    var grupoAreas_copy=grupoAreas;
+    for (var i in grupoAreas_copy) {
+        if(grupoAreas_copy[i].feature!==undefined){
+            if(grupoAreas_copy[i].feature.geometry.type=="Polygon"){ // If it's an area
+                var imgandtitle;
+                if (grupoAreas_copy[i].feature.properties.tags.highway=="services") {
+                    imgandtitle='<img src="https://upload.wikimedia.org/wikipedia/commons/b/b6/' + 
+                        'Spain_traffic_signal_s127.svg" height=50px/>' + $.i18n._('areadeservicio');
+                } else if (grupoAreas_copy[i].feature.properties.tags.highway=="rest_area") {
+                    imgandtitle='<img src="https://upload.wikimedia.org/wikipedia/commons/5/56/' + 
+                        'Spain_traffic_signal_s123.svg" height=50px/>' + $.i18n._('areadedescanso');
                 }
-                circulo = L.circleMarker(grupoAreas[i].getBounds().getCenter(), MarkerStyleAreas);
-                circulo.bindPopup("<b> " + tipo + ": " + grupoAreas[i].feature.properties.tags.name + 
-                    "<br>&nbsp&nbsp&nbsp" + linkEditors("way", grupoAreas[i].feature.properties.id) );
+                circulo = L.circleMarker(grupoAreas_copy[i].getBounds().getCenter(), MarkerStyleAreas); // Create a node in the middle of the area
+                circulo.bindPopup("<b> " + imgandtitle + ": " + grupoAreas[i].feature.properties.tags.name + 
+                    "<br>&nbsp&nbsp&nbsp" + htmlLinkEditors("way", grupoAreas[i].feature.properties.id) );
                 circulo.addTo(map);
                 grupoAreas.push(circulo);
             }
@@ -452,7 +437,7 @@ function getDestinationUnmarked2 (response) {
     // Gets exit ways
     // Checks destination, Possible unmarked exits
 
-    var nodosAutopista = response;
+    var nodosAutopista = response; // each of the nodes of the freeway
     var nodosalida = 0;
 
     consulta = '[out:json][timeout:25];relation(' + id + ');way(r);node(w);way(bn);way._["highway"~"motorway_link|trunk_link|service"];(._;>;);out;'; 
@@ -476,86 +461,54 @@ function getDestinationUnmarked2 (response) {
                 opacity: 1,
                 fillOpacity: 1
             };
-            var viasSalidas = response;
+            var viasSalidas = response;     // motorway_link ways
 
-            for (var i = 0; i < viasSalidas.elements.length; i++) {
-                if (viasSalidas.elements[i].type == "way") {            // I get only the "way"s
-                    if (viasSalidas.elements[i].tags.oneway == "-1") {  // Get the ID of the first node on the way
-                        nodosalida = viasSalidas.elements[i].nodes.length; // And I use it to detect if it's an exit or an entry to the freeway
+            for (var i in viasSalidas.elements) {
+                if (viasSalidas.elements[i].type == "way") {            // Select only ways
+                    if (viasSalidas.elements[i].tags.oneway == "-1") {  // If oneway=-1 then the first node of the way is listed the last one
+                        nodosalida = viasSalidas.elements[i].nodes.length;
                     } else {
                         nodosalida = 0;
                     }
                     if (viasSalidas.elements[i].tags.access !== "no" && viasSalidas.elements[i].tags.access !== "private") { // Check if access is possible
                         var esSalida = true;
-                        for (var m = 0; m < grupoVias.length; m++) { // Check if it's actually an exit or if it's part of the freeway
+                        for (m in grupoVias) { // If the motorway_link is part of the freeway then it's not an exit
                             if (grupoVias[m].feature.properties.id == viasSalidas.elements[i].id) {
                                 esSalida = false;
                             }
                         };
-                        if (esSalida) {
-                            for (var j = 0; j < nodosAutopista.elements.length; j++) {  // For each node on the freeway
+                        if (esSalida) {     // If we determined that is really an exit
+                            for (j in nodosAutopista.elements) {  // For each node on the freeway
                                 if (nodosAutopista.elements[j].id == viasSalidas.elements[i].nodes[nodosalida]) { // Get the junction node
-                                    var lat=nodosAutopista.elements[j].lat;
+                                    var lat=nodosAutopista.elements[j].lat; // Junction node lat and long
                                     var lon=nodosAutopista.elements[j].lon;
 
-                                    if (nodosAutopista.elements[j].tags == undefined) {  // If it has no tags, I mark it as Possible Unmarked Exit
+                                    if (nodosAutopista.elements[j].tags == undefined) {  // If the junction node has no tags then mark it as Possible Unmarked Exit
                                         circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);
                                         circulo.bindPopup("<b>" + $.i18n._('SalSinSal') + "</b>");
                                         circulo.addTo(map);
                                         grupoSalSinSal.push(circulo);
 
-                                    } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // If it has no motorway_junction  
-                                        circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // I mark it as Possible Unmarked Exit
+                                    } else if (nodosAutopista.elements[j].tags.highway !== "motorway_junction" ) {  // If the junction node has no highway=motorway_junction  
+                                        circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalSinSal);         // then mark it as Possible Unmarked Exit
                                         circulo.bindPopup("<b>" + $.i18n._('SalSinSal') + "</b>");
                                         circulo.addTo(map);
                                         grupoSalSinSal.push(circulo);
-                                                                                        //  If it has destination I mark it as Exit with Destination
+                                                                                        //  If the junction node has destination then mark it as Exit with Destination
                                     } else if (nodosAutopista.elements[j].tags.name == undefined && nodosAutopista.elements[j].tags.exit_to == undefined) {
                                         if (viasSalidas.elements[i].tags.destination !== undefined){
                                             circulo = L.circleMarker(L.latLng(lat, lon), MarkerStyleSalDestination);
                                             circulo.feature = {properties: nodosAutopista.elements[j]}; // Copy the node properties
 
-                                            if (circulo.feature.properties.tags.ref !== undefined) {        // Prepare the ref
-                                                ref = circulo.feature.properties.tags.ref
+                                            if (circulo.feature.properties.tags.ref !== undefined) { // It the junction node has a reference we get it
+                                                ref = circulo.feature.properties.tags.ref;
                                             } else {
                                                 ref = "&nbsp";
                                             }
-                                            direcciones=viasSalidas.elements[i].tags.destination.split(";"); // Prepare the directions
 
-                                            popup = '<div class="senal">' +                         // Prepare popup HTML code
-                                                        '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="20px"/>' + ref + '&nbsp</div>' +
-                                                        '<div class="senal senalElem" id="destination">';
-                                            for (p in direcciones) { 
-                                                if(esReferencia(direcciones[p])){ // If it has a reference in the directions
-                                                    direccion = direcciones[p].split(" ");
-                                                    for (q in direccion) {
-                                                        if (esReferencia(direccion[q])){
-                                                            popup += '<div class="senalReferencia">&nbsp' + direccion[q] + '&nbsp</div> ';
-                                                        } else {
-                                                            popup += ' ' + direccion[q];
-                                                        }
-                                                    }
-                                                    popup += '<br/>';
-                                                } else {
-                                                    popup += direcciones[p] + '<br/>';
-                                                }
-                                            }
-
-                                            popup +=    '</div></div>' + 
-                                                        '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>' + 
-                                                        '<div class="alltags">' + // Show all tags
-                                                        '<b>' + $.i18n._('nodo') + ' ID: </b>' + circulo.feature.properties.id + "<br/>&nbsp&nbsp&nbsp" +
-                                                        linkEditors("node", circulo.feature.properties.id); // Add Link to editors
-                                            for (key in circulo.feature.properties.tags) {                  
-                                                popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + circulo.feature.properties.tags[key];
-                                            }
-
-                                            popup += '<br/><br/><b>' + $.i18n._('via') + ' ID: </b>' + viasSalidas.elements[i].id + "<br/>&nbsp&nbsp&nbsp" +
-                                                linkEditors("way", viasSalidas.elements[i].id); // Add Link to editors
-                                            for (key in viasSalidas.elements[i].tags) {                  
-                                                popup += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + viasSalidas.elements[i].tags[key];
-                                            }
-                                            popup += '</div>';
+                                            popup = htmlPanel(viasSalidas.elements[i].tags.destination, ref);
+                                            popup += htmlShowAllTags ('node', circulo.feature.properties.id, circulo.feature.properties.tags, true);
+                                            popup += htmlShowAllTags ('way', viasSalidas.elements[i].id, viasSalidas.elements[i].tags, false);
 
                                             circulo.bindPopup(popup);
 
@@ -580,7 +533,7 @@ function getDestinationUnmarked2 (response) {
             grupoSalNoRef = deleteOldNodes(grupoSalNoRef, grupoSalDestination);
             grupoSalNada = deleteOldNodes(grupoSalNada, grupoSalDestination);
 
-            // Add nodes with destination=
+            // Add nodes with destination=*
             for (var i = 0; i < grupoSalDestination.length; i++) {
                 if (grupoSalDestination[i].feature.properties.tags.ref !==undefined){
                     grupoSalRef.push(grupoSalDestination[i]);
@@ -639,11 +592,6 @@ function getFreewayRefAndLoadIt () {
     });
 }
 
-function linkEditors (type, id) {
-    return '<a target="_blank" href="http://level0.osmz.ru/?url=' + type + '/' + id + '">level0<img class="link" src="img/link.png"/></a>' + 
-    '<a target="_blank" href="http://127.0.0.1:8111/load_object?new_layer=false&objects=' + type + id + '">JOSM<img class="link" src="img/link.png"/></a>';
-}
-
 function esReferencia(string) {
     return (string.indexOf("1") !== -1 || string.indexOf("2") !== -1 || string.indexOf("3") !== -1 || string.indexOf("4") !== -1 || 
         string.indexOf("5") !== -1 || string.indexOf("6") !== -1 || string.indexOf("7") !== -1 || string.indexOf("8") !== -1 || 
@@ -692,4 +640,75 @@ function updateFeedback () {
         $("input[name=ver]").prop("disabled",false);
         cargando=false;
     };
+}
+
+function htmlLinkEditors (type, id) {
+    // Gives the html code for the link to the editors.
+    // Needs the type of element ("way", "node") and it's ID.
+
+    return '<a target="_blank" href="http://level0.osmz.ru/?url=' + type + '/' + id + '">level0<img class="link" src="img/link.png"/></a>' + 
+    '<a target="_blank" href="http://127.0.0.1:8111/load_object?new_layer=false&objects=' + type + id + '">JOSM<img class="link" src="img/link.png"/></a>';
+}
+
+function htmlPanel (destination, ref) {
+    // Prepares the html code of a panel simulating the real physical panel on highways that indicate the exits.
+    // Needs as input the destination and ref.
+
+    var destinationLine=destination.split(";"); // The character ; is assumed to separate different lines (like a Carriage Return)
+
+    var html = '<div class="senal">' +
+        '<div class="senal senalElem" id="ref"><img src="img/salida.svg" height="20px"/>' + ref + '&nbsp</div>' +
+        '<div class="senal senalElem" id="destination">';
+
+    for (var p in destinationLine) { 
+        if(esReferencia(destinationLine[p])){ // If it has a reference in the directions
+            var eachdestination = destinationLine[p].split(" ");
+            for (q in eachdestination) {
+                if (esReferencia(eachdestination[q])){
+                    html += '<div class="senalReferencia">&nbsp' + eachdestination[q] + '&nbsp</div> ';
+                } else {
+                    html += ' ' + eachdestination[q];
+                }
+            }
+            html += '<br/>';
+        } else {
+            html += destinationLine[p] + '<br/>';
+        }
+    }
+
+    html += '</div></div>';
+
+    return html;
+
+}
+
+function htmlShowAllTags (type, id, tags, first) {
+    // Gives the html code showing the id of the node or way and all of its tags and links to editors.
+    // Needs a type of element ("way", "node"), the id of the element and the desired tags.
+    // If it's the first element of the popup then mark first=true. This will create the button to show all tags.
+
+    if (first) {
+        var html = '<div class="mostrar">' + $.i18n._('mostrartodastags') + '</div>';
+    } else {
+        var html = '';
+    }
+
+    if (type == 'way') {
+        var tipo = 'via';
+    } else if (type == 'node') {
+        var tipo = 'nodo';
+    }
+
+    html += '<div class="alltags">';
+    html += '<b>' + $.i18n._(tipo) + ' ID: </b>' + id + "<br/>&nbsp&nbsp&nbsp" +
+        htmlLinkEditors(type, id); // Add Link to editors
+
+    for (var key in tags) {
+        html += '<br/><b>&nbsp&nbsp&nbsp' + key + '</b>: ' + tags[key];
+    }
+
+    html += '</div>';
+
+    return html;
+
 }

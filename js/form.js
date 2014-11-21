@@ -1,4 +1,4 @@
-var visibSelector = true;
+var visibMenu = true;
 var id;
 var cargando = false;
 $(document).ready( function() {
@@ -51,9 +51,9 @@ $(document).ready( function() {
 
     //"Hide menu" button
     $("#mostrar").click(function(){
-        $("#selector").toggle();
-        visibSelector=!visibSelector;
-        if (visibSelector) {
+        $("#menu").toggle();
+        visibMenu=!visibMenu;
+        if (visibMenu) {
             ga('send', 'event', 'Mostrar menu', 'click');
             $("#mostrar").html($.i18n._('esconder') +" &#8594;");
         } else {
@@ -73,6 +73,12 @@ $(document).ready( function() {
         var lang = $.url().param("lang"); 
         if (lang) { link += "&lang=" + lang; } // If a language is loaded we save it in the permalink
         $(this).prop("href", link);
+    });
+
+
+    $("#menu").accordion({
+        collapsible: true,
+        heightStyle: "content"
     });
     
 });
