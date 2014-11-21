@@ -10,17 +10,15 @@
         <meta name="HandheldFriendly" content="true" />                                                 <!-- iPhone -->
         <meta name="apple-mobile-web-app-capable" content="yes" />                                      <!-- iPhone -->
 
-        <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>                                                          <!-- CSS -->
-        <link rel="stylesheet" type="text/css" href="css/stylesheetmobile.css" media="screen  and (max-width: 40.5em),handheld" />  <!-- CSS mobile -->
-        <link rel="stylesheet" type="text/css" href="css/stylesheetdesktop.css" media="screen  and (min-width: 40.5em)" />          <!-- CSS desktop -->
-
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />     <!-- Leaflet-js: The map library -->
         <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>               <!-- Leaflet-js -->
         <script src='js/osmtogeojson.js'></script>          <!-- osmtogeojsom -->
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">    <!-- LocateControl: Adds locate button -->
         <link rel="stylesheet" href="css/L.Control.Locate.css" />                                               <!-- LocateControl -->
         <script src="js/L.Control.Locate.js" ></script>                                                         <!-- LocateControl -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>     <!-- jQuery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>                             <!-- jQuery -->
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />    <!-- jQuery UI -->
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>                            <!-- jQuery UI -->
         <script src="js/purl.js"></script>      <!-- allmarkedup/purl: Parses the url for the parameters -->
         <link rel="stylesheet" href="css/Leaflet.EditInOSM.css" />      <!-- EditInOSM: Adds button for JOSM at top right corner -->
         <script src="js/Leaflet.EditInOSM.js"></script>                 <!-- EditInOSM -->
@@ -29,6 +27,9 @@
         <script src="lang/translations.js"></script>    <!-- Translations storage -->
         <script src="lang/translate.js"></script>       <!-- Translates -->
 
+        <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>                                                          <!-- CSS -->
+        <link rel="stylesheet" type="text/css" href="css/stylesheetmobile.css" media="screen  and (max-width: 40.5em),handheld" />  <!-- CSS mobile -->
+        <link rel="stylesheet" type="text/css" href="css/stylesheetdesktop.css" media="screen  and (min-width: 40.5em)" />          <!-- CSS desktop -->
 
         <script src="js/form.js"></script>
 
@@ -53,33 +54,40 @@
                 <div id="lema">Herramienta de control de calidad de autopistas en <a href="http://www.openstreetmap.org/">OSM</a>.</div>
             </div>
         </div>
+
         <div id="mostrar">Esconder &#8594;</div>
-        <div id="selector">
-            <ul>
-                <li><input name="ver" type="button" value="Ver autopistas" /></li>
-                <li><select name="autopistas"></select><input name="cargar" type="button" value="Cargar" disabled="true"/></li>
-                <li><div class="feedback" id="feedback1"></div><div class="feedback" id="feedback2"></div>
-                <br/>
-                <li><b><div id="txtleyenda">Leyenda</div></b></li>
-                <li><div class="boton" id="Peaje"></div><div class="leyenda_text" id="Peaje">Peaje</div></li>
-                <br/>
-                <li><div class="boton" id="SalDestination"></div><div class="leyenda_text" id="SalDestination">Salida con <span class="code">destination</span></div></li>
-                <li><div class="boton" id="SalExitTo"></div><div class="leyenda_text" id="SalExitTo">Salida con <span class="code">exit_to</span></div></li>
-                <li><div class="boton" id="SalName"></div><div class="leyenda_text" id="SalName">Salida con <span class="code">name</span></div></li>
-                <li><div class="boton" id="SalNada"></div><div class="leyenda_text" id="SalNada">Salida sin <span class="code">destination</span> ni <span class="code">exit_to</span> ni <span class="code">name</span></div></li>
-                <li><div class="boton" id="SalRef"></div><div class="leyenda_text" id="SalRef">Salida con <span class="code">ref</span></div></li>
-                <li><div class="boton" id="SalNoRef"></div><div class="leyenda_text" id="SalNoRef">Salida sin <span class="code">ref</span></div></li>
-                <li><div class="boton" id="SalSinSal"></div><div class="leyenda_text" id="SalSinSal">Posible salida sin marcar</div></li>
-                <br/>
-                <li><div class="boton" id="Areas"></div><div class="leyenda_text" id="Areas">Áreas de servicio y de descanso</div></li>
-                <br/>
-                <li><div class="linea" id="ViaTodo"></div><div class="leyenda_text" id="ViaTodo">Vía completa</div></li>
-                <li><div class="linea" id="ViaNoMaxspeed"></div><div class="leyenda_text" id="ViaNoMaxspeed">Vía sin <span class="code">maxspeed</span></div></li>
-                <li><div class="linea" id="ViaNoLanes"></div><div class="leyenda_text" id="ViaNoLanes">Vía sin <span class="code">lanes</span></div></li>
-                <li><div class="linea" id="ViaNoMaxspeedNoLanes"></div><div class="leyenda_text" id="ViaNoMaxspeedNoLanes">Vía sin <span class="code">maxspeed</span> y sin <span class="code">lanes</span></div></li>
-                <li><svg width="12" height="10" version="1.1" xmlns="http://www.w3.org/2000/svg"><line stroke-dasharray="3, 2" x1="0" y1="5" x2="20" y2="5" /></svg><div class="leyenda_text" id="ViaNoName">Vía sin <span class="code">name</span></div></li>    
-                <li><div class="linea" id="ViaConstruccion"></div><div class="leyenda_text" id="ViaConstruccion">En construcción</div></li>   
-                <li><div class="linea" id="ViaProyecto"></div><div class="leyenda_text" id="ViaProyecto">En proyecto</div></li> 
+
+        <div id="menu">
+            <h3 id="seleccionarautopista">Seleccionar autopista</h3>
+            <div>
+                <input name="ver" type="button" value="Ver autopistas" />
+                <div id="selector"><select name="autopistas"></select><input name="cargar" type="button" value="Cargar" disabled="true"/></div>
+                <div class="feedback" id="feedback1"></div><div class="feedback" id="feedback2"></div>
+            </div>
+            <h3 id="leyenda">Leyenda</h3>
+            <div>
+                <ul>
+                    <li><div class="boton" id="Peaje"></div><div class="leyenda_text" id="Peaje">Peaje</div></li>
+                    <br/>
+                    <li><div class="boton" id="SalDestination"></div><div class="leyenda_text" id="SalDestination">Salida con <span class="code">destination</span></div></li>
+                    <li><div class="boton" id="SalExitTo"></div><div class="leyenda_text" id="SalExitTo">Salida con <span class="code">exit_to</span></div></li>
+                    <li><div class="boton" id="SalName"></div><div class="leyenda_text" id="SalName">Salida con <span class="code">name</span></div></li>
+                    <li><div class="boton" id="SalNada"></div><div class="leyenda_text" id="SalNada">Salida sin <span class="code">destination</span> ni <span class="code">exit_to</span> ni <span class="code">name</span></div></li>
+                    <li><div class="boton" id="SalRef"></div><div class="leyenda_text" id="SalRef">Salida con <span class="code">ref</span></div></li>
+                    <li><div class="boton" id="SalNoRef"></div><div class="leyenda_text" id="SalNoRef">Salida sin <span class="code">ref</span></div></li>
+                    <li><div class="boton" id="SalSinSal"></div><div class="leyenda_text" id="SalSinSal">Posible salida sin marcar</div></li>
+                    <br/>
+                    <li><div class="boton" id="Areas"></div><div class="leyenda_text" id="Areas">Áreas de servicio y de descanso</div></li>
+                    <br/>
+                    <li><div class="linea" id="ViaTodo"></div><div class="leyenda_text" id="ViaTodo">Vía completa</div></li>
+                    <li><div class="linea" id="ViaNoMaxspeed"></div><div class="leyenda_text" id="ViaNoMaxspeed">Vía sin <span class="code">maxspeed</span></div></li>
+                    <li><div class="linea" id="ViaNoLanes"></div><div class="leyenda_text" id="ViaNoLanes">Vía sin <span class="code">lanes</span></div></li>
+                    <li><div class="linea" id="ViaNoMaxspeedNoLanes"></div><div class="leyenda_text" id="ViaNoMaxspeedNoLanes">Vía sin <span class="code">maxspeed</span> y sin <span class="code">lanes</span></div></li>
+                    <li><svg width="12" height="10" version="1.1" xmlns="http://www.w3.org/2000/svg"><line stroke-dasharray="3, 2" x1="0" y1="5" x2="20" y2="5" /></svg><div class="leyenda_text" id="ViaNoName">Vía sin <span class="code">name</span></div></li>    
+                    <li><div class="linea" id="ViaConstruccion"></div><div class="leyenda_text" id="ViaConstruccion">En construcción</div></li>   
+                    <li><div class="linea" id="ViaProyecto"></div><div class="leyenda_text" id="ViaProyecto">En proyecto</div></li> 
+                </ul>
+            </div>
         </div>
         <div id="map">
             <script src="js/prepareMap.js"></script>

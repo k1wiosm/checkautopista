@@ -7,8 +7,8 @@ html, body {
     width:100%;
     position:inline;
     margin:0;
-    padding: 0;
-    margin: 0;
+    padding:0;
+    margin:0;
 }
 
 img {
@@ -85,7 +85,7 @@ a {
 	width:100%;
 }
 
-#selector {
+#menu {
 	position:relative;
 	overflow:auto;
 	padding:5px;
@@ -99,6 +99,10 @@ a {
 	z-index:1;
 	background-color:rgba(255,255,255,0.8);
 	clear: both;
+}
+
+.ui-accordion .ui-accordion-content {
+	padding:5px;
 }
 
 #mostrar {
@@ -121,7 +125,12 @@ ul {
 
 input[name=ver] {
 	white-space: normal;
-	max-width: 100%;
+	width: 100%;
+}
+
+#selector {
+	display: none;
+	margin-top: 5px;
 }
 
 .leyenda_text {
@@ -187,6 +196,7 @@ line {
 }
 
 .feedback {
+	margin-top: 5px;
 	color:grey;
 }
 

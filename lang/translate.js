@@ -36,7 +36,8 @@ $(document).ready( function() {
 	$('div#lema')._t('lema', '<a href="http://www.openstreetmap.org/">', '</a>');
 	$('input[name=ver]').prop('value', $.i18n._('verautopistas'));
 	$('input[name=cargar]').prop('value', $.i18n._('cargar'));
-	$('div#txtleyenda')._t('leyenda');
+	$('h3#seleccionarautopista')._t('seleccionarautopista');
+	$('h3#leyenda')._t('leyenda');
 	$('div.leyenda_text#Peaje')._t('Peaje');
 	$('div.leyenda_text#SalDestination')._t('SalDestination', '<span class="code">', '</span>');
 	$('div.leyenda_text#SalExitTo')._t('SalExitTo', '<span class="code">', '</span>');
