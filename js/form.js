@@ -4,20 +4,20 @@ var cargando = false;
 $(document).ready( function() {
 
     //Legend buttons style
-    $("#Peaje").css("border-color", colorPeaje);
-    $("#Peaje").css("background-color", colorPeajeFondo);
-    $("#SalDestination").css("border-color", colorSalDestination);
-    $("#SalExitTo").css("border-color", colorSalExitTo);
-    $("#SalName").css("border-color", colorSalName);
-    $("#SalNada").css("border-color", colorSalNada);   
+    $("#Peaje").css("border-color", grupoPeaje.color);
+    $("#Peaje").css("background-color", grupoPeaje.colorbg);
+    $("#SalDestination").css("border-color", grupoSalDestination.color);
+    $("#SalExitTo").css("border-color", grupoSalExitTo.color);
+    $("#SalName").css("border-color", grupoSalName.color);
+    $("#SalNada").css("border-color", grupoSalNada.color);   
     $("#SalRef").css("border-color", "#ffffff");
-    $("#SalRef").css("background-color", colorSalRefFondo);
+    $("#SalRef").css("background-color", grupoSalRef.colorbg);
     $("#SalNoRef").css("border-color", "#ffffff");
-    $("#SalNoRef").css("background-color", colorSalNoRefFondo);
-    $("#SalSinSal").css("border-color", colorSalSinSal);
-    $("#SalSinSal").css("background-color", colorSalSinSalFondo);
-    $("#Areas").css("border-color", colorAreas);
-    $("#Areas").css("background-color", colorAreasFondo);
+    $("#SalNoRef").css("background-color", grupoSalNoRef.colorbg);
+    $("#SalSinSal").css("border-color", grupoSalSinSal.color);
+    $("#SalSinSal").css("background-color", grupoSalSinSal.colorbg);
+    $("#Areas").css("border-color", grupoAreas.color);
+    $("#Areas").css("background-color", grupoAreas.colorbg);
 
     //Detect wanted freeway from permalink
     id = $.url().param("id");
@@ -38,9 +38,9 @@ $(document).ready( function() {
     //Hide data
     $(".boton").click(function () {
         ga('send', 'event', 'Esconder datos', 'click');
-        nombre = this.id;
-        window["visib" + nombre] = !window["visib" + nombre]; // Flip saved value in visib___
-        updateGroupVisib(nombre);
+        name = this.id;
+        grupo[name].visib=!grupo[name].visib;
+        updateGroupVisib(name);
     })
 
     //"Show all tags" button
@@ -122,66 +122,23 @@ function Cargar() {
         errores=0;
         getBasicData();
         getAreas();
-        getDestinationUnmarked1();
     }
 }
 
-function updateGroupVisib (nombre) {
-    // Hides or Shows the group on the map depending on the visib___ of that group
+function updateGroupVisib (name) {
+    // Updates the visibility on the map of the given group, based on the visib parameter
     
-    visib = window["visib" + nombre];
-    grupo = window["grupo" + nombre];
-    if (window["color" + nombre + "Fondo"] !== undefined) { // Get the background color assigned to this grupo___
-        colorBg = window["color" + nombre + "Fondo"];
-    } else {
-        colorBg = "white";
-    }
-    if (window["color" + nombre] !== undefined) {   // Get the border color assigned to this grupo___
-        color = window["color" + nombre];
-    } else {
-        color = "white";
-    }                                               // Hide or show nodes depending on visib___
-    if (!visib) { // Hide nodes                                  
-        $("#"+nombre).css("border-color", "white");     //Legend style
-        $("#"+nombre).css("background-color", colorDesactivadoFondo);
-        for (var i = 0; i < grupo.length; i++) { // For each node of this grupo___
-            x = getGrupo(grupo[i]); // Groups this node is part of
-            if(x.length>1) { // If it's part of more than one group
-                if (nombre.indexOf("Ref") == -1) { // If it's not one of ref
-                    grupo[i].setStyle({radius:5, color:"black", weight:1});
-                    if (window["visib" + x[1]] == false) { // If the other group is also deactivated I delete the node
-                    map.removeLayer(grupo[i]);
-                    };
-                } else { // If it's one of ref
-                    grupo[i].setStyle({fillOpacity:0});
-                    if (window["visib" + x[0]] == false) { // If the other group is also deactivated I delete the node
-                    map.removeLayer(grupo[i]);
-                    };
-                };
-            } else {
-                map.removeLayer(grupo[i]);
-            };
+    if (grupo[name].visib) {
+        for (var i in grupo[name].elem) {
+            map.addLayer(grupo[name].elem[i]);
         };
-    } else {    //Add nodes
-        $("#"+nombre).css("border-color", color);   //Legend style
-        $("#"+nombre).css("background-color", colorBg);
-        for (var i = 0; i < grupo.length; i++) { // For each node if this grupo___
-            if (nombre.indexOf("Ref") == -1) { // If it's not one of ref
-                grupo[i].setStyle({radius:6, color:color, weight:3});
-            } else { // If it's one of ref
-                grupo[i].setStyle({fillOpacity:1});
-            }
-            map.addLayer(grupo[i]);
+        $("#" + name).css("border-color", grupo[name].color);
+        $("#" + name).css("background-color", grupo[name].colorbg);
+    } else {
+        for (var i in grupo[name].elem) {
+            map.removeLayer(grupo[name].elem[i]);
         };
+        $("#" + name).css("border-color", "white");
+        $("#" + name).css("background-color", colorDesactivadoFondo);
     };
-}
-
-function getGrupo (elem) {
-    var solucion = [];
-    for (i in grupos) {
-        if (grupos[i].indexOf(elem) > -1) {
-            solucion.push(gruposnombre[i]);
-        }
-    }
-    return solucion;
 }
