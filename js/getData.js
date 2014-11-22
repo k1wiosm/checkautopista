@@ -15,6 +15,27 @@ function Group(name, elem, visib, color, colorbg) {
 	this.visib = visib;
 	this.color = color;
 	this.colorbg = colorbg;
+	this.clear = function () {
+		for (var i in this.elem) {
+			map.removeLayer(this.elem[i]);
+		}
+		this.elem = [];
+	}
+	this.updateMap = function () {
+		if (this.visib) {
+			for (var i in this.elem) {
+				map.addLayer(this.elem[i]);
+			};
+			$("#" + this.name).css("border-color", this.color);
+			$("#" + this.name).css("background-color", this.colorbg);
+		} else {
+			for (var i in this.elem) {
+				map.removeLayer(this.elem[i]);
+			};
+			$("#" + this.name).css("border-color", "white");
+			$("#" + this.name).css("background-color", colorDesactivadoFondo);
+		};
+	}
 };
 
 var grupoVias = new Group ("Vias", [], true, "", "");
@@ -36,6 +57,8 @@ var grupo = {};
 for (i in grupos) {
 	grupo[grupos[i].name] = grupos[i];
 };
+
+
 
 	var MarkerStyleDest = {
 		radius: 6,
@@ -264,12 +287,12 @@ function addBasicData () {
 	};
 
 	// Hide data
-	updateGroupVisib ("Peaje");
-	updateGroupVisib ("SalExitTo");
-	updateGroupVisib ("SalName");
-	updateGroupVisib ("SalNada");
-	updateGroupVisib ("SalRef");
-	updateGroupVisib ("SalNoRef");
+	grupo["Peaje"].updateMap();
+	grupo["SalExitTo"].updateMap();
+	grupo["SalName"].updateMap();
+	grupo["SalNada"].updateMap();
+	grupo["SalRef"].updateMap();
+	grupo["SalNoRef"].updateMap();
 
 	getDestinationUnmarked1();
 }
@@ -377,7 +400,7 @@ function addAreas () {
 	};
 
 	// Hide data
-	updateGroupVisib("Areas");
+	grupo["Areas"].updateMap();
 }
 
 function getDestinationUnmarked1 () {
@@ -521,10 +544,10 @@ function getDestinationUnmarked2 (response) {
 			}
 
 			// Hide data
-			updateGroupVisib ("SalRef");
-			updateGroupVisib ("SalNoRef");
-			updateGroupVisib ("SalDestination");
-			updateGroupVisib ("SalSinSal");
+			grupo["SalRef"].updateMap();
+			grupo["SalNoRef"].updateMap();
+			grupo["SalDestination"].updateMap();
+			grupo["SalSinSal"].updateMap();
 
 			cargado++;
 			updateFeedback();

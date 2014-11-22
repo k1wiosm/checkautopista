@@ -40,7 +40,7 @@ $(document).ready( function() {
 		ga('send', 'event', 'Esconder datos', 'click');
 		name = this.id;
 		grupo[name].visib=!grupo[name].visib;
-		updateGroupVisib(name);
+		grupo[name].updateMap();
 	})
 
 	//"Show all tags" button
@@ -120,25 +120,20 @@ function Cargar() {
 		$("div#feedback2").html("");
 		cargado=0;
 		errores=0;
+
+		grupoVias.clear();
+		grupoPeaje.clear();
+		grupoSalDestination.clear();
+		grupoSalExitTo.clear();
+		grupoSalName.clear();
+		grupoSalNada.clear();
+		grupoSalRef.clear();
+		grupoSalNoRef.clear();
+		grupoSalSinSal.clear();
+		grupoAreas.clear();
+		grupoOtros.clear();
+
 		getBasicData();
 		getAreas();
 	}
-}
-
-function updateGroupVisib (name) {
-	// Updates the visibility on the map of the given group, based on the visib parameter
-	
-	if (grupo[name].visib) {
-		for (var i in grupo[name].elem) {
-			map.addLayer(grupo[name].elem[i]);
-		};
-		$("#" + name).css("border-color", grupo[name].color);
-		$("#" + name).css("background-color", grupo[name].colorbg);
-	} else {
-		for (var i in grupo[name].elem) {
-			map.removeLayer(grupo[name].elem[i]);
-		};
-		$("#" + name).css("border-color", "white");
-		$("#" + name).css("background-color", colorDesactivadoFondo);
-	};
 }
