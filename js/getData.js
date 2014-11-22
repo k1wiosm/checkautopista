@@ -614,6 +614,7 @@ function updateFeedback () {
 		};
 		$("input[name=ver]").prop("disabled",false);
 		cargando=false;
+		$('h3#leyenda').click();
 	};
 }
 
