@@ -57,7 +57,7 @@ var my_dictionary_de = {
 	"ViaNoName":"Weg ohne %1$sname%2$s",
 	"ViaConstruccion":"im Bau",
 	"ViaProyecto":"geplant",
-	"seleccionarautopista":"",
+	"seleccionarautopista":"Autobahn auswählen",
 	"verautopistas":"Autobahnliste laden",
 	"cancelar":"Abbrechen",
 	"esconder":"einklappen",
