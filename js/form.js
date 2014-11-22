@@ -4,20 +4,20 @@ var cargando = false;
 $(document).ready( function() {
 
 	//Legend buttons style
-	$("#Peaje").css("border-color", grupoPeaje.color);
-	$("#Peaje").css("background-color", grupoPeaje.colorbg);
-	$("#SalDestination").css("border-color", grupoSalDestination.color);
-	$("#SalExitTo").css("border-color", grupoSalExitTo.color);
-	$("#SalName").css("border-color", grupoSalName.color);
-	$("#SalNada").css("border-color", grupoSalNada.color);   
-	$("#SalRef").css("border-color", "#ffffff");
-	$("#SalRef").css("background-color", grupoSalRef.colorbg);
-	$("#SalNoRef").css("border-color", "#ffffff");
-	$("#SalNoRef").css("background-color", grupoSalNoRef.colorbg);
-	$("#SalSinSal").css("border-color", grupoSalSinSal.color);
-	$("#SalSinSal").css("background-color", grupoSalSinSal.colorbg);
-	$("#Areas").css("border-color", grupoAreas.color);
-	$("#Areas").css("background-color", grupoAreas.colorbg);
+	$("#Peaje > .boton").css("border-color", grupoPeaje.color);
+	$("#Peaje > .boton").css("background-color", grupoPeaje.colorbg);
+	$("#SalDestination > .boton").css("border-color", grupoSalDestination.color);
+	$("#SalExitTo > .boton").css("border-color", grupoSalExitTo.color);
+	$("#SalName > .boton").css("border-color", grupoSalName.color);
+	$("#SalNada > .boton").css("border-color", grupoSalNada.color);   
+	$("#SalRef > .boton").css("border-color", "#ffffff");
+	$("#SalRef > .boton").css("background-color", grupoSalRef.colorbg);
+	$("#SalNoRef > .boton").css("border-color", "#ffffff");
+	$("#SalNoRef > .boton").css("background-color", grupoSalNoRef.colorbg);
+	$("#SalSinSal > .boton").css("border-color", grupoSalSinSal.color);
+	$("#SalSinSal > .boton").css("background-color", grupoSalSinSal.colorbg);
+	$("#Areas > .boton").css("border-color", grupoAreas.color);
+	$("#Areas > .boton").css("background-color", grupoAreas.colorbg);
 
 	//Detect wanted freeway from permalink
 	id = $.url().param("id");
@@ -38,7 +38,8 @@ $(document).ready( function() {
 	//Hide data
 	$(".boton").click(function () {
 		ga('send', 'event', 'Esconder datos', 'click');
-		name = this.id;
+		name = $(this).parent().attr('id');
+		console.log(name);
 		grupo[name].visib=!grupo[name].visib;
 		grupo[name].updateMap();
 	})
@@ -78,7 +79,7 @@ $(document).ready( function() {
 
 	$("#menu").accordion({
 		collapsible: true,
-		heightStyle: "content"
+		heightStyle: "panel",
 	});
 	
 });
@@ -120,6 +121,8 @@ function Cargar() {
 		$("div#feedback2").html("");
 		cargado=0;
 		errores=0;
+		$('h3#leyenda').html('<span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>' + 
+			$('select[name=autopistas] option:selected').text());
 
 		grupoVias.clear();
 		grupoPeaje.clear();
@@ -136,4 +139,17 @@ function Cargar() {
 		getBasicData();
 		getAreas();
 	}
+}
+
+function Analizar () {
+	$('#Peaje > .stats').text(grupoPeaje.elem.length);
+	var totalexits = grupoSalRef.elem.length + grupoSalNoRef.elem.length;
+	$('#SalDestination > .stats').text(grupoSalDestination.elem.length + "/" + totalexits);
+	$('#SalExitTo > .stats').text(grupoSalExitTo.elem.length + "/" + totalexits);
+	$('#SalName > .stats').text(grupoSalName.elem.length + "/" + totalexits);
+	$('#SalNada > .stats').text(grupoSalNada.elem.length + "/" + totalexits);
+	$('#SalRef > .stats').text(grupoSalRef.elem.length + "/" + totalexits);
+	$('#SalNoRef > .stats').text(grupoSalNoRef.elem.length + "/" + totalexits);
+	$('#SalSinSal > .stats').text(grupoSalSinSal.elem.length);
+	$('#Areas > .stats').text(grupoAreas.elem.length);
 }

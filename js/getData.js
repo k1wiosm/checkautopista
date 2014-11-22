@@ -26,14 +26,14 @@ function Group(name, elem, visib, color, colorbg) {
 			for (var i in this.elem) {
 				map.addLayer(this.elem[i]);
 			};
-			$("#" + this.name).css("border-color", this.color);
-			$("#" + this.name).css("background-color", this.colorbg);
+			$("#" + this.name + "> .boton").css("border-color", this.color);
+			$("#" + this.name + "> .boton").css("background-color", this.colorbg);
 		} else {
 			for (var i in this.elem) {
 				map.removeLayer(this.elem[i]);
 			};
-			$("#" + this.name).css("border-color", "white");
-			$("#" + this.name).css("background-color", colorDesactivadoFondo);
+			$("#" + this.name + "> .boton").css("border-color", "white");
+			$("#" + this.name + "> .boton").css("background-color", colorDesactivadoFondo);
 		};
 	}
 };
@@ -59,24 +59,32 @@ for (i in grupos) {
 };
 
 
+var MarkerStyleDest = {
+	radius: 6,
+	fillColor: "#FFFFFF",
+	color: "#000000",
+	weight: 3,
+	opacity: 1,
+	fillOpacity: 0
+};
 
-	var MarkerStyleDest = {
-		radius: 6,
-		fillColor: "#FFFFFF",
-		color: "#000000",
-		weight: 3,
-		opacity: 1,
-		fillOpacity: 0
-	};
+var MarkerStyleRef = {
+	radius: 5,
+	fillColor: "#000000",
+	color: "#000000",
+	weight: 1,
+	opacity: 1,
+	fillOpacity: 1
+};
 
-	var MarkerStyleRef = {
-		radius: 5,
-		fillColor: "#000000",
-		color: "#000000",
-		weight: 1,
-		opacity: 1,
-		fillOpacity: 1
-	};
+var MarkerStylePeaje = {
+	radius: 6,
+	fillColor: grupoPeaje.colorbg,
+	color: grupoPeaje.color,
+	weight: 3,
+	opacity: 1,
+	fillOpacity: 1
+};
 
 function getVisibleFreeways () {
 	// Gets the freeways that are visible on the map and adds them to the selector
@@ -218,9 +226,20 @@ function addBasicData () {
 			};
 		},  // Popups
 		onEachFeature: function (feature, layer) {
-			layer.bindPopup("<b>" + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
-				feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: <div class='maxspeed'>" + feature.properties.tags.maxspeed + 
-				"</div><br/>lanes: " + feature.properties.tags.lanes);
+			if (feature.properties.tags.highway=='construction') {
+				layer.bindPopup("<b>" + $.i18n._('ViaConstruccion') + ": " + feature.properties.tags.name + 
+					" <span style='color:white;background-color:blue'>&nbsp" + 
+					feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: <div class='maxspeed'>" + feature.properties.tags.maxspeed + "</div><br/>lanes: " + 
+					feature.properties.tags.lanes);
+			} else if (feature.properties.tags.highway=='proposed') {
+				layer.bindPopup("<b>" + $.i18n._('enproyecto') + ": " + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
+					feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: <div class='maxspeed'>" + feature.properties.tags.maxspeed + "</div><br/>lanes: " + 
+					feature.properties.tags.lanes);
+			} else {
+				layer.bindPopup("<b>" + feature.properties.tags.name + " <span style='color:white;background-color:blue'>&nbsp" + 
+					feature.properties.tags.ref + "&nbsp</span></b><br/> maxspeed: <div class='maxspeed'>" + feature.properties.tags.maxspeed + 
+					"</div><br/>lanes: " + feature.properties.tags.lanes);
+			};
 		}
 	})
 	.addTo(map);
@@ -232,9 +251,9 @@ function addBasicData () {
 
 	// Add nodes to the map
 	for (var i in dataGeoJSONNodes.features) {
+		var lat = dataGeoJSONNodes.features[i].geometry.coordinates[1];
+		var lon = dataGeoJSONNodes.features[i].geometry.coordinates[0];
 		if (dataGeoJSONNodes.features[i].properties.tags.highway=='motorway_junction') {
-			var lat = dataGeoJSONNodes.features[i].geometry.coordinates[1];
-			var lon = dataGeoJSONNodes.features[i].geometry.coordinates[0];
 			var popup = "";
 			var destination = "";
 			var ref ="&nbsp";
@@ -283,7 +302,12 @@ function addBasicData () {
 			else {
 				grupoSalNoRef.elem.push(marker2);
 			};
-		};
+		} else if (dataGeoJSONNodes.features[i].properties.tags.barrier=='toll_booth') {
+			var marker = L.circleMarker(L.latLng(lat, lon), MarkerStylePeaje);
+			marker.bindPopup("<b>"+ $.i18n._('Peaje') + ": " + dataGeoJSONNodes.features[i].properties.tags.name + "</b>" +
+				"<br>&nbsp&nbsp&nbsp" + htmlLinkEditors("node", dataGeoJSONNodes.features[i].properties.id) );
+			grupoPeaje.elem.push(marker);
+		}
 	};
 
 	// Hide data
@@ -637,6 +661,7 @@ function updateFeedback () {
 		};
 		$("input[name=ver]").prop("disabled",false);
 		cargando=false;
+		Analizar();
 		$('h3#leyenda').click();
 	};
 }

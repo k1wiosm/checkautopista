@@ -66,27 +66,25 @@
             </div>
             <h3 id="leyenda">Leyenda</h3>
             <div>
-                <ul>
-                    <li><div class="boton" id="Peaje"></div><div class="leyenda_text" id="Peaje">Peaje</div></li>
-                    <br/>
-                    <li><div class="boton" id="SalDestination"></div><div class="leyenda_text" id="SalDestination">Salida con <span class="code">destination</span></div></li>
-                    <li><div class="boton" id="SalExitTo"></div><div class="leyenda_text" id="SalExitTo">Salida con <span class="code">exit_to</span></div></li>
-                    <li><div class="boton" id="SalName"></div><div class="leyenda_text" id="SalName">Salida con <span class="code">name</span></div></li>
-                    <li><div class="boton" id="SalNada"></div><div class="leyenda_text" id="SalNada">Salida sin <span class="code">destination</span> ni <span class="code">exit_to</span> ni <span class="code">name</span></div></li>
-                    <li><div class="boton" id="SalRef"></div><div class="leyenda_text" id="SalRef">Salida con <span class="code">ref</span></div></li>
-                    <li><div class="boton" id="SalNoRef"></div><div class="leyenda_text" id="SalNoRef">Salida sin <span class="code">ref</span></div></li>
-                    <li><div class="boton" id="SalSinSal"></div><div class="leyenda_text" id="SalSinSal">Posible salida sin marcar</div></li>
-                    <br/>
-                    <li><div class="boton" id="Areas"></div><div class="leyenda_text" id="Areas">Áreas de servicio y de descanso</div></li>
-                    <br/>
-                    <li><div class="linea" id="ViaTodo"></div><div class="leyenda_text" id="ViaTodo">Vía completa</div></li>
-                    <li><div class="linea" id="ViaNoMaxspeed"></div><div class="leyenda_text" id="ViaNoMaxspeed">Vía sin <span class="code">maxspeed</span></div></li>
-                    <li><div class="linea" id="ViaNoLanes"></div><div class="leyenda_text" id="ViaNoLanes">Vía sin <span class="code">lanes</span></div></li>
-                    <li><div class="linea" id="ViaNoMaxspeedNoLanes"></div><div class="leyenda_text" id="ViaNoMaxspeedNoLanes">Vía sin <span class="code">maxspeed</span> y sin <span class="code">lanes</span></div></li>
-                    <li><svg width="12" height="10" version="1.1" xmlns="http://www.w3.org/2000/svg"><line stroke-dasharray="3, 2" x1="0" y1="5" x2="20" y2="5" /></svg><div class="leyenda_text" id="ViaNoName">Vía sin <span class="code">name</span></div></li>    
-                    <li><div class="linea" id="ViaConstruccion"></div><div class="leyenda_text" id="ViaConstruccion">En construcción</div></li>   
-                    <li><div class="linea" id="ViaProyecto"></div><div class="leyenda_text" id="ViaProyecto">En proyecto</div></li> 
-                </ul>
+                <div class="txt" id="Peaje"><div class="boton"></div><div class="leyenda_text">Peaje</div><div class="stats">0</div></div>
+                </br>
+                <div class="txt" id="SalDestination"><div class="boton"></div><div class="leyenda_text">Salida con <span class="code">destination</span></div><div class="stats">0</div></div>
+                <div class="txt" id="SalExitTo"><div class="boton"></div><div class="leyenda_text">Salida con <span class="code">exit_to</span></div><div class="stats">0</div></div>
+                <div class="txt" id="SalName"><div class="boton"></div><div class="leyenda_text">Salida con <span class="code">name</span></div><div class="stats">0</div></div>
+                <div class="txt" id="SalNada"><div class="boton"></div><div class="leyenda_text">Salida sin <span class="code">destination</span> ni <span class="code">exit_to</span> ni <span class="code">name</span></div><div class="stats">0</div></div>
+                <div class="txt" id="SalRef"><div class="boton"></div><div class="leyenda_text">Salida con <span class="code">ref</span></div><div class="stats">0</div></div>
+                <div class="txt" id="SalNoRef"><div class="boton"></div><div class="leyenda_text">Salida sin <span class="code">ref</span></div><div class="stats">0</div></div>
+                <div class="txt" id="SalSinSal"><div class="boton"></div><div class="leyenda_text">Posible salida sin marcar</div><div class="stats">0</div></div>
+                </br>
+                <div class="txt" id="Areas"><div class="boton"></div><div class="leyenda_text">Áreas de servicio y de descanso</div><div class="stats">0</div></div>
+                </br>
+                <div class="txt" id="ViaTodo"><div class="linea"></div><div class="leyenda_text">Vía completa</div><div class="stats"></div></div>
+                <div class="txt" id="ViaNoMaxspeed"><div class="linea"></div><div class="leyenda_text">Vía sin <span class="code">maxspeed</span></div><div class="stats"></div></div>
+                <div class="txt" id="ViaNoLanes"><div class="linea"></div><div class="leyenda_text">Vía sin <span class="code">lanes</span></div><div class="stats"></div></div>
+                <div class="txt" id="ViaNoMaxspeedNoLanes"><div class="linea"></div><div class="leyenda_text">Vía sin <span class="code">maxspeed</span> y sin <span class="code">lanes</span></div><div class="stats"></div></div>
+                <div class="txt" id="ViaNoName"><svg width="12" height="10" version="1.1" xmlns="http://www.w3.org/2000/svg"><line stroke-dasharray="3, 2" x1="0" y1="5" x2="20" y2="5" /></svg><div class="leyenda_text" >Vía sin <span class="code">name</span></div><div class="stats"></div></div>
+                <div class="txt" id="ViaConstruccion"><div class="linea"></div><div class="leyenda_text">En construcción</div><div class="stats"></div></div>
+                <div class="txt" id="ViaProyecto"><div class="linea"></div><div class="leyenda_text">En proyecto</div><div class="stats"></div></div>
             </div>
         </div>
         <div id="map">
