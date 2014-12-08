@@ -1,3 +1,7 @@
 #header {
 	display:none;
 }
+
+.ui-accordion .ui-accordion-content {
+	max-height:calc(100vh - 240px);
+}

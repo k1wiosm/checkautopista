@@ -15,6 +15,7 @@ function Group(name, elem, visib, color, colorbg) {
 	this.visib = visib;
 	this.color = color;
 	this.colorbg = colorbg;
+	this.meters = 0;
 	this.clear = function () {
 		for (var i in this.elem) {
 			map.removeLayer(this.elem[i]);
@@ -36,10 +37,28 @@ function Group(name, elem, visib, color, colorbg) {
 			$("#" + this.name + "> .boton").css("background-color", colorDesactivadoFondo);
 		};
 	}
+	this.measure = function () {
+		var distance = 0;
+		for (var i in this.elem) {
+			for (var j = 0; j < this.elem[i]._latlngs.length - 1; j++) {
+				distance += this.elem[i]._latlngs[j].distanceTo(this.elem[i]._latlngs[j + 1]);
+			};
+		};
+		this.meters = distance;
+	}
 };
 
-var grupoVias = new Group ("Vias", [], true, "", "");
+var grupoVia = new Group ("Via", [], true, "", "");
+var grupoViaTodo = new Group ("ViaTodo", [], true, "", "");
+var grupoViaNoMaxspeed = new Group ("ViaNoMaxspeed", [], true, "", "");
+var grupoViaNoLanes = new Group ("ViaNoLanes", [], true, "", "");
+var grupoViaNoMaxspeedNoLanes = new Group ("ViaNoMaxspeedNoLanes", [], true, "", "");
+var grupoViaNoName = new Group ("ViaNoName", [], true, "", "");
+var grupoViaConstruccion = new Group ("ViaConstruccion", [], true, "", "");
+var grupoViaProyecto = new Group ("ViaProyecto", [], true, "", "");
+
 var grupoPeaje = new Group ("Peaje", [], true, "#0000ff", "#55a0bd");
+
 var grupoSalDestination = new Group ("SalDestination", [], true, "#1e452b", "");
 var grupoSalExitTo = new Group ("SalExitTo", [], true, "#00b140", "");
 var grupoSalName = new Group ("SalName", [], true, "#00ffff", "");
@@ -47,11 +66,13 @@ var grupoSalNada = new Group ("SalNada", [], true, "#ff0000", "");
 var grupoSalRef = new Group ("SalRef", [], true, "", "#00ff00");
 var grupoSalNoRef = new Group ("SalNoRef", [], true, "", "#eca411");
 var grupoSalSinSal = new Group ("SalSinSal", [], true, "#ae0000", "#985652");
+
 var grupoAreas = new Group ("Areas", [], true, "#f043b4", "#d48fd1");
 var grupoOtros = new Group ("Otros", [], true, "", "");
 var colorDesactivadoFondo = "#b7c3c2";
 
-var grupos = [grupoVias, grupoPeaje, grupoSalDestination, grupoSalExitTo, grupoSalName, grupoSalNada, grupoSalRef, grupoSalNoRef, grupoSalSinSal, grupoAreas, grupoOtros];
+var grupos = [grupoVia, grupoViaTodo, grupoViaNoMaxspeed, grupoViaNoLanes, grupoViaNoMaxspeedNoLanes, grupoViaNoName, grupoViaConstruccion,grupoViaProyecto,
+ grupoPeaje, grupoSalDestination, grupoSalExitTo, grupoSalName, grupoSalNada, grupoSalRef, grupoSalNoRef, grupoSalSinSal, grupoAreas, grupoOtros];
 
 var grupo = {};
 for (i in grupos) {
@@ -244,9 +265,32 @@ function addBasicData () {
 	})
 	.addTo(map);
 
+	// Sort ways into groups
 	layers = layerWays.getLayers();
 	for (var i in layers) {
-		grupoVias.elem.push(layers[i]);
+		grupoVia.elem.push(layers[i]);
+		if (layers[i].feature.properties.tags.highway=='construction') {
+			grupoViaConstruccion.elem.push(layers[i]);
+		} else if (layers[i].feature.properties.tags.highway=='proposed') {
+			grupoViaProyecto.elem.push(layers[i]);
+		} else {
+			if (layers[i].feature.properties.tags.lanes==undefined && layers[i].feature.properties.tags.maxspeed==undefined) {
+				grupoViaNoMaxspeedNoLanes.elem.push(layers[i]);
+			} else {
+				if (layers[i].feature.properties.tags.maxspeed==undefined) {
+					grupoViaNoMaxspeed.elem.push(layers[i]);
+				}
+				if (layers[i].feature.properties.tags.lanes==undefined) {
+					grupoViaNoLanes.elem.push(layers[i]);
+				}
+			}
+			if (layers[i].feature.properties.tags.name==undefined) {
+				grupoViaNoName.elem.push(layers[i]);
+			}
+			if (layers[i].feature.properties.tags.name!=undefined && layers[i].feature.properties.tags.lanes!=undefined && layers[i].feature.properties.tags.maxspeed!=undefined) {
+				grupoViaTodo.elem.push(layers[i]);
+			}
+		};
 	};
 
 	// Add nodes to the map
@@ -493,8 +537,8 @@ function getDestinationUnmarked2 (response) {
 					}
 					if (viasSalidas.elements[i].tags.access !== "no" && viasSalidas.elements[i].tags.access !== "private") { // Check if access is possible
 						var esSalida = true;
-						for (m in grupoVias.elem) { // If the motorway_link is part of the freeway then it's not an exit
-							if (grupoVias.elem[m].feature.properties.id == viasSalidas.elements[i].id) {
+						for (m in grupoVia.elem) { // If the motorway_link is part of the freeway then it's not an exit
+							if (grupoVia.elem[m].feature.properties.id == viasSalidas.elements[i].id) {
 								esSalida = false;
 							}
 						};

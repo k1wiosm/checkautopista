@@ -39,7 +39,6 @@ $(document).ready( function() {
 	$(".boton").click(function () {
 		ga('send', 'event', 'Esconder datos', 'click');
 		name = $(this).parent().attr('id');
-		console.log(name);
 		grupo[name].visib=!grupo[name].visib;
 		grupo[name].updateMap();
 	})
@@ -124,7 +123,14 @@ function Cargar() {
 		$('h3#leyenda').html('<span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>' + 
 			$('select[name=autopistas] option:selected').text());
 
-		grupoVias.clear();
+		grupoVia.clear();
+		grupoViaTodo.clear();
+		grupoViaNoMaxspeed.clear();
+		grupoViaNoLanes.clear();
+		grupoViaNoMaxspeedNoLanes.clear();
+		grupoViaNoName.clear();
+		grupoViaConstruccion.clear();
+		grupoViaProyecto.clear();
 		grupoPeaje.clear();
 		grupoSalDestination.clear();
 		grupoSalExitTo.clear();
@@ -152,4 +158,22 @@ function Analizar () {
 	$('#SalNoRef > .stats').text(grupoSalNoRef.elem.length + "/" + totalexits);
 	$('#SalSinSal > .stats').text(grupoSalSinSal.elem.length);
 	$('#Areas > .stats').text(grupoAreas.elem.length);
+
+	grupoVia.measure();
+	grupoViaTodo.measure();
+	grupoViaNoMaxspeed.measure();
+	grupoViaNoLanes.measure();
+	grupoViaNoMaxspeedNoLanes.measure();
+	grupoViaNoName.measure();
+	grupoViaConstruccion.measure();
+	grupoViaProyecto.measure();
+
+	$('#ViaTodo > .stats').text(Math.round(1000*grupoViaTodo.meters/grupoVia.meters)/10 + "%");
+	$('#ViaNoMaxspeed > .stats').text(Math.round(1000*grupoViaNoMaxspeed.meters/grupoVia.meters)/10 + "%");
+	$('#ViaNoLanes > .stats').text(Math.round(1000*grupoViaNoLanes.meters/grupoVia.meters)/10 + "%");
+	$('#ViaNoMaxspeedNoLanes > .stats').text(Math.round(1000*grupoViaNoMaxspeedNoLanes.meters/grupoVia.meters)/10 + "%");
+	$('#ViaNoName > .stats').text(Math.round(1000*grupoViaNoName.meters/grupoVia.meters)/10 + "%");
+	$('#ViaConstruccion > .stats').text(Math.round(1000*grupoViaConstruccion.meters/grupoVia.meters)/10 + "%");
+	$('#ViaProyecto > .stats').text(Math.round(1000*grupoViaProyecto.meters/grupoVia.meters)/10 + "%");
+
 }
