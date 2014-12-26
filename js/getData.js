@@ -134,24 +134,26 @@ function getVisibleFreeways () {
 			$("select[name=autopistas]").empty();
 			var autopistas = [];
 			var vias = [];
+			// Parsing the response data
+			// We organize the data into two objects: autopistas (relations) and vias (ways)
 			for (i in response.elements) {
-				if (response.elements[i].type == "relation") {  // Organize the received data on autopistas (relations) y vias (ways)
+				if (response.elements[i].type == "relation") {
 					autopistas.push({id:response.elements[i].id, ref:response.elements[i].tags.ref, members:response.elements[i].members});
 				} else if (response.elements[i].type == "way") {
 					vias.push({id:response.elements[i].id, tags:response.elements[i].tags});
 				}
 			}
 
-			var copiaautopistas = autopistas;
+			var autopistas_copy = autopistas;
 			autopistas = [];
-
-			for (i in copiaautopistas) {    // Delete false freeways
-				var primeravia = vias[findWithAttr(vias, "id", copiaautopistas[i].members[0].ref)]; //The first way of the freeway
+			// Delete false freeways
+			for (i in autopistas_copy) {
+				var primeravia = vias[findWithAttr(vias, "id", autopistas_copy[i].members[0].ref)]; //Get the first way of the freeway
 				if (primeravia) {
 					if (primeravia.tags) {
 						if (primeravia.tags.highway == "motorway" || primeravia.tags.highway == "motorway_link" || primeravia.tags.highway == "trunk" 
 						|| primeravia.tags.highway == "trunk_link") {
-							autopistas.push(copiaautopistas[i]);
+							autopistas.push(autopistas_copy[i]);
 						}
 					}
 				}
