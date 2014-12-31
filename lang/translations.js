@@ -19,7 +19,7 @@ var my_dictionary_ca = {
 	"ViaNoName":"Via sense %1$sname%2$s",
 	"ViaConstruccion":"En construcció",
 	"ViaProyecto":"En projecte",
-	"seleccionarautopista":"",
+	"seleccionarautopista":"Seleccionar autopista",
 	"verautopistas":"Veure autopistes",
 	"cancelar":"Cancel·lar",
 	"esconder":"Amagar",
