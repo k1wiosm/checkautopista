@@ -25,7 +25,7 @@ function Group(name, visib, color, colorbg, type) {
 	this.updateStyle = function () {
 		for (var i in this.elem) {
 			if (this.color=="") {
-				this.elem[i].setStyle({color:"#000000", fillColor:this.colorbg});
+				this.elem[i].setStyle({fillColor:this.colorbg});
 			} else {
 				this.elem[i].setStyle({color:this.color, fillColor:this.colorbg});
 			}
@@ -57,18 +57,23 @@ function Group(name, visib, color, colorbg, type) {
 	}
 	this.updateMap = function () {
 		this.updateStyle();
+		if (this.color == "#000000") {
+			var color = "white";
+		} else {
+			var color = this.color;
+		}
 		if (this.visib) {
 			for (var i in this.elem) {
 				map.addLayer(this.elem[i]);
 			};
-			$("#" + this.name + "> .boton").css("border-color", this.color);
+			$("#" + this.name + "> .boton").css("border-color", color);
 			$("#" + this.name + "> .boton").css("background-color", this.colorbg);
 		} else {
 			for (var i in this.elem) {
 				map.removeLayer(this.elem[i]);
 			};
 			$("#" + this.name + "> .boton").css("border-color", "white");
-			$("#" + this.name + "> .boton").css("background-color", colorDesactivadoFondo);
+			$("#" + this.name + "> .boton").css("background-color", "#b7c3c2");
 		};
 	}
 	this.measure = function () {
@@ -98,13 +103,12 @@ var grupoSalDestination = new Group ("SalDestination", true, "#1e452b", "", "nod
 var grupoSalExitTo = new Group ("SalExitTo", true, "#00b140", "", "nodeOut");
 var grupoSalName = new Group ("SalName", true, "#00ffff", "", "nodeOut");
 var grupoSalNada = new Group ("SalNada", true, "#ff0000", "", "nodeOut");
-var grupoSalRef = new Group ("SalRef", true, "", "#00ff00", "nodeIn");
-var grupoSalNoRef = new Group ("SalNoRef", true, "", "#eca411", "nodeIn");
+var grupoSalRef = new Group ("SalRef", true, "#000000", "#00ff00", "nodeIn");
+var grupoSalNoRef = new Group ("SalNoRef", true, "#000000", "#eca411", "nodeIn");
 var grupoSalSinSal = new Group ("SalSinSal", true, "#ae0000", "#985652", "node");
 
 var grupoAreas = new Group ("Areas", true, "#f043b4", "#d48fd1", "area");
 var grupoOtros = new Group ("Otros", true, "", "", "node");
-var colorDesactivadoFondo = "#b7c3c2";
 
 var grupos = [grupoVia, grupoViaTodo, grupoViaNoMaxspeed, grupoViaNoLanes, grupoViaNoMaxspeedNoLanes, grupoViaNoName, grupoViaConstruccion,grupoViaProyecto,
  grupoPeaje, grupoSalDestination, grupoSalExitTo, grupoSalName, grupoSalNada, grupoSalRef, grupoSalNoRef, grupoSalSinSal, grupoAreas, grupoOtros];
@@ -256,9 +260,10 @@ function addBasicData () {
 			} else {
 				if (layers[i].feature.properties.tags.maxspeed==undefined) {
 					grupoViaNoMaxspeed.elem.push(layers[i]);
-				}
-				if (layers[i].feature.properties.tags.lanes==undefined) {
+				} else if (layers[i].feature.properties.tags.lanes==undefined) {
 					grupoViaNoLanes.elem.push(layers[i]);
+				} else {
+					grupoViaTodo.elem.push(layers[i]);
 				}
 			}
 			if (layers[i].feature.properties.tags.name==undefined) {
