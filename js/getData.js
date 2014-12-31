@@ -93,7 +93,7 @@ var grupoViaTodo = new Group ("ViaTodo", true, "#0000ff", "", "way");
 var grupoViaNoMaxspeed = new Group ("ViaNoMaxspeed", true, "#ffff00", "", "way");
 var grupoViaNoLanes = new Group ("ViaNoLanes", true, "#ff8d00", "", "way");
 var grupoViaNoMaxspeedNoLanes = new Group ("ViaNoMaxspeedNoLanes", true, "#D430AB", "", "way");
-var grupoViaNoName = new Group ("ViaNoName", true, "", "", "way");
+var grupoViaNoName = new Group ("ViaNoName", true, "#0000ff", "", "way");
 var grupoViaConstruccion = new Group ("ViaConstruccion", true, "#000000", "", "way");
 var grupoViaProyecto = new Group ("ViaProyecto", true, "#82858a", "", "way");
 
@@ -262,8 +262,6 @@ function addBasicData () {
 					grupoViaNoMaxspeed.elem.push(layers[i]);
 				} else if (layers[i].feature.properties.tags.lanes==undefined) {
 					grupoViaNoLanes.elem.push(layers[i]);
-				} else {
-					grupoViaTodo.elem.push(layers[i]);
 				}
 			}
 			if (layers[i].feature.properties.tags.name==undefined) {
@@ -610,6 +608,7 @@ function deleteOldNodes (groupToDelete, groupNew) {
 }
 
 function updateMap () {
+	grupo["ViaNoName"].updateMap();
 	grupo["ViaTodo"].updateMap();
 	grupo["ViaNoMaxspeed"].updateMap();
 	grupo["ViaNoLanes"].updateMap();
