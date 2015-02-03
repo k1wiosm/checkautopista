@@ -302,7 +302,7 @@ var my_dictionary_uk = {
 	"via":"Спосіб",
 }
 
-var my_dictionary_Zh-hant = {
+var my_dictionary_zh_HANT = {
 	"lema":"%sOSM%s的高速公路品質提升工具",
 	"leyenda":"圖例",
 	"Peaje":"收費站",
