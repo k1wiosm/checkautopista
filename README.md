@@ -29,5 +29,5 @@ Also it shows information about the tollbooths and the service and rest areas.
 Languages
 =========
 
-CheckAutopista is available in Catalán, German, English, Spanish, French, Portuguese, Tagalog and Ukranian. You can colaborate translating here: https://www.transifex.com/projects/p/checkautopista/
+CheckAutopista is available in Catalán, German, English, Spanish, French, Portuguese, Tagalog, Ukranian and Traditional Chinese. You can colaborate translating here: https://www.transifex.com/projects/p/checkautopista/
 
