@@ -1,9 +1,9 @@
 CheckAutopista
 ==============
 
-http://checkautopista.hol.es/original
+Live demo: http://checkautopista.hol.es/original
 
-For the new CheckAutopista2 see http://github.com/k1wiosm/checkautopista2
+_For the new CheckAutopista2 see http://github.com/k1wiosm/checkautopista2_
 
 Quality Assurance tool for motorways in OSM. It allows to check any motorway in the world, as long as it's tagged as a relation with ```route=road```.
 
