@@ -5,6 +5,8 @@ Live demo: http://checkautopista.hol.es/original
 
 _For the new CheckAutopista2 see http://github.com/k1wiosm/checkautopista2_
 
+![](https://raw.githubusercontent.com/k1wiosm/checkautopista/master/img/example.png)
+
 Quality Assurance tool for motorways in OSM. It allows to check any motorway in the world, as long as it's tagged as a relation with ```route=road```.
 
 How it works: To obtain the data it uses Overpass API and it uses Leaflet to show them.
