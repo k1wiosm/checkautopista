@@ -1,7 +1,7 @@
 CheckAutopista
 ==============
 
-Live demo: http://checkautopista.hol.es/original
+Live demo: http://k1wiosm.github.io/checkautopista/original
 
 _For the new CheckAutopista2 see http://github.com/k1wiosm/checkautopista2_
 
